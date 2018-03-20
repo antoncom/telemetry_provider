@@ -35,12 +35,12 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/babel">
   export default {
     props: {
       title: {
         type: String,
-        default: 'Paper Dashboard Pro'
+        default: 'Telemetry Provider Portal'
       },
       type: {
         type: String,
