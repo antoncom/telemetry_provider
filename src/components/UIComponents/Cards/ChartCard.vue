@@ -35,7 +35,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/babel">
   export default {
     name: 'chart-card',
     props: {

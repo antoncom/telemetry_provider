@@ -4,19 +4,19 @@
        :data-active-color="activeColor">
     <div class="logo">
       <a class="simple-text logo-mini"
-         href="https://www.creative-tim.com/product/vue-paper-dashboard-pro">
+         href="/">
           <div class="logo-img">
               <img :src="logo" alt="">
           </div>
       </a>
       <a class="simple-text logo-normal"
-         href="https://www.creative-tim.com/vue-paper-dashboard-pro">
+         href="/">
           {{ title }}
       </a>
     </div>
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
       <slot>
-
+<!--        // search field is hidden by ant-->
       </slot>
       <ul :class="navClasses">
         <slot name="links">

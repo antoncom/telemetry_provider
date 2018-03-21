@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <router-link class="navbar-brand" to="/admin">Paper Dashboard PRO</router-link>
+          <router-link class="navbar-brand" to="/provider/home">Главная</router-link>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -24,7 +24,7 @@
     </nav>
 
     <div class="wrapper wrapper-full-page">
-      <div class="full-page lock-page" data-color="green" data-image="static/img/background/background-5.png"
+      <div class="full-page lock-page" data-color="red" data-image="static/img/background/background-2.png"
            style="background-image: url('static/img/background/background-5.png')">
         <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
         <div class="content">
@@ -35,29 +35,27 @@
               </div>
               <h4>Chet Faker</h4>
               <div class="form-group">
-                <input type="password" placeholder="Enter Password" class="form-control">
+                <input type="password" placeholder="Введите пароль" class="form-control">
               </div>
-              <button type="button" class="btn btn-wd">Unlock</button>
+              <button type="button" class="btn btn-wd">Разблокировать</button>
             </div>
           </form>
         </div>
         <footer class="footer footer-transparent">
           <div class="container">
             <div class="copyright">
-              &copy; Coded with
-              <i class="fa fa-heart heart"></i> by
-              <a href="https://github.com/cristijora" target="_blank">Cristi Jora</a>.
-              Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.
+              &copy; Инструмент-Н, 2018.
             </div>
           </div>
         </footer>
+        <div class="full-page-background" style="background-image: url(static/img/background/background-2.jpg) "></div>
       </div>
     </div>
     <div class="collapse navbar-collapse off-canvas-sidebar">
       <ul class="nav nav-mobile-menu">
         <li>
-          <router-link to="/admin">
-            Dashboard
+          <router-link to="/provider/home">
+            Главная
           </router-link>
         </li>
       </ul>

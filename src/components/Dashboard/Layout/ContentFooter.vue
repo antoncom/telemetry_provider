@@ -4,27 +4,24 @@
       <nav class="pull-left">
         <ul>
           <li>
-            <a href="http://www.creative-tim.com">
-              Creative Tim
+            <a href="/#/login">
+              Логин
             </a>
           </li>
           <li>
-            <a href="http://blog.creative-tim.com">
-              Blog
+            <a href="/#/register">
+              Регистрация
             </a>
           </li>
           <li>
-            <a href="http://www.creative-tim.com/license">
-              Licenses
+            <a href="/#/lock">
+              Заблокировать экран
             </a>
           </li>
         </ul>
       </nav>
       <div class="copyright pull-right">
-        &copy; Coded with
-        <i class="fa fa-heart heart"></i> by
-        <a href="https://github.com/cristijora" target="_blank">Cristi Jora</a>.
-        <span>Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.</span>
+        &copy; Инструмент-Н, 2018.
       </div>
     </div>
   </footer>

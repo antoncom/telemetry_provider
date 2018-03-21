@@ -18,7 +18,12 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <router-link to="/login" class="btn">
-                Looking to login?
+                Уже есть логин?
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/provider/home" class="btn">
+                Главная
               </router-link>
             </li>
           </ul>
@@ -34,8 +39,8 @@
             <div class="row">
               <div class="col-md-8 col-md-offset-2">
                 <div class="header-text">
-                  <h2>Paper Dashboard PRO</h2>
-                  <h4>Register for free and experience the dashboard today.</h4>
+                  <h2><b>Telemetry</b><br />учёт и оптимизация энергоресурсов.</h2>
+                  <h4>Зарегистрируйтесь и получите доступ к системе телеметрии.</h4>
                   <hr>
                 </div>
               </div>
@@ -47,8 +52,8 @@
                     </div>
                   </div>
                   <div class="media-body">
-                    <h5>Free Account</h5>
-                    Here you can write a feature description for your dashboard, let the users know what is the value that you give them.
+                    <h5>Я провайдер</h5>
+                    Я предоставляю систему телеметрии - весь программно-аппаратный комплекс.
                   </div>
                 </div>
                 <div class="media">
@@ -58,8 +63,8 @@
                     </div>
                   </div>
                   <div class="media-body">
-                    <h5>Awesome Performances</h5>
-                    Here you can write a feature description for your dashboard, let the users know what is the value that you give them.
+                    <h5>Я оператор системы</h5>
+                    Я устанавливаю систему регулирования теплоэнергии, выполняю настройку и сопровождение.
                   </div>
                 </div>
                 <div class="media">
@@ -69,8 +74,8 @@
                     </div>
                   </div>
                   <div class="media-body">
-                    <h5>Global Support</h5>
-                    Here you can write a feature description for your dashboard, let the users know what is the value that you give them.
+                    <h5>Я управляющая компания, ТСЖ, ЖЭУ</h5>
+                    Я обеспечиваю оптимальный климат-контроль для потребителей теплоэнергии.
                   </div>
                 </div>
               </div>
@@ -79,26 +84,26 @@
                   <div class="card card-plain">
                     <div class="content">
                       <div class="form-group">
-                        <input type="email" placeholder="Your First Name" class="form-control">
+                        <input type="email" placeholder="Ваше имя" class="form-control">
                       </div>
                       <div class="form-group">
-                        <input type="email" placeholder="Your Last Name" class="form-control">
+                        <input type="email" placeholder="Ваша фамилия" class="form-control">
                       </div>
                       <div class="form-group">
-                        <input type="email" placeholder="Company" class="form-control">
+                        <input type="email" placeholder="Компания" class="form-control">
                       </div>
                       <div class="form-group">
-                        <input type="email" placeholder="Enter email" class="form-control">
+                        <input type="email" placeholder="Email" class="form-control">
                       </div>
                       <div class="form-group">
-                        <input type="password" placeholder="Password" class="form-control">
+                        <input type="password" placeholder="Пароль" class="form-control">
                       </div>
                       <div class="form-group">
-                        <input type="password" placeholder="Password Confirmation" class="form-control">
+                        <input type="password" placeholder="Подтверждение пароля" class="form-control">
                       </div>
                     </div>
                     <div class="footer text-center">
-                      <button type="button" class="btn btn-fill btn-danger btn-wd">Create Free Account</button>
+                      <button type="button" class="btn btn-fill btn-danger btn-wd">Зарегистрироваться</button>
                     </div>
                   </div>
                 </form>
@@ -110,10 +115,7 @@
         <footer class="footer footer-transparent">
           <div class="container">
             <div class="copyright text-center">
-              &copy; Coded with
-              <i class="fa fa-heart heart"></i> by
-              <a href="https://github.com/cristijora" target="_blank">Cristi Jora</a>.
-              Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.
+              &copy; Инструмент-Н, 2018.
             </div>
           </div>
         </footer>
@@ -123,12 +125,12 @@
       <ul class="nav nav-mobile-menu">
         <li>
           <router-link to="/login">
-            Looking to login?
+            Уже есть логин?
           </router-link>
         </li>
         <li>
-          <router-link to="/admin">
-            Dashboard
+          <router-link to="/provider/home">
+            Главная
           </router-link>
         </li>
       </ul>

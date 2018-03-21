@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h4 class="title">Edit Profile</h4>
+      <h4 class="title">Редактировать профиль</h4>
     </div>
     <div class="card-content">
       <form>
@@ -96,7 +96,7 @@
         </div>
         <div class="text-center">
           <button type="submit" class="btn btn-info btn-fill btn-wd" @click.prevent="updateProfile">
-            Update Profile
+            Сохранить изменения
           </button>
         </div>
         <div class="clearfix"></div>
@@ -109,14 +109,16 @@
     data () {
       return {
         user: {
-          company: 'Paper Dashboard',
-          username: 'michael23',
+          company: 'Инструмент-Н',
+          username: 'peter22',
           email: '',
-          lastName: 'Faker',
-          address: 'Melbourne, Australia',
-          city: 'melbourne',
-          postalCode: '',
-          aboutMe: `Oh so, your weak rhyme. You doubt I'll bother, reading into it.I'll probably won't, left to my own devicesBut that's the difference in our opinions.`
+          firstName: 'Пётр',
+          lastName: 'Иванов',
+          address: 'Машиностроителей улица',
+          city: 'Йошкар-Ола',
+          postalCode: '424000',
+          country: 'Россия',
+          aboutMe: `По всем вопросам работы системы обращаться по емайл.`
         }
       }
     },

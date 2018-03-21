@@ -6,21 +6,19 @@
     <div class="card-content">
       <div class="author">
         <img class="avatar border-white" src="static/img/faces/face-2.jpg" alt="...">
-        <h4 class="title">Chet Faker
+        <h4 class="title">Пётр Иванов
           <br>
           <a href="#">
-            <small>@chetfaker</small>
+            <small>@petrivanov</small>
           </a>
         </h4>
       </div>
       <p class="description text-center">
-        "I like the way you work it
-        <br> No diggity
-        <br> I wanna bag it up"
+        Администратор системы
       </p>
     </div>
     <hr>
-    <div class="text-center">
+    <!--<div class="text-center">
       <div class="row">
         <div v-for="(info,index) in details" :class="getClasses(index)">
           <h5>{{info.title}}
@@ -29,7 +27,7 @@
           </h5>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>

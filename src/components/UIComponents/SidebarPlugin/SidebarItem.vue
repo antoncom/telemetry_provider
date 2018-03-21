@@ -38,7 +38,7 @@
     </slot>
   </component>
 </template>
-<script>
+<script type="text/babel">
   import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 
   export default {

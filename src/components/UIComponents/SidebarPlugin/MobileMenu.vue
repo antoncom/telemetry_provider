@@ -1,5 +1,5 @@
 <template>
-  <ul class="nav nav-mobile-menu">
+  <!--<ul class="nav nav-mobile-menu">
     <li>
       <a href="javascript:void(0)" class="dropdown-toggle btn-magnify" data-toggle="dropdown">
         <i class="ti-panel"></i>
@@ -29,9 +29,9 @@
         </p>
       </a>
     </li>
-  </ul>
+  </ul>-->
 </template>
-<script>
+<script type="text/babel">
   export default {}
 </script>
 <style>

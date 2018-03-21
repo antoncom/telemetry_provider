@@ -12,15 +12,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <router-link class="navbar-brand" to="/admin">Paper Dashboard PRO</router-link>
+          <router-link class="navbar-brand" to="/admin">Telemetry - оптимальный расход энергресурсов</router-link>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <router-link to="/register" tag="li">
-              <a>Register</a>
+              <a>Регистрация</a>
             </router-link>
-            <router-link to="/admin/overview" tag="li">
-              <a>Dashboard</a>
+            <router-link to="/provider/home" tag="li">
+              <a>Главная</a>
             </router-link>
           </ul>
         </div>
@@ -28,8 +28,8 @@
     </nav>
 
     <div class="wrapper wrapper-full-page">
-      <div class="full-page login-page" data-color=""
-           data-image="static/img/background/background-2.jpg">
+      <div class="full-page login-page" data-color="blue"
+           data-image="/static/img/background/background-2.jpg">
         <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
         <div class="content">
           <div class="container">
@@ -38,23 +38,23 @@
                 <form method="#" action="#">
                   <div class="card" data-background="color" data-color="blue">
                     <div class="card-header">
-                      <h3 class="card-title">Login</h3>
+                      <h3 class="card-title">Вход в систему</h3>
                     </div>
                     <div class="card-content">
                       <div class="form-group">
-                        <label>Email address</label>
-                        <input type="email" placeholder="Enter email" class="form-control input-no-border">
+                        <label>Email</label>
+                        <input type="email" placeholder="Введите емайл" class="form-control input-no-border">
                       </div>
                       <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" placeholder="Password" class="form-control input-no-border">
+                        <label>Пароль</label>
+                        <input type="password" placeholder="Введите пароль" class="form-control input-no-border">
                       </div>
                     </div>
                     <div class="card-footer text-center">
-                      <button type="submit" class="btn btn-fill btn-wd ">Let's go</button>
+                      <button type="submit" class="btn btn-fill btn-wd ">Войти</button>
                       <div class="forgot">
                         <router-link to="/register">
-                          Forgot your password?
+                          Забыли пароль?
                         </router-link>
                       </div>
                     </div>
@@ -68,10 +68,7 @@
         <footer class="footer footer-transparent">
           <div class="container">
             <div class="copyright">
-              &copy; Coded with
-              <i class="fa fa-heart heart"></i> by
-              <a href="https://github.com/cristijora" target="_blank">Cristi Jora</a>.
-              Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.
+              &copy; Инструмент-Н, 2018
             </div>
           </div>
         </footer>
@@ -81,10 +78,10 @@
     <div class="collapse navbar-collapse off-canvas-sidebar">
       <ul class="nav nav-mobile-menu">
         <router-link to="/register" tag="li">
-          <a>Register</a>
+          <a>Зарегистрироваться</a>
         </router-link>
-        <router-link to="/admin/overview" tag="li">
-          <a>Dashboard</a>
+        <router-link to="/provider/home" tag="li">
+          <a>Главная</a>
         </router-link>
       </ul>
     </div>

@@ -6,7 +6,7 @@
     <div class="info">
       <a data-toggle="collapse" @click="toggleMenu" href="javascript:void(0)">
            <span>
-             Chet Faker
+             Пётр Иванов
              <b class="caret"></b>
           </span>
       </a>
@@ -15,21 +15,15 @@
         <el-collapse-transition>
           <ul class="nav" v-show="!isClosed">
             <li>
-              <a href="javascript:void(0)">
+              <a href="/#/provider/user">
                 <span class="sidebar-mini">Mp</span>
-                <span class="sidebar-normal">My Profile</span>
+                <span class="sidebar-normal">Мой профайл</span>
               </a>
             </li>
             <li>
-              <a href="javascript:void(0)">
-                <span class="sidebar-mini">Ep</span>
-                <span class="sidebar-normal">Edit Profile</span>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:void(0)">
-                <span class="sidebar-mini">S</span>
-                <span class="sidebar-normal">Settings</span>
+              <a href="/#/login">
+                <span class="sidebar-mini">В</span>
+                <span class="sidebar-normal">Выход</span>
               </a>
             </li>
           </ul>
