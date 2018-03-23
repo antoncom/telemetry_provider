@@ -2,7 +2,7 @@
 .vue-tabs {
   .nav-tabs-navigation{
     text-align: center;
-    border-bottom: 1px solid #F1EAE0;
+    border-bottom: 1px solid #a09e9b;
     margin-bottom: 30px;
 
     .nav > li > a{
@@ -46,7 +46,7 @@
       }
 
       & a:after{
-        border-bottom: 11px solid $white-color;
+        border-bottom: 11px solid $bg-nude;
         border-left: 11px solid rgba(0, 0, 0, 0);
         border-right: 11px solid rgba(0, 0, 0, 0);
         content: "";

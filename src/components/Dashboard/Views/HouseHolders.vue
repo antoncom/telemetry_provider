@@ -74,12 +74,13 @@
 <script type="text/babel">
 
   import Vue from 'vue'
-  import {Table, TableColumn, Select, Option} from 'element-ui'
+  import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
+
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
   // axios.defaults.baseURL = 'http://5ab289c362a6ae001408c272.mockapi.io/api/v1'
@@ -91,6 +92,7 @@
   Vue.use(TableColumn)
   Vue.use(Select)
   Vue.use(Option)
+  Vue.use(Loading)
 
   export default{
     components: {
@@ -142,6 +144,7 @@
     created () {
       axios.get(this.api_operators)
               .then(response => {
+                this.loading2 = false
                 // JSON responses are automatically parsed.
                 this.tableData = response.data
               })
@@ -197,7 +200,8 @@
             minWidth: 100
           }
         ],
-        tableData: []
+        tableData: [],
+        loading2: true
       }
     },
     methods: {

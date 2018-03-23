@@ -11,6 +11,8 @@ import Lock from 'src/components/Dashboard/Views/Pages/Lock.vue'
 
 import Operators from 'src/components/Dashboard/Views/Operators.vue'
 import HouseHolders from 'src/components/Dashboard/Views/HouseHolders.vue'
+import Houses from 'src/components/Dashboard/Views/Houses.vue'
+import House from 'src/components/Dashboard/Views/House.vue'
 
 
 let loginPage = {
@@ -51,6 +53,16 @@ const routes = [
         path: '/provider/householders',
         name: 'Домовладельцы',
         component: HouseHolders
+      },
+      {
+        path: '/provider/houses',
+        name: 'Дома',
+        component: Houses
+      },
+      {
+        path: '/provider/house',
+        name: 'Карточка дома',
+        component: House
       },
       {
         path: '/provider/user',

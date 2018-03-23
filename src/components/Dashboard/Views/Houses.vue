@@ -1,11 +1,11 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <h4 class="title">Операторы системы</h4>
+      <h4 class="title">Дома и здания</h4>
     </div>
     <div class="col-md-12 card">
       <div class="card-header">
-        <div class="category">Список операторов, зарегистрированных в системе</div>
+        <div class="category">Список домов, муниципальных и офисных зданий.</div>
       </div>
       <div class="card-content row">
         <div class="col-sm-6">
@@ -31,12 +31,12 @@
         </div>
         <div class="col-sm-12">
           <el-table class="table-striped"
+                    :data="queriedData"
+                    border
                     v-loading="loading2"
                     element-loading-text="Ждите..."
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
-                    :data="queriedData"
-                    border
                     style="width: 100%">
             <el-table-column v-for="column in tableColumns"
                              sortable
@@ -80,6 +80,7 @@
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
+
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
   // axios.defaults.baseURL = 'http://5ab289c362a6ae001408c272.mockapi.io/api/v1'
@@ -153,7 +154,7 @@
     },
     data () {
       return {
-        api_operators: '/operators?key=ddde2fd0',
+        api_operators: '/houses?key=ddde2fd0',
         pagination: {
           perPage: 10,
           currentPage: 1,
@@ -161,37 +162,42 @@
           total: 0
         },
         searchQuery: '',
-        propsToSearch: ['company', 'inn', 'location'],
+        propsToSearch: ['address', 'householder', 'city'],
         tableColumns: [
           {
             prop: 'reg_date',
             label: 'Регистрация',
-            minWidth: 70
+            minWidth: 110
           },
           {
-            prop: 'inn',
-            label: 'ИНН',
-            minWidth: 60
+            prop: 'city',
+            label: 'Город',
+            minWidth: 75
           },
           {
-            prop: 'company',
-            label: 'Компания',
+            prop: 'address',
+            label: 'Адрес',
             minWidth: 100
           },
           {
-            prop: 'location',
-            label: 'География',
+            prop: 'phone',
+            label: 'Телефон',
             minWidth: 100
           },
           {
-            prop: 'contracted',
-            label: 'Статус контракта',
-            minWidth: 80
+            prop: 'householder',
+            label: 'Домовладелец',
+            minWidth: 140
           },
           {
-            prop: 'email',
-            label: 'Email',
-            minWidth: 120
+            prop: 'docs',
+            label: 'Документы',
+            minWidth: 85
+          },
+          {
+            prop: 'photos',
+            label: 'Фото',
+            minWidth: 50
           }
         ],
         tableData: [],

@@ -1,19 +1,55 @@
 <template>
   <div class="row">
     <div class="col-md-12">
+      <h4 class="title">Добро пожаловать!</h4>
+      <p class="category">На данном сайте представлен прототип интерфейсов портала учёта энергоресурсов.<br /></p>
+    </div>
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <h4 class="title">Добро пожаловать!</h4>
-          <p class="category">Вы находитесь на портале учёта энергоресурсов.<br />Канал обсуждения проекта на Slack: <a href="http://devgroup-ru.slack.com" target="_blank">devgroup-ru.slack.com</a><br /><br /></p>
+          <h3 class="title">Структура сайта</h3>
+          <p>Предварительная структура разделов сайта:</p>
+          <ul>
+            <li v-for="(link, index) in links">
+              <a v-bind:href="'/#'+link.path">{{link.name}}</a>
+            </li>
+          </ul>
+          <br />
+          <h7>Служебные страницы:</h7>
+          <ul>
+            <li><a href="/#/login">Login</a></li>
+            <li><a href="/#/register">Регистрация</a></li>
+            <li><a href="/#/provider/user">Мой профайл</a></li>
+            <li><a href="/#/lock">Блокировка экрана</a></li>
+          </ul>
         </div>
+        <div class="card-content row"></div>
       </div>
+    </div>
+    <div class="col-md-6 card">
+        <div class="card-header">
+          <h3 class="title">Заметки</h3>
+          <div class="category">Заметки по обновлениям прототипа.</div>
+        </div>
+        <div class="card-content row">
+          <div class="col-md-12">
+            Сейчас в работе: <a href="/#/provider/house">Карточка дома</a>
+          </div>
+        </div>
     </div>
   </div>
 </template>
 <script type="text/babel">
-  export default {
+  import sidebarLinks from 'src/sidebarLinks.js'
+
+  export default{
     data () {
-      return {}
+      return {
+        links: []
+      }
+    },
+    mounted: function () {
+      this.links = sidebarLinks
     }
   }
 </script>
