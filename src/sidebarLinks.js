@@ -27,5 +27,10 @@ export default [
         name: 'Каточка дома',
         path: '/provider/house'
       }]
+  },
+  {
+    name: 'Сообщения',
+    icon: 'ti-gift',
+    path: '/provider/messenger'
   }
 ]

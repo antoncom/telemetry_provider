@@ -13,6 +13,7 @@ import Operators from 'src/components/Dashboard/Views/Operators.vue'
 import HouseHolders from 'src/components/Dashboard/Views/HouseHolders.vue'
 import Houses from 'src/components/Dashboard/Views/Houses.vue'
 import House from 'src/components/Dashboard/Views/House.vue'
+import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 
 
 let loginPage = {
@@ -68,6 +69,11 @@ const routes = [
         path: '/provider/user',
         name: 'Профиль пользователя',
         component: User
+      },
+      {
+        path: '/provider/messenger',
+        name: 'Сообщения пользователей',
+        component: Messenger
       }
     ]
   },

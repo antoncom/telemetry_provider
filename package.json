@@ -22,6 +22,7 @@
     "jquery": "^3.2.1",
     "jvectormap-next": "^3.0.0",
     "perfect-scrollbar": "0.7.1",
+    "sample-project": "github:codingexplained/vuejs-mail-app",
     "sweetalert2": "^6.11.4",
     "vee-validate": "^2.0.0-rc.21",
     "vue": "^2.5.2",
