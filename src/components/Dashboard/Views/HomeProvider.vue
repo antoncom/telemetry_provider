@@ -38,9 +38,9 @@
               <li>
                 <a href="/#/provider/house">Карточка дома</a>
               </li>
-              <li>
+              <!--<li>
                 <a href="/#/provider/techproc">Визуализация бизнес-процессов</a>
-              </li>
+              </li>-->
             </ul>
           </div>
         </div>

@@ -27,7 +27,7 @@ export default [
         name: 'Каточка дома',
         path: '/provider/house'
       }]
-  },
+  } /*,
   {
     name: 'Сообщения',
     icon: 'ti-gift',
@@ -37,5 +37,5 @@ export default [
     name: 'Тех.процессы',
     icon: 'ti-gift',
     path: '/provider/techproc'
-  }
+  } */
 ]
