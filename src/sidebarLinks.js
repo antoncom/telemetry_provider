@@ -32,5 +32,10 @@ export default [
     name: 'Сообщения',
     icon: 'ti-gift',
     path: '/provider/messenger'
+  },
+  {
+    name: 'Тех.процессы',
+    icon: 'ti-gift',
+    path: '/provider/techproc'
   }
 ]
