@@ -33,7 +33,15 @@
         </div>
         <div class="card-content row">
           <div class="col-md-12">
-            Сейчас в работе: <a href="/#/provider/house">Карточка дома</a>
+            <p>Сейчас в работе:</p>
+            <ul>
+              <li>
+                <a href="/#/provider/house">Карточка дома</a>
+              </li>
+              <li>
+                <a href="/#/provider/techproc">Визуализация бизнес-процессов</a>
+              </li>
+            </ul>
           </div>
         </div>
     </div>
