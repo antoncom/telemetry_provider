@@ -15,6 +15,7 @@ import Houses from 'src/components/Dashboard/Views/Houses.vue'
 import House from 'src/components/Dashboard/Views/House.vue'
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
+import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
 
 
 let loginPage = {
@@ -77,8 +78,13 @@ const routes = [
         component: Messenger
       },
       {
-        path: '/provider/techproc',
-        name: 'Тех.процессы',
+        path: '/provider/docuproc',
+        name: 'Бизнес-процессы',
+        component: DocuProc
+      },
+      {
+        path: '/provider/obsledproc',
+        name: 'Постановка дома на обследование',
         component: TechProc
       }
     ]
