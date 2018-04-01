@@ -6,7 +6,7 @@
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">Карточка дома</h4>
-            <p class="category">Основные сведения, фото, документы</p>
+            <p class="category">Основные сведения, документы</p>
           </div>
           <div class="card-content">
             <div class="typo-line">
@@ -62,25 +62,17 @@
             <button v-on:click="showTabs=4" v-bind:class="{ 'btn-fill': showTabs == 4 }" class="btn btn-primary">Энергосервис</button>
 
             <vue-tabs class="card-content" v-show="showTabs == 1">
-              <v-tab title="Начисление" icon="ti-bar-chart">
-                <h5>Теплоснабжение - начисление</h5>
+              <v-tab title="Потребление" icon="ti-bar-chart">
+                <h5>Теплоснабжение - потребление</h5>
               </v-tab>
-              <v-tab title="Потребление" icon="ti-user"><h5>Теплоснабжение - потребление</h5></v-tab>
-              <v-tab title="Документы" icon="ti-files"><h5>Теплоснабжение - документы ОДПУ</h5></v-tab>
+              <v-tab title="Отопление" icon="ti-user"><h5>Теплоснабжение - отопление</h5></v-tab>
+              <v-tab title="Качество" icon="ti-files"><h5>Теплоснабжение - качество теплоносителя</h5></v-tab>
             </vue-tabs>
             <vue-tabs class="card-content" v-show="showTabs == 2">
-              <v-tab title="Начисление" icon="ti-bar-chart">
-                <h5>Горячее водоснабжение - начисление</h5>
-              </v-tab>
               <v-tab title="Потребление" icon="ti-user"><h5>Горячее водоснабжение - потребление</h5></v-tab>
-              <v-tab title="Документы" icon="ti-files"><h5>Горячее водоснабжение - документы ОДПУ</h5></v-tab>
             </vue-tabs>
             <vue-tabs class="card-content" v-show="showTabs == 3">
-              <v-tab title="Начисление" icon="ti-bar-chart">
-                <h5>Холодное водоснабжение - начисление</h5>
-              </v-tab>
               <v-tab title="Потребление" icon="ti-user"><h5>Холодное водоснабжение - потребление</h5></v-tab>
-              <v-tab title="Документы" icon="ti-files"><h5>Холодное водоснабжение - документы ОДПУ</h5></v-tab>
             </vue-tabs>
             <vue-tabs class="card-content" v-show="showTabs == 4">
               <v-tab title="Базовое" icon="ti-bar-chart">

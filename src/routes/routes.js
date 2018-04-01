@@ -17,7 +17,6 @@ import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
 import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
 
-
 let loginPage = {
   path: '/login',
   name: 'Login',

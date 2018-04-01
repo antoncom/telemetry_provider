@@ -29,6 +29,7 @@
     "vue-axios": "^2.0.2",
     "vue-clickaway": "^2.1.0",
     "vue-form-wizard": "^0.7.0",
+    "vue-froala-wysiwyg": "^2.7.6",
     "vue-nav-tabs": "^0.5.4",
     "vue-notifyjs": "^0.2.0",
     "vue-router": "^3.0.1"

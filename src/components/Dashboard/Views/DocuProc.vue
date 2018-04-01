@@ -46,17 +46,68 @@
           <iframe src="/static/xara_proto/dooborot.htm" width="1360" height="830" align="left" scrolling="no" frameBorder="0">
             Ваш браузер не поддерживает плавающие фреймы!
           </iframe>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Примечания</h4>
+        </div>
+        <div class="card-content">
           <img src="/static/pics/how-it-works.png" />
         </div>
       </div>
     </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Пример шаблона и сгенерированного документа</h4>
+          <p class="category">Шаблон есть HTML документ с вкраплением тегов для подстановки данных</p>
+        </div>
+        <div class="card-content">
+          <froala :tag="'textarea'" :config="config" v-model="model"></froala>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 <script type="text/babel">
+  import $ from 'jquery'
+  // Import and use Vue Froala lib.
+  import Vue from 'vue'
+  import VueFroala from 'vue-froala-wysiwyg'
+  Vue.use(VueFroala)
 
   export default{
     data () {
-      return {}
+      return {
+        config: {
+          events: {
+            'froalaEditor.initialized': function () {
+              console.log('initialized')
+            }
+          },
+          /* toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', '|', 'insertImage', 'insertTable', '|', 'print', 'html', '|'], */
+          toolbarButtons: ['fullscreen', 'bold', 'italic'],
+          heightMax: 300,
+          widthMax: 500,
+          htmlUntouched: true
+        },
+        model: '<h3>Шаблон сметы:</h3><p><img src="/static/pics/smeta.png"></p><h3>Сгенерированный документ:</h3><p><img src="/static/pics/smeta_generated.png"></p>'
+      }
+    },
+    created () {
+      window.$ = window.jQuery = $
+
+      // Require Froala Editor js file.
+      require('froala-editor/js/froala_editor.pkgd.min')
+
+      // Require Froala Editor css files.
+      require('froala-editor/css/froala_editor.pkgd.min.css')
+      require('font-awesome/css/font-awesome.css')
+      require('froala-editor/css/froala_style.min.css')
     }
   }
 </script>
