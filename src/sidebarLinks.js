@@ -27,15 +27,24 @@ export default [
         name: 'Каточка дома',
         path: '/provider/house'
       }]
-  } /*,
+  },
   {
     name: 'Сообщения',
     icon: 'ti-gift',
     path: '/provider/messenger'
   },
   {
-    name: 'Тех.процессы',
+    name: 'Бизнес процессы',
     icon: 'ti-gift',
-    path: '/provider/techproc'
-  } */
+    path: '/provider/docuproc',
+    children: [
+      {
+        name: 'Документооборот',
+        path: '/provider/docuproc'
+      },
+      {
+        name: 'Обследование дома',
+        path: '/provider/obsledproc'
+      }]
+  }
 ]

@@ -12,7 +12,7 @@
             <div class="typo-line">
               <h5><p class="category">Адрес</p>г. Волжск, ул.Набережная, д.25.<br />Телефон ответственного: 8 (8363) 7-22-40.</h5>
             </div>
-            <div class="typo-line">
+            <!--<div class="typo-line">
               <h5><p class="category">Фото</p>
                 <el-upload
                         class="upload-demo"
@@ -29,7 +29,7 @@
                   </el-dialog>
                 </el-upload>
               </h5>
-            </div>
+            </div>-->
             <div class="typo-line">
               <!--<h5><p class="category">Документы</p>-->
                 <!--<el-table class="table-striped" :data="tableData">
