@@ -16,6 +16,7 @@ import House from 'src/components/Dashboard/Views/House.vue'
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
 import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
+import TeamtimeBpm from 'src/components/Dashboard/Views/TeamtimeBpm.vue'
 
 let loginPage = {
   path: '/login',
@@ -85,6 +86,11 @@ const routes = [
         path: '/provider/obsledproc',
         name: 'Постановка дома на обследование',
         component: TechProc
+      },
+      {
+        path: '/provider/ttbpm',
+        name: 'TeamtimeBpm',
+        component: TeamtimeBpm
       }
     ]
   },
