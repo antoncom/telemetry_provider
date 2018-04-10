@@ -1,6 +1,5 @@
 
 TeamTime.jQuery(window).load(function () {
-
 	var $ = TeamTime.jQuery;
 	var buttonsPanel = parent.SwimlanePanelButtons;
 
@@ -29,7 +28,7 @@ TeamTime.jQuery(window).load(function () {
 
 		$.ajax({
 			type : 'GET',
-			url  : 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=333',
+			url  : 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=327&username=' + credentials.username + '&passwd=' + credentials.passwd,
 			xhrFields: {
 				withCredentials: true
 			},

@@ -1,15 +1,28 @@
 <template>
   <div id="processDiagram" style="height: 631px;">
-    <!-- <iframe id="processDiagramWindow" src="http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&amp;controller=process&amp;view=processdiagram&amp;id=1&amp;tmpl=component" width="100%" height="100%" scrolling="yes" frameborder="no"></iframe>-->
     <iframe id="processDiagramWindow" src="static/mock/processdiagram.html" width="100%" height="100%" scrolling="yes" frameborder="no"></iframe>
+    <!--<iframe name="previewframe" id="previewframe" src="static/mock/iframe.html" width="100%" height="100%" scrolling="yes" frameborder="no"></iframe>-->
   </div>
 </template>
 
 <script type="text/babel">
   export default {
+    props: {
+      credentials: {
+        type: Object,
+        required: true
+      }
+    },
     data () {
       return {
+        myvar: {a: 1}
       }
+    },
+    mounted () {
+//      console.log('CREDENTIALS')
+//      console.log(this.credentials.username)
+      window.document.username = this.credentials.username
+      window.document.passwd = this.credentials.passwd
     }
   }
 </script>

@@ -1,4 +1,3 @@
-
 //
 // Swimlane changed figures list
 //
@@ -443,7 +442,8 @@ var SwimlanePanel = function () {
 
 		$.ajax({
 			type : 'GET',
-			url  : TeamTime.getUrlForTask("loadRoles"),
+			// url  : TeamTime.getUrlForTask("loadRoles"),
+			url  : TeamTime.getUrlForTask("loadRoles") + '&username=' + credentials.username + '&passwd=' + credentials.passwd,
 			xhrFields: {
 				withCredentials: true
 			},
@@ -1116,8 +1116,11 @@ var SwimlanePanel = function () {
 
 		$.ajax({
 			type : 'POST',
-			url  : TeamTime.getUrlForTask("loadInfo"),
-			data:	'{info: typeInfo, figures: JSON.stringify(figuresForLoad)}',
+			url  : TeamTime.getUrlForTask("loadInfo") + '&username=' + credentials.username + '&passwd=' + credentials.passwd,
+			data:	{
+				info: typeInfo,
+				figures: JSON.stringify(figuresForLoad)
+			},
 			xhrFields: {
 				withCredentials: true
 			},

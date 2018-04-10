@@ -140,6 +140,7 @@
 </template>
 
 <script type="text/babel">
+  import 'vue'
   export default {
     props: {
       titles: {
@@ -148,8 +149,8 @@
       }
     },
     data () {
-      return {
-      }
+//      return this.$root.$data
+      return {}
     }
   }
 </script>
