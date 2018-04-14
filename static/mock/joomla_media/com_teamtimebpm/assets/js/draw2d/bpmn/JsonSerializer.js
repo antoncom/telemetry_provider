@@ -194,6 +194,7 @@ draw2d.bpmn.JsonSerializer.prototype.unserialize = function (panel, jsonStr) {
 		panel.appendColumn(col.title, col.id, col.size);
 	}
 
+	// *** ant
 	// load figures
 	for (i = 0; i < data.figures.length; i++) {
 		this.initData(data.figures[i], panel);

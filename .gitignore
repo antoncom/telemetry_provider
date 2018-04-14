@@ -7,3 +7,4 @@ npm-debug.log
 storybook-static/
 test/unit/coverage/
 documentation/
+src/components/Dashboard/Views/TeamtimeBpm/credentials/

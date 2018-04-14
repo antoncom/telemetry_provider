@@ -1,24 +1,38 @@
 <template>
   <div id="processdiagram_contentpane">
     <div id="SwimlanePanel-cols-container">
-      <ul id="SwimlanePanel-cols">
-        <li v-for="column in columns" class="ui-state-default parent_column ui-resizable" v-bind:id="column.id" v-bind:style="{width: column.size + 'px'}">
-          <span class="ui-icon ui-icon-arrowthick-2-e-w"></span>
-          <div class="title">{{column.title}}</div>
-          <div class="ui-resizable-handle ui-resizable-e"></div>
-          <div class="vertical_line right_line" v-bind:style="'left: ' + column.size + 'px; top: 30px;'"></div>
-          <div class="vertical_line left_line" style="left: -1px; top: 30px;"></div>
-        </li>
-      </ul>
+      <template>
+        <ul id="SwimlanePanel-cols">
+          <li v-for="column in columns" class="ui-state-default parent_column ui-resizable" v-bind:id="column.id" v-bind:style="{width: column.size + 'px'}">
+            <span class="ui-icon ui-icon-arrowthick-2-e-w"></span>
+            <div class="title">{{column.title}}</div>
+            <div class="ui-resizable-handle ui-resizable-e"></div>
+            <div class="vertical_line right_line" v-bind:style="{'left': column.size-1 + 'px', 'top': 10 + 'px'}"></div>
+            <div class="vertical_line left_line" style="left: -1px; top: 30px;"></div>
+          </li>
+        </ul>
+      </template>
     </div>
 
     <div id="SwimlanePanel-rows-container">
-      <ul id="SwimlanePanel-rows" class="ui-sortable" style="">
-      </ul>
+      <template>
+        <ul id="SwimlanePanel-rows" class="ui-sortable" style="">
+          <li v-for="row in rows" class="ui-state-default parent_row ui-resizable" v-bind:id="row.id" v-bind:style="{height: row.size + 'px'}">
+            <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+            <div class="title vertical_text" v-bind:style="{height: row.size + 'px'}">
+              <div>
+                {{row.title}}
+              </div>
+            </div>
+            <div class="ui-resizable-handle ui-resizable-s"></div>
+            <div class="horizontal_line bottom_line" v-bind:style="{'top': row.size + 'px', 'left': 30 + 'px'}"></div>
+          </li>
+        </ul>
+      </template>
     </div>
-
     <div id="SwimlanePanel-scrollarea">
       <div id="SwimlanePanel-paintarea">
+        <activity v-for="activity in figures" :key="activity.id" :id="activity.id" :name="activity.name" :x="activity.x" :y="activity.y"></activity>
       </div>
     </div>
     <blocks-menu></blocks-menu>
@@ -34,6 +48,7 @@
   import credentials from 'src/components/Dashboard/Views/TeamtimeBpm/credentials/credentials.js'
   import draw2d from '../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/bpmn/_init_.js'
   import $ from 'jquery'
+  import Activity from './layout/Activity.vue'
   // import ContextMenuSwPanel from './Layout/ContextMenuSwPanel.vue'
   // require('https://github.com/swisnl/jQuery-contextMenu/blob/master/dist/jquery.contextMenu.min.css')
 
@@ -156,12 +171,14 @@
         workflow: null, // drawing area
         rows: null, // partisipants
         columns: null, // milestones
+        figures: null,
         minRowHeight: 120,
         minColumnWidth: 120
       }
     },
     components: {
-      BlocksMenu
+      BlocksMenu,
+      Activity
     },
     mounted () {
       console.log('ProcessDiagram MOUNTED')
@@ -171,18 +188,24 @@
         TeamTime.option = 'com_teamtimebpm'
         TeamTime.controller = 'process'
 
-        this.loadWorkflow(333)
+        this.loadWorkflow(325)
       })
     },
     watch: {
       columns: function () {
         console.log('Columns', this.updatedColumns)
+      },
+      rows: function () {
+        console.log('Rows', this.updatedRows)
       }
     },
     computed: {
       // геттер вычисляемого значения
       updatedColumns: function () {
         return this.columns
+      },
+      updatedRows: function () {
+        return this.rows
       }
     },
     created () {
@@ -203,14 +226,17 @@
         let api = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=' + id + '&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
 
         this.axios.get(api).then((response) => {
+          console.log('Data', response.data)
           this.columns = response.data.columns
-          console.log(this.columns)
+          this.rows = response.data.rows
+          this.figures = response.data.figures
+          console.log('Rows', this.rows)
         })
       }
     }
   }
 </script>
 
-<style scoped>
+<style>
 
 </style>
