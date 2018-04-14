@@ -89,8 +89,8 @@
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/ToggleButton.js"></script>
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/bpmn/ButtonShowBlocksMenu.js"></script>
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/Canvas.js"></script>
-  <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/Workflow.js"></script>
-  <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/GraphicalViewer.js"></script>
+  <!--<script type="text/javascript" src="Workflow.js"></script>-->
+  <!--<script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/GraphicalViewer.js"></script>-->
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/Command.js"></script>
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/CommandAdd.js"></script>
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/CommandConnect.js"></script>
@@ -171,24 +171,24 @@
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/draw2d/SnapToGrid.js"></script>
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/swimlane/SwimlanePanelBlocksMenu.js"></script>
   <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/swimlane/SwimlanePanelToolbar.js"></script>
-  <!--<script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/swimlane/SwimlanePanel.js"></script>-->
+  <!--<script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/../../../media/com_teamtimebpm/assets/js/swimlane/SwimlanePanel.js"></script>
   <script type="text/javascript" src="SwimlanePanel.js"></script>
   <script type="text/javascript" src="app.js"></script>
-  <script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/js/swimlane/SwimlanePanel_lang_ru-RU.js"></script>
+  <!--<script type="text/javascript" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/js/swimlane/SwimlanePanel_lang_ru-RU.js"></script>&ndash;&gt;-->
   <script type="text/javascript">
-	hs.graphicsDir = 'http://teamlog.teamtime.info/media/com_teamtime/assets/modules/highslide/graphics/';
-
-	TeamTime.baseUrl = 'http://teamlog.teamtime.info/administrator/';
-
-	TeamTime.option = 'com_teamtimebpm';
-
-	TeamTime.controller = 'process';
-
-
-	credentials = {
-	  username: window.parent.document.username,
-	  passwd: window.parent.document.passwd
-	}
+//	hs.graphicsDir = 'http://teamlog.teamtime.info/media/com_teamtime/assets/modules/highslide/graphics/';
+//
+//	TeamTime.baseUrl = 'http://teamlog.teamtime.info/administrator/';
+//
+//	TeamTime.option = 'com_teamtimebpm';
+//
+//	TeamTime.controller = 'process';
+//
+//
+//	credentials = {
+//	  username: window.parent.document.username,
+//	  passwd: window.parent.document.passwd
+//	}
 
   </script>
 
@@ -198,98 +198,7 @@
 
 
 </head>
-<body class="contentpane">
+<body class="contentpane" id="processdiagram_contentpane">
 
-
-<!--[if lte IE 7]>
-<link type="text/css" rel="stylesheet"
-	  href="http://teamlog.teamtime.info/administrator/components/com_teamtimebpm/assets/css/diagram_elements_ie.css" />
-<![endif]-->
-
-<style>
-  body {
-	margin:0px;
-	padding:0px;
-  }
-</style>
-
-<!-- swimlane panel layout -->
-
-<div id="SwimlanePanel-cols-container">
-  <ul id="SwimlanePanel-cols">
-  </ul>
-</div>
-
-<div id="SwimlanePanel-rows-container">
-  <ul id="SwimlanePanel-rows">
-  </ul>
-</div>
-
-<div id="SwimlanePanel-scrollarea">
-  <div id="SwimlanePanel-paintarea">
-  </div>
-</div>
-
-<!-- /swimlane panel layout -->
-
-<!-- swimlane panel blocks menu -->
-
-<div id="SwimlanePanel-blocksmenu" class="bpmn_insert_menu">
-  <table>
-	<tbody>
-	<tr>
-	  <td id="SwimlanePanel-blocksmenu-insert_block"
-		  class="bpmn_insert_menu_header" colspan="5">Insert</td>
-	</tr>
-	<tr>
-	  <td class="bpmn_insert_menu_item cmdInsertActivity">
-		<img src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/block.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertConditionXOR">
-		<img style="height: 28px;" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/gateway_xor.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertSubprocess">
-		<img style="height: 18px;" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/subprocess.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertMessage">
-		<img src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/message.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdMoreBlocks">
-		<div></div>
-	  </td>
-	</tr>
-
-	<!-- hidden blocks -->
-
-	<tr class="bpmn_insert_menu_hidden">
-	  <td class="bpmn_insert_divider" colspan="5"></td>
-	</tr>
-	<tr class="bpmn_insert_menu_hidden">
-	  <td class="bpmn_insert_menu_item cmdInsertConditionAND">
-		<img style="height: 28px;" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/gateway_and.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertConditionOR">
-		<img style="height: 28px;" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/gateway_or.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertLinkedSubprocess">
-		<img style="height: 18px;" src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/linked-subprocess.png"/>
-	  </td>
-	</tr>
-	<tr class="bpmn_insert_menu_hidden">
-	  <td class="bpmn_insert_menu_item cmdInsertTimer">
-		<img src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/timer.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertException">
-		<img src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/exception.png"/>
-	  </td>
-	  <td class="bpmn_insert_menu_item cmdInsertEnd">
-		<img src="http://teamlog.teamtime.info/media/com_teamtimebpm/assets/images/icons/start-end.png"/>
-	  </td>
-	</tr>
-	</tbody>
-  </table>
-</div>
-
-<!-- /swimlane panel blocks menu -->
 </body>
 </html>
