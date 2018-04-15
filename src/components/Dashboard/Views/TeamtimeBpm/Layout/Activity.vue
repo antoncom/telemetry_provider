@@ -1,16 +1,16 @@
 <template>
-  <div :id="id" tabindex="0" class="with-context-menu" :style="style">
-    <div class="bpmn_activity simple_activity">
+  <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
+    <div class="bpmn_activity simple_activity" :style="style">
       <div class="bpmn_linked_process_icon" src="linked_process_icon.gif"></div>
-      <div class="bpmn_content_hidden">
+      <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
         <div class="bpmn_activity_container">
-          <span class="bpmn_activity_content">{{name}}</span>
+          <span class="bpmn_activity_content">{{data.text}}</span>
           <span class="bpmn_activity_iefix">&nbsp;</span>
         </div>
       </div>
       <div class="bpmn_collapse_icon"></div>
       <div class="bpmn_activity_backlight" style="display:none;"></div>
-      <div class="bpmn_activity_aditional_info" style="display:none;"></div>
+      <div v-bind:class="acState.state" class="bpmn_activity_aditional_info" :style="showStatus">{{acState.part}}</div>
     </div>
   </div>
 </template>
@@ -18,36 +18,30 @@
 <script type="text/babel">
   export default {
     props: {
-      id: '',
-      type: 'bpmn.Activity',
-      viewState: 'simple',
-      name: '',
-      x: '',
-      y: ''
+      data: Object, // data for the activity
+      acState: Object // {state: 'part-done', part: '73%'} or {state: 'done', part: '}
     },
     data () {
       return {
         style: {
-          position: 'absolute',
-          left: '0px',
-          top: '0px',
           height: '60px',
           width: '140px',
-          margin: 0,
-          padding: 0,
-          outline: 'none',
-          'z-index': 100,
-          cursor: 'move',
-          border: '0px solid rgb(128, 128, 255)'
+          left: '0px',
+          top: '0px'
+        },
+        showStatus: {
+          display: 'none'
         }
       }
     },
     created: function () {
-      this.style.left = this.x + 'px'
-      this.style.top = this.y + 'px'
-    },
-    mounted: function () {
-      console.log('Activity MONTED')
+      // position & size of activity
+      this.style.left = this.data.x + 'px'
+      this.style.top = this.data.y + 'px'
+      this.style.height = this.data.height + 'px'
+      this.style.width = this.data.width + 'px'
+      // show state of activity
+      if (this.acState.state !== '') this.showStatus.display = 'block'
     }
   }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div id="processDiagram" style="height: 631px;">
     <!--<iframe id="processDiagramWindow" src="static/mock/processdiagram.html" width="100%" height="100%" scrolling="yes" frameborder="no"></iframe>-->
-    <iframe name="previewframe" id="previewframe" src="static/mock/iframe.html" width="100%" height="100%" scrolling="yes" frameborder="no"></iframe>
+    <iframe name="previewframe" id="previewframe" src="/static/TeamtimeBpm/iframe.html" width="100%" height="100%" scrolling="yes" frameborder="no"></iframe>
   </div>
 </template>
 

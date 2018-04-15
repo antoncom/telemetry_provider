@@ -32,7 +32,7 @@
     </div>
     <div id="SwimlanePanel-scrollarea">
       <div id="SwimlanePanel-paintarea">
-        <activity v-for="activity in figures" :key="activity.id" :id="activity.id" :name="activity.name" :x="activity.x" :y="activity.y"></activity>
+        <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id"></activity>
       </div>
     </div>
     <blocks-menu></blocks-menu>
@@ -188,16 +188,8 @@
         TeamTime.option = 'com_teamtimebpm'
         TeamTime.controller = 'process'
 
-        this.loadWorkflow(325)
+        this.loadWorkflow(327)
       })
-    },
-    watch: {
-      columns: function () {
-        console.log('Columns', this.updatedColumns)
-      },
-      rows: function () {
-        console.log('Rows', this.updatedRows)
-      }
     },
     computed: {
       // геттер вычисляемого значения
@@ -222,16 +214,54 @@
         return result
       },
       loadWorkflow: function (id) {
-        console.log(this.credentials.username)
-        let api = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=' + id + '&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
+        let apiDiagram = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=' + id + '&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
+        let apiStatus = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadInfo&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
 
-        this.axios.get(api).then((response) => {
-          console.log('Data', response.data)
-          this.columns = response.data.columns
-          this.rows = response.data.rows
-          this.figures = response.data.figures
-          console.log('Rows', this.rows)
+        this.axios.get(apiDiagram).then((responseDiagram) => {
+          var figuresToPost = []
+          responseDiagram.data.figures.forEach(function (figure) {
+            if ('paramsData' in figure) {
+              if ('_id' in figure.paramsData) {
+                figuresToPost.push({'id': figure.id, '_id': figure.paramsData._id})
+              } else if ('linkedId' in figure.paramsData) {
+                figuresToPost.push({'id': figure.id, 'linkedId': figure.paramsData.linkedId})
+              }
+            }
+          })
+          figuresToPost = figuresToPost.map(function (el) {
+            return JSON.stringify(el)
+          })
+          var postData = new FormData()
+          postData.set(
+            'figures', '[' + figuresToPost.toString() + ']'
+          )
+          postData.set(
+            'info', 'status'
+          )
+//          let config = {
+//            headers: {
+//              'Content-Type': 'application/json'
+//            }
+//          }
+          this.axios.post(apiStatus, postData).then((responsStatus) => {
+            this.statuses = responsStatus.data
+            this.columns = responseDiagram.data.columns
+            this.rows = responseDiagram.data.rows
+            this.figures = responseDiagram.data.figures
+          })
         })
+      },
+      activityStatus: function (act) {
+        var out = ''
+        this.statuses.forEach(function (status) {
+          if (status.id === act.id) {
+            out = {
+              state: 'bpmn_activity_' + status.params.state,
+              part: status.params.part
+            }
+          }
+        })
+        return out
       }
     }
   }

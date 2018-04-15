@@ -1,0 +1,9 @@
+.with-context-menu  {
+  position: absolute;
+  outline: none;
+  z-index: 100;
+  cursor: move;
+  border: 0px solid rgb(128, 128, 255);
+  margin: 0;
+  padding: 0;
+}
