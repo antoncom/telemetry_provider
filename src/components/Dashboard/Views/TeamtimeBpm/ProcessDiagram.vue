@@ -47,20 +47,13 @@
   import TeamTime from '../../../../../static/mock/joomla_media/com_teamtime/assets/js/default.js'
   import credentials from 'src/components/Dashboard/Views/TeamtimeBpm/credentials/credentials.js'
   import draw2d from '../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/bpmn/_init_.js'
-  import $ from 'jquery'
+  // import $ from 'jquery'
   import Activity from './layout/Activity.vue'
   // import ContextMenuSwPanel from './Layout/ContextMenuSwPanel.vue'
-  // require('https://github.com/swisnl/jQuery-contextMenu/blob/master/dist/jquery.contextMenu.min.css')
 
   Vue.use(VueAxios, axios)
 
-  // require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/_init_.js')
-  // import draw2d from '../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/_init_.js'
-  // equire('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/bpmn/_init_.js')
-
-  // require('../../../../../static/mock/joomla_media/com_teamtime/assets/js/default.js')
-
-  require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/Canvas.js')
+/*  require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/Canvas.js')
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/Command.js')
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/CommandAdd.js')
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/CommandConnect.js')
@@ -159,6 +152,8 @@
   require('../../../../../static/mock/joomla_media/Workflow.js')
   require('../../../../../static/mock/joomla_media/SwimlanePanel.js')
   require('../../../../../static/mock/joomla_media/GraphicalViewer.js')
+  */
+
   // require('../../../../../static/mock/joomla_media/app.js')
 
   export default {
@@ -192,27 +187,27 @@
       })
     },
     computed: {
-      // геттер вычисляемого значения
-      updatedColumns: function () {
-        return this.columns
-      },
-      updatedRows: function () {
-        return this.rows
-      }
+//      // геттер вычисляемого значения
+//      updatedColumns: function () {
+//        return this.columns
+//      },
+//      updatedRows: function () {
+//        return this.rows
+//      }
     },
     created () {
       console.log('ProcessDiagram CREATED')
     },
     methods: {
-      getHeaderTitle: function (obj, parentType) {
-        var result = ''
-        if (parentType === 'row') {
-          result = $(obj).children('span.rowTitle').text()
-        } else {
-          result = $(obj).text()
-        }
-        return result
-      },
+//      getHeaderTitle: function (obj, parentType) {
+//        var result = ''
+//        if (parentType === 'row') {
+//          result = $(obj).children('span.rowTitle').text()
+//        } else {
+//          result = $(obj).text()
+//        }
+//        return result
+//      },
       loadWorkflow: function (id) {
         let apiDiagram = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=' + id + '&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
         let apiStatus = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadInfo&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
@@ -238,11 +233,7 @@
           postData.set(
             'info', 'status'
           )
-//          let config = {
-//            headers: {
-//              'Content-Type': 'application/json'
-//            }
-//          }
+
           this.axios.post(apiStatus, postData).then((responsStatus) => {
             this.statuses = responsStatus.data
             this.columns = responseDiagram.data.columns
