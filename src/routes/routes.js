@@ -17,6 +17,7 @@ import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
 import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
 import TeamtimeBpm from 'src/components/Dashboard/Views/TeamtimeBpm.vue'
+import TeamtimeBpmWrapper from 'src/components/Dashboard/Views/TeamtimeBpmWrapper.vue'
 
 let loginPage = {
   path: '/login',
