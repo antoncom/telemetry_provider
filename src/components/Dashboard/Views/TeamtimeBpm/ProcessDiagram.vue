@@ -32,7 +32,14 @@
     </div>
     <div id="SwimlanePanel-scrollarea">
       <div id="SwimlanePanel-paintarea">
+        <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id"></start>
         <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id"></activity>
+        <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id"></end>
+        <condition-xor v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionXOR'" v-bind:data="activity" :key="activity.id"></condition-xor>
+        <condition-or v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionOR'" v-bind:data="activity" :key="activity.id"></condition-or>
+        <condition-and v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionAND'" v-bind:data="activity" :key="activity.id"></condition-and>
+        <message v-for="activity in figures" v-if="activity.type === 'bpmn.Message'" v-bind:data="activity" :key="activity.id"></message>
+        <timer v-for="activity in figures" v-if="activity.type === 'bpmn.Timer'" v-bind:data="activity" :key="activity.id"></timer>
       </div>
     </div>
     <blocks-menu></blocks-menu>
@@ -48,7 +55,14 @@
   import credentials from 'src/components/Dashboard/Views/TeamtimeBpm/credentials/credentials.js'
   import draw2d from '../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/bpmn/_init_.js'
   // import $ from 'jquery'
+  import Start from './layout/Start.vue'
   import Activity from './layout/Activity.vue'
+  import End from './layout/End.vue'
+  import ConditionXor from './layout/ConditionXor.vue'
+  import ConditionOr from './layout/ConditionOr.vue'
+  import ConditionAnd from './layout/ConditionAnd.vue'
+  import Message from './layout/Message.vue'
+  import Timer from './layout/Timer.vue'
   // import ContextMenuSwPanel from './Layout/ContextMenuSwPanel.vue'
 
   Vue.use(VueAxios, axios)
@@ -173,7 +187,14 @@
     },
     components: {
       BlocksMenu,
-      Activity
+      Activity,
+      Start,
+      End,
+      ConditionXor,
+      ConditionOr,
+      ConditionAnd,
+      Message,
+      Timer
     },
     mounted () {
       console.log('ProcessDiagram MOUNTED')

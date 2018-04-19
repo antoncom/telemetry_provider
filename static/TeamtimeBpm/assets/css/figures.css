@@ -1,4 +1,4 @@
-.with-context-menu  {
+/*.with-context-menu  {
   position: absolute;
   outline: none;
   z-index: 100;
@@ -7,3 +7,16 @@
   margin: 0;
   padding: 0;
 }
+.bpmn_condition_xor {
+  background-image: url('resources/condition_xor.gif');
+  background-repeat: no-repeat;
+}
+.bpmn_condition_or {
+  background-image: url('resources/condition_or.gif');
+  background-repeat: no-repeat;
+}
+
+.bpmn_condition_and {
+  background-image: url('resources/condition_and.gif');
+  background-repeat: no-repeat;
+}*/
