@@ -1,48 +1,15 @@
 <template>
   <div id="processdiagram_contentpane">
     <div id="SwimlanePanel-cols-container">
-      <template>
-        <ul id="SwimlanePanel-cols">
-          <li v-for="column in columns" class="ui-state-default parent_column ui-resizable" v-bind:id="column.id" v-bind:style="{width: column.size + 'px'}">
-            <span class="ui-icon ui-icon-arrowthick-2-e-w"></span>
-            <div class="title">{{column.title}}</div>
-            <div class="ui-resizable-handle ui-resizable-e"></div>
-            <div class="vertical_line right_line" v-bind:style="{'left': column.size-1 + 'px', 'top': 10 + 'px'}"></div>
-            <div class="vertical_line left_line" style="left: -1px; top: 30px;"></div>
-          </li>
-        </ul>
-      </template>
+
     </div>
 
     <div id="SwimlanePanel-rows-container">
-      <template>
-        <ul id="SwimlanePanel-rows" class="ui-sortable" style="">
-          <li v-for="row in rows" class="ui-state-default parent_row ui-resizable" v-bind:id="row.id" v-bind:style="{height: row.size + 'px'}">
-            <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-            <div class="title vertical_text" v-bind:style="{height: row.size + 'px'}">
-              <div>
-                {{row.title}}
-              </div>
-            </div>
-            <div class="ui-resizable-handle ui-resizable-s"></div>
-            <div class="horizontal_line bottom_line" v-bind:style="{'top': row.size + 'px', 'left': 30 + 'px'}"></div>
-          </li>
-        </ul>
-      </template>
+
     </div>
     <div id="SwimlanePanel-scrollarea">
-      <div id="SwimlanePanel-paintarea">
-        <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id"></start>
-        <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id"></activity>
-        <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id"></end>
-        <condition-xor v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionXOR'" v-bind:data="activity" :key="activity.id"></condition-xor>
-        <condition-or v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionOR'" v-bind:data="activity" :key="activity.id"></condition-or>
-        <condition-and v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionAND'" v-bind:data="activity" :key="activity.id"></condition-and>
-        <message v-for="activity in figures" v-if="activity.type === 'bpmn.Message'" v-bind:data="activity" :key="activity.id"></message>
-        <timer v-for="activity in figures" v-if="activity.type === 'bpmn.Timer'" v-bind:data="activity" :key="activity.id"></timer>
-      </div>
+
     </div>
-    <blocks-menu></blocks-menu>
   </div>
 </template>
 
@@ -50,24 +17,17 @@
   import Vue from 'vue'
   import axios from 'axios'
   import VueAxios from 'vue-axios'
-  import BlocksMenu from './BlocksMenu.vue'
-  import TeamTime from '../../../../../static/mock/joomla_media/com_teamtime/assets/js/default.js'
+  // import BlocksMenu from './BlocksMenu.vue'
+  // import TeamTime from '../../../../../static/mock/joomla_media/com_teamtime/assets/js/default.js'
   import credentials from 'src/components/Dashboard/Views/TeamtimeBpm/credentials/credentials.js'
+  import SwimlanePanel from '../../../../../static/mock/joomla_media/SwimlanePanel.js'
   import draw2d from '../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/bpmn/_init_.js'
-  // import $ from 'jquery'
-  import Start from './layout/Start.vue'
-  import Activity from './layout/Activity.vue'
-  import End from './layout/End.vue'
-  import ConditionXor from './layout/ConditionXor.vue'
-  import ConditionOr from './layout/ConditionOr.vue'
-  import ConditionAnd from './layout/ConditionAnd.vue'
-  import Message from './layout/Message.vue'
-  import Timer from './layout/Timer.vue'
+  import 'jquery'
   // import ContextMenuSwPanel from './Layout/ContextMenuSwPanel.vue'
 
   Vue.use(VueAxios, axios)
 
-/*  require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/Canvas.js')
+  require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/Canvas.js')
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/Command.js')
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/CommandAdd.js')
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/CommandConnect.js')
@@ -162,11 +122,8 @@
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/swimlane/SwimlanePanel_lang_ru-RU.js')
 
   require('../../../../../static/mock/joomla_media/com_teamtimebpm/assets/js/draw2d/bpmn/JsonSerializer.js')
-
   require('../../../../../static/mock/joomla_media/Workflow.js')
-  require('../../../../../static/mock/joomla_media/SwimlanePanel.js')
   require('../../../../../static/mock/joomla_media/GraphicalViewer.js')
-  */
 
   // require('../../../../../static/mock/joomla_media/app.js')
 
@@ -186,49 +143,28 @@
       }
     },
     components: {
-      BlocksMenu,
-      Activity,
-      Start,
-      End,
-      ConditionXor,
-      ConditionOr,
-      ConditionAnd,
-      Message,
-      Timer
     },
     mounted () {
       console.log('ProcessDiagram MOUNTED')
       this.$nextTick(function () {
         console.log('ProcessDiagram nextTick')
-        TeamTime.baseUrl = 'http://teamlog.teamtime.info/administrator/'
-        TeamTime.option = 'com_teamtimebpm'
-        TeamTime.controller = 'process'
+        // init path for assets
+        draw2d.bpmn.assetsUrl = 'static/mock/joomla_media/com_teamtimebpm/assets'
+
+        var swPanel = new SwimlanePanel()
+        draw2d.bpmn.setSwimlanePanel(swPanel)
+
+        swPanel.init()
 
         this.loadWorkflow(327)
       })
     },
     computed: {
-//      // геттер вычисляемого значения
-//      updatedColumns: function () {
-//        return this.columns
-//      },
-//      updatedRows: function () {
-//        return this.rows
-//      }
     },
     created () {
       console.log('ProcessDiagram CREATED')
     },
     methods: {
-//      getHeaderTitle: function (obj, parentType) {
-//        var result = ''
-//        if (parentType === 'row') {
-//          result = $(obj).children('span.rowTitle').text()
-//        } else {
-//          result = $(obj).text()
-//        }
-//        return result
-//      },
       loadWorkflow: function (id) {
         let apiDiagram = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=' + id + '&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
         let apiStatus = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadInfo&username=' + this.credentials.username + '&passwd=' + this.credentials.passwd
@@ -256,24 +192,23 @@
           )
 
           this.axios.post(apiStatus, postData).then((responsStatus) => {
-            this.statuses = responsStatus.data
-            this.columns = responseDiagram.data.columns
-            this.rows = responseDiagram.data.rows
-            this.figures = responseDiagram.data.figures
+//            this.statuses = responsStatus.data
+//            this.columns = responseDiagram.data.columns
+//            this.rows = responseDiagram.data.rows
+//            this.figures = responseDiagram.data.figures
+
+            var sJson = new draw2d.bpmn.JsonSerializer()
+            var swPanel = draw2d.bpmn.getSwimlanePanel()
+            console.log('swPanel', swPanel)
+            swPanel.clear()
+            sJson.unserialize(swPanel, responseDiagram.data)
+
+            console.log('diagram loaded')
+            console.log('EL', this.$el)
+
+            // changeShowInfo();
           })
         })
-      },
-      activityStatus: function (act) {
-        var out = ''
-        this.statuses.forEach(function (status) {
-          if (status.id === act.id) {
-            out = {
-              state: 'bpmn_activity_' + status.params.state,
-              part: status.params.part
-            }
-          }
-        })
-        return out
       }
     }
   }

@@ -1,6 +1,8 @@
 
 // Json serializer for swimlane panel structure
 import draw2d from './_init_.js'
+import $ from 'jquery'
+import TeamTime from '../../../../../com_teamtime/assets/js/default.js'
 draw2d.bpmn.JsonSerializer = function () { };
 
 draw2d.bpmn.JsonSerializer.prototype.getChildren = function (parent) {
@@ -179,7 +181,10 @@ draw2d.bpmn.JsonSerializer.prototype.unserialize = function (panel, jsonStr) {
 	console.log('UNSERIALIZE');
 	var $ = TeamTime.jQuery;
 
-	var data = JSON.parse(jsonStr);
+	console.log(panel);
+
+	// var data = JSON.parse(jsonStr);
+	var data = jsonStr;
 
 	// load rows data
 	var i;
