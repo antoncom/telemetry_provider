@@ -12,17 +12,26 @@
       <div class="bpmn_activity_backlight" style="display:none;"></div>
       <div v-bind:class="acState.state" class="bpmn_activity_aditional_info" :style="showStatus">{{acState.part}}</div>
     </div>
+    <port v-for="pType in portTypes" :position="pType" :key="pType"></port>
   </div>
 </template>
 
 <script type="text/babel">
+  import Port from './Port.vue'
   export default {
+    components: {
+      Port
+    },
     props: {
       data: Object, // data for the activity
       acState: Object // {state: 'part-done', part: '73%'} or {state: 'done', part: '}
     },
     data () {
       return {
+        x: 0,
+        y: 0,
+        w: 140,
+        h: 60,
         style: {
           height: '60px',
           width: '140px',
@@ -32,11 +41,16 @@
         showStatus: {
           display: 'none'
         },
-        acType: 'simple_activity' // by default
+        acType: 'simple_activity', // by default
+        portTypes: ['input', 'input1', 'input2', 'output', 'output1', 'output2']
       }
     },
     created: function () {
       // position & size of activity
+      this.x = this.data.x
+      this.y = this.data.y
+      this.w = this.data.width
+      this.h = this.data.height
       this.style.left = this.data.x + 'px'
       this.style.top = this.data.y + 'px'
       this.style.height = this.data.height + 'px'

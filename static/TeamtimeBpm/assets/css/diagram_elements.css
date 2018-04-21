@@ -339,3 +339,34 @@
 .bpmn_message .bpmn_icon {
 	background-image: url('resources/message.png');
 }
+
+/* Ports */
+.port {
+	position: absolute;
+	height: 18px;
+	width: 18px;
+	margin: 0px;
+	padding: 0px;
+	outline: none;
+	z-index: 5000;
+	font-size: 1px;
+	line-height: 1px;
+	cursor: move;
+	background-repeat: no-repeat;
+	background-position: 0px 3px;
+	cursor: crosshair;
+}
+
+.port.input, .port.input1, .port.input2 {
+	background-image: url('images/bg_port_input.png');
+}
+.port.input:hover, .port.input1:hover, .port.input2:hover {
+	background-position: 0px -14px;
+}
+
+.port.output, .port.output1, .port.output2 {
+	background-image: url('images/bg_port_output.png');
+}
+.port.output:hover, .port.output1:hover, .port.output2:hover {
+	background-position: 0px -14px;
+}
