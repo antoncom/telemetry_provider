@@ -3,6 +3,8 @@
 </template>
 
 <script type="text/babel">
+  // import store from '../../../../../store/index.js'
+  // import Vuex from 'vuex'
   export default {
     props: {
       type: {
@@ -22,6 +24,14 @@
         }
       }
     },
+//    watch: {
+//      'portStyle.left': function () {
+//        var figure = this.$parent
+//        var savedPort = new Map()
+//        savedPort.set(this.position, {x: this.portStyle.left, y: this.portStyle.top})
+//        this.$store.dispatch('addPort', {'figureId': figure.data.id, 'port': savedPort})
+//      }
+//    },
     created: function () {
       // Place port accordingly type of figure and type of the port
       if (this.$parent.data.type === 'bpmn.Activity') {

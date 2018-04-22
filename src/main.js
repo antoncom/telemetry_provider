@@ -15,6 +15,9 @@ import SideBar from './components/UIComponents/SidebarPlugin'
 // router setup
 import routes from './routes/routes'
 
+// store setup
+import store from './store/index.js'
+
 // library imports
 
 import './assets/sass/paper-dashboard.scss'
@@ -42,5 +45,6 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   render: h => h(App),
-  router
+  router,
+  store
 })
