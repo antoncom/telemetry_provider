@@ -12,11 +12,12 @@
       <div class="bpmn_activity_backlight" style="display:none;"></div>
       <div v-bind:class="acState.state" class="bpmn_activity_aditional_info" :style="showStatus">{{acState.part}}</div>
     </div>
-    <port v-for="pType in portTypes" :position="pType" :key="pType"></port>
+    <port v-for="pType in portTypes" v-if="showPorts" :position="pType" :key="pType"></port>
   </div>
 </template>
 
 <script type="text/babel">
+  import store from 'src/store/index.js'
   import Port from './Port.vue'
   export default {
     components: {
@@ -43,6 +44,11 @@
         },
         acType: 'simple_activity', // by default
         portTypes: ['input', 'input1', 'input2', 'output', 'output1', 'output2']
+      }
+    },
+    computed: {
+      showPorts: function () {
+        return store.state.role === 0
       }
     },
     created: function () {

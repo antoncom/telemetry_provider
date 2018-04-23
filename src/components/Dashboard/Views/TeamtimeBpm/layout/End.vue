@@ -2,12 +2,13 @@
 <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
   <div class="bpmn_end">
     <div class="bpmn_end_content">End</div>
-    <port v-for="pType in portTypes" :position="pType" :key="pType"></port>
+    <port v-for="pType in portTypes" v-if="showPorts" :position="pType" :key="pType"></port>
   </div>
 </div>
 </template>
 
 <script type="text/babel">
+  import store from 'src/store/index.js'
   import Port from './Port.vue'
   export default {
     components: {
@@ -32,6 +33,11 @@
           display: 'none'
         },
         portTypes: ['input', 'input1', 'input2']
+      }
+    },
+    computed: {
+      showPorts: function () {
+        return store.state.role === 0
       }
     },
     created: function () {

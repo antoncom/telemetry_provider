@@ -1,17 +1,17 @@
 <template>
-  <div v-bind:id="makeId()">{{data.source.name}}
-    <!--<line v-for="line in lines" properties="line.props" v-bind:key="line.id">OO</line>-->
+  <div v-bind:id="makeId()">
+    <connection-line v-for="(line, index) in lines" v-bind:properties="line" :key="makeId() + index"></connection-line>
     <!--<arrow data="arrowData"></arrow>-->
   </div>
 </template>
 
 <script type="text/babel">
-  import Line from './Line.vue'
+  import ConnectionLine from './ConnectionLine.vue'
   import store from 'src/store/index.js'
   // import Arrow from './Arrow.vue'
   export default {
     components: {
-      Line
+      ConnectionLine
     },
     props: {
       data: {
@@ -25,9 +25,10 @@
       }
     },
     created: function () {
+      console.log('LINE created')
+    },
+    mounted: function () {
       // populate lines array
-      // console.log('GLOB XY', store.getters.getPortXY('diagram', this.data.source.figureId, 'input'))
-      // let global = store.getters.getPortXY('diagram', this.data.source.figureId, 'input')
       var UP = 0
       var RIGHT = 1
       var DOWN = 2
@@ -54,20 +55,67 @@
       this.makePoints(fromPt, fromDir, toPt, toDir)
       console.log('POINTS', this.points)
     },
-    mounted: function () {
-    },
     computed: {
       lines: function () {
         // generate lines
-
+        var w = 2
+        var h = 2
+        var x = 0
+        var y = 0
+        var result = []
+        var vector = {length: 0, dir: 0}
+        var loops = this.points.length - 1
+        for (let i = 0; i < loops; i++) {
+          if (this.points[i].x === this.points[i + 1].x) {
+            vector = this.getVector(this.points[i].y, this.points[i + 1].y)
+            h = vector.length
+            w = 2
+            x = this.points[i].x
+            y = this.points[i + vector.dir].y
+          } else {
+            vector = this.getVector(this.points[i].x, this.points[i + 1].x)
+            w = vector.length
+            h = 2
+            x = this.points[i + vector.dir].x
+            y = this.points[i].y
+          }
+          result.push({
+            left: x + 'px',
+            top: y + 'px',
+            width: w + 'px',
+            height: h + 'px',
+            clip: 'rect(0, ' + w + 'px, ' + h + 'px, 0)'}
+          )
+        }
+        return result
       }
     },
     methods: {
       makeId: function () {
         return this.data.source.figureId + '_' + this.data.target.figureId
       },
-      addPoint: function (x, y) {
-        this.points.push({x: x, y: y})
+      addPoint: function (point) {
+        this.points.push(point)
+      },
+      getVector: function (a, b) {
+        var result = {length: 0, dir: 0}
+        if (a > b) {
+          result = {
+            length: a - b + 2,
+            dir: 1
+          }
+        } else if (b > a) {
+          result = {
+            length: b - a,
+            dir: 0
+          }
+        } else if (a === b) {
+          result = {
+            length: 2,
+            dir: 1
+          }
+        }
+        return result
       },
       makePoints: function (fromPt, fromDir, toPt, toDir) {
         var TOL = 0.1
@@ -83,7 +131,7 @@
         var point = {x: 0, y: 0}
         var dir = 0
         if (((xDiff * xDiff) < (TOLxTOL)) && ((yDiff * yDiff) < (TOLxTOL))) {
-          this.addPoint(toPt.x, toPt.y)
+          this.addPoint(toPt)
           return
         }
         if (fromDir === LEFT) {

@@ -10,7 +10,8 @@ const state = {
   columns: [],
   figures: new Map(),
   connections: [],
-  figureStatus: []
+  figureStatus: [],
+  role: 1
 }
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -40,23 +41,23 @@ export default new Vuex.Store({
       // get relative coordinates of the port
       if (figure.type === 'bpmn.Activity') {
         if (portType === 'input') {
-          result.x = -9
-          result.y = (figure.height / 2 - 9)
+          result.x = 0
+          result.y = (figure.height / 2)
         } else if (portType === 'input1') {
-          result.x = 11
-          result.y = -9
+          result.x = 20
+          result.y = 0
         } else if (portType === 'input2') {
-          result.x = 9
-          result.y = (figure.height - 9)
+          result.x = 20
+          result.y = (figure.height)
         } else if (portType === 'output') {
-          result.x = (figure.width - 9)
-          result.y = (figure.height / 2 - 9)
+          result.x = (figure.width)
+          result.y = (figure.height / 2)
         } else if (portType === 'output1') {
-          result.x = (figure.width - 29)
-          result.y = -9
+          result.x = (figure.width - 20)
+          result.y = 0
         } else if (portType === 'output2') {
-          result.x = (figure.width - 29)
-          result.y = (figure.height - 9)
+          result.x = (figure.width - 20)
+          result.y = (figure.height)
         }
       } else if (figure.type === 'bpmn.Message' ||
           figure.type === 'bpmn.Start' ||
@@ -65,28 +66,28 @@ export default new Vuex.Store({
           figure.type === 'bpmn.ConditionOR' ||
           figure.type === 'bpmn.ConditionAND') {
         if (portType === 'input') {
-          result.x = -9
-          result.y = (figure.height / 2 - 9)
+          result.x = 0
+          result.y = (figure.height / 2)
         } else if (portType === 'input1') {
-          result.x = (figure.width / 2 - 9)
-          result.y = -9
+          result.x = (figure.width / 2)
+          result.y = 0
         } else if (portType === 'output') {
-          result.x = (figure.width - 9)
-          result.y = (figure.height / 2 - 9)
+          result.x = (figure.width)
+          result.y = (figure.height / 2)
         } else if (portType === 'output2') {
-          result.x = (figure.width / 2 - 9)
-          result.y = (figure.height - 9)
+          result.x = (figure.width / 2)
+          result.y = (figure.height)
         }
       } else if (figure.type === 'bpmn.End') {
         if (portType === 'input') {
-          result.x = -9
-          result.y = (figure.height / 2 - 9)
+          result.x = 0
+          result.y = (figure.height / 2)
         } else if (portType === 'input1') {
-          result.x = (figure.width / 2 - 9)
-          result.y = -9
+          result.x = (figure.width / 2)
+          result.y = 0
         } else if (portType === 'input2') {
-          result.x = (figure.width / 2 - 9)
-          result.y = (figure.height - 9)
+          result.x = (figure.width / 2)
+          result.y = (figure.height)
         }
       }
       return result
