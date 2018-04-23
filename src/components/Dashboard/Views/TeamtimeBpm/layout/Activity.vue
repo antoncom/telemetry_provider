@@ -3,10 +3,12 @@
     <div class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
-        <div class="bpmn_activity_container">
-          <span class="bpmn_activity_content">{{data.text}}</span>
-          <span class="bpmn_activity_iefix">&nbsp;</span>
-        </div>
+        <a href="javascript:;" v-on:click="enablePorts">
+          <div class="bpmn_activity_container">
+            <span class="bpmn_activity_content">{{data.text}}</span>
+            <span class="bpmn_activity_iefix">&nbsp;</span>
+          </div>
+        </a>
       </div>
       <div class="bpmn_collapse_icon" v-bind:class="data.viewState"></div>
       <div class="bpmn_activity_backlight" style="display:none;"></div>
@@ -69,6 +71,12 @@
       else if (this.data.viewState === 'collapsed') this.acType = 'subprocess_collapsed_activity'
       else if (this.data.viewState === 'expanded') this.acType = 'subprocess_expanded_activity'
       else this.acType = 'simple_activity'
+    },
+    methods: {
+      enablePorts: function () {
+        if (store.state.role === 1) store.state.role = 0
+        else store.state.role = 1
+      }
     }
   }
 </script>
