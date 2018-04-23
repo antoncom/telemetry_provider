@@ -3,8 +3,7 @@
 </template>
 
 <script type="text/babel">
-  // import store from '../../../../../store/index.js'
-  // import Vuex from 'vuex'
+  import store from 'src/store/index.js'
   export default {
     props: {
       type: {
@@ -24,67 +23,70 @@
         }
       }
     },
-//    watch: {
-//      'portStyle.left': function () {
-//        var figure = this.$parent
-//        var savedPort = new Map()
-//        savedPort.set(this.position, {x: this.portStyle.left, y: this.portStyle.top})
-//        this.$store.dispatch('addPort', {'figureId': figure.data.id, 'port': savedPort})
-//      }
-//    },
+    computed: {
+      xy: function () {
+        var out = {x: 0, y: 0}
+        if (this.$parent.data.type === 'bpmn.Activity') {
+          if (this.position === 'input') {
+            out.x = -9
+            out.y = (this.$parent.h / 2 - 9)
+          } else if (this.position === 'input1') {
+            out.x = 11
+            out.y = -9
+          } else if (this.position === 'input2') {
+            out.x = 9
+            out.y = (this.$parent.h - 9)
+          } else if (this.position === 'output') {
+            out.x = (this.$parent.w - 9)
+            out.y = (this.$parent.h / 2 - 9)
+          } else if (this.position === 'output1') {
+            out.x = (this.$parent.w - 29)
+            out.y = -9
+          } else if (this.position === 'output2') {
+            out.x = (this.$parent.w - 29)
+            out.y = (this.$parent.h - 9)
+          }
+        } else if (this.$parent.data.type === 'bpmn.Message' ||
+                this.$parent.data.type === 'bpmn.Start' ||
+                this.$parent.data.type === 'bpmn.Timer' ||
+                this.$parent.data.type === 'bpmn.ConditionXOR' ||
+                this.$parent.data.type === 'bpmn.ConditionOR' ||
+                this.$parent.data.type === 'bpmn.ConditionAND') {
+          if (this.position === 'input') {
+            out.x = -9
+            out.y = (this.$parent.h / 2 - 9)
+          } else if (this.position === 'input1') {
+            out.x = (this.$parent.w / 2 - 9)
+            out.y = -9
+          } else if (this.position === 'output') {
+            out.x = (this.$parent.w - 9)
+            out.y = (this.$parent.h / 2 - 9)
+          } else if (this.position === 'output2') {
+            out.x = (this.$parent.w / 2 - 9)
+            out.y = (this.$parent.h - 9)
+          }
+        } else if (this.$parent.data.type === 'bpmn.End') {
+          if (this.position === 'input') {
+            out.x = -9
+            out.y = (this.$parent.h / 2 - 9)
+          } else if (this.position === 'input1') {
+            out.x = (this.$parent.w / 2 - 9)
+            out.y = -9
+          } else if (this.position === 'input2') {
+            out.x = (this.$parent.w / 2 - 9)
+            out.y = (this.$parent.h - 9)
+          }
+        }
+        return out
+      }
+    },
     created: function () {
       // Place port accordingly type of figure and type of the port
-      if (this.$parent.data.type === 'bpmn.Activity') {
-        if (this.position === 'input') {
-          this.portStyle.left = '-9px'
-          this.portStyle.top = (this.$parent.h / 2 - 9) + 'px'
-        } else if (this.position === 'input1') {
-          this.portStyle.left = '11px'
-          this.portStyle.top = '-9px'
-        } else if (this.position === 'input2') {
-          this.portStyle.left = '9px'
-          this.portStyle.top = (this.$parent.h - 9) + 'px'
-        } else if (this.position === 'output') {
-          this.portStyle.left = (this.$parent.w - 9) + 'px'
-          this.portStyle.top = (this.$parent.h / 2 - 9) + 'px'
-        } else if (this.position === 'output1') {
-          this.portStyle.left = (this.$parent.w - 29) + 'px'
-          this.portStyle.top = '-9px'
-        } else if (this.position === 'output2') {
-          this.portStyle.left = (this.$parent.w - 29) + 'px'
-          this.portStyle.top = (this.$parent.h - 9) + 'px'
-        }
-      } else if (this.$parent.data.type === 'bpmn.Message' ||
-              this.$parent.data.type === 'bpmn.Start' ||
-              this.$parent.data.type === 'bpmn.Timer' ||
-              this.$parent.data.type === 'bpmn.ConditionXOR' ||
-              this.$parent.data.type === 'bpmn.ConditionOR' ||
-              this.$parent.data.type === 'bpmn.ConditionAND') {
-        if (this.position === 'input') {
-          this.portStyle.left = '-9px'
-          this.portStyle.top = (this.$parent.h / 2 - 9) + 'px'
-        } else if (this.position === 'input1') {
-          this.portStyle.left = (this.$parent.w / 2 - 9) + 'px'
-          this.portStyle.top = '-9px'
-        } else if (this.position === 'output') {
-          this.portStyle.left = (this.$parent.w - 9) + 'px'
-          this.portStyle.top = (this.$parent.h / 2 - 9) + 'px'
-        } else if (this.position === 'output2') {
-          this.portStyle.left = (this.$parent.w / 2 - 9) + 'px'
-          this.portStyle.top = (this.$parent.h - 9) + 'px'
-        }
-      } else if (this.$parent.data.type === 'bpmn.End') {
-        if (this.position === 'input') {
-          this.portStyle.left = '-9px'
-          this.portStyle.top = (this.$parent.h / 2 - 9) + 'px'
-        } else if (this.position === 'input1') {
-          this.portStyle.left = (this.$parent.w / 2 - 9) + 'px'
-          this.portStyle.top = '-9px'
-        } else if (this.position === 'input2') {
-          this.portStyle.left = (this.$parent.w / 2 - 9) + 'px'
-          this.portStyle.top = (this.$parent.h - 9) + 'px'
-        }
-      }
+      this.portStyle.left = this.xy.x + 'px'
+      this.portStyle.top = this.xy.y + 'px'
+      // TODO
+      // To place ports on the figure based on Store data
+      console.log('FROM STORE', store.getters.getPortXY('diagram', 'input'))
     }
   }
 </script>

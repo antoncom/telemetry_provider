@@ -20,5 +20,20 @@ export default new Vuex.Store({
   mutations,
   actions,
   strict: debug,
-  plugins: debug ? [createLogger()] : []
+  plugins: debug ? [createLogger()] : [],
+  getters: {
+    getPortXY: (state) => (context = 'figure', type = 'input') => {
+      var out = {x: 0, y: 0}
+      // TODO
+      // Make X, Y of port according to context and type of port
+      if (context === 'figure') {
+        out.x = 1
+        out.y = 1
+      } else if (context === 'diagram') {
+        out.x = 2
+        out.y = 2
+      }
+      return out
+    }
+  }
 })
