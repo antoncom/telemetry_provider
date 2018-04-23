@@ -105,7 +105,7 @@
         return store.state.figures
       },
       connections: function () {
-        return store.state.conections
+        return store.state.connections
       },
       statuses: function () {
         return store.state.figureStatus
