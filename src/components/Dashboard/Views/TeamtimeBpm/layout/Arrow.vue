@@ -1,34 +1,24 @@
 <template>
-  <div v-for="arrLine in arrLines" class="arrow" v-bind:class="data.type" v-bind:style="data.position"></div>
+  <div class="arrow" v-bind:class="orientation" v-bind:style="position"></div>
 </template>
 
 <script type="text/babel">
   export default {
     props: {
-      data: {
+      position: {
         type: Object,
         default: {
-          type: {
-            type: String,
-            default: 'up-ward' // left-ward, top-ward, down-ward
-          },
-          position: {
-            type: Object,
-            default: {
-              left: '0px',
-              top: '0px'
-            }
-          }
+          left: '0px',
+          top: '0px'
         }
+      },
+      orientation: {
+        type: String,
+        default: 'input'
       }
     },
     data () {
-      return {
-        arrLines: new Map()
-      }
-    },
-    created: function () {
-
+      return {}
     }
   }
 </script>

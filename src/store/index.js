@@ -11,7 +11,8 @@ const state = {
   figures: new Map(),
   connections: [],
   figureStatus: [],
-  role: 1
+  isPortsEnabled: false,
+  isGridShown: false
 }
 
 const debug = process.env.NODE_ENV !== 'production'

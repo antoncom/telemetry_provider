@@ -1,13 +1,13 @@
 <template>
   <div id="processdiagram_contentpane">
-    <div id="SwimlanePanel-cols-container">
+    <div id="SwimlanePanel-cols-container" v-bind:style="swimlaneStyle">
       <template>
         <ul id="SwimlanePanel-cols">
           <li v-for="column in columns" class="ui-state-default parent_column ui-resizable" v-bind:id="column.id" v-bind:style="{width: column.size + 'px'}">
             <span class="ui-icon ui-icon-arrowthick-2-e-w"></span>
             <div class="title">{{column.title}}</div>
             <div class="ui-resizable-handle ui-resizable-e"></div>
-            <div class="vertical_line right_line" v-bind:style="{'left': column.size-1 + 'px', 'top': 10 + 'px'}"></div>
+            <div class="vertical_line right_line" v-bind:style="{'left': column.size-1 + 'px', 'top': 10 + 'px', 'height': height + 40 + 'px'}"></div>
             <div class="vertical_line left_line" style="left: -1px; top: 30px;"></div>
           </li>
         </ul>
@@ -25,13 +25,13 @@
               </div>
             </div>
             <div class="ui-resizable-handle ui-resizable-s"></div>
-            <div class="horizontal_line bottom_line" v-bind:style="{'top': row.size + 'px', 'left': 30 + 'px'}"></div>
+            <div class="horizontal_line bottom_line" v-bind:style="{'top': row.size + 'px', 'left': 30 + 'px', 'width': width + 'px'}"></div>
           </li>
         </ul>
       </template>
     </div>
-    <div id="SwimlanePanel-scrollarea">
-      <div id="SwimlanePanel-paintarea">
+    <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
+      <div id="SwimlanePanel-paintarea" v-bind:class="isGridShown" v-bind:style="swimlaneStyle">
         <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id"></start>
         <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id"></activity>
         <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id"></end>
@@ -69,8 +69,7 @@
         changedFigures: null, // array of changed figures
         workflow: null, // drawing area
         minRowHeight: 120,
-        minColumnWidth: 120,
-        ports: new Map() // all ports of the diagram
+        minColumnWidth: 120
       }
     },
     components: {
@@ -109,6 +108,37 @@
       },
       statuses: function () {
         return store.state.figureStatus
+      },
+      width: function () {
+        var w = 0
+        for (let col of this.columns) {
+          w += col.size
+        }
+        return w
+      },
+      height: function () {
+        var h = 0
+        for (let row of this.rows) {
+          h += row.size
+        }
+        return h
+      },
+      swimlaneStyle: function () {
+        let result = {
+          width: this.width + 'px',
+          height: this.height + 'px'
+        }
+        return result
+      },
+      isGridShown: function () {
+        var gridClass = ''
+        console.log('IS GRID SHOWN')
+        if (store.state.isGridShown === true) {
+          gridClass = 'hide-grid'
+        } else {
+          gridClass = 'show-grid'
+        }
+        return gridClass
       }
     },
     created () {

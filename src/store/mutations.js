@@ -11,6 +11,12 @@ export default {
   [types.LOAD_FIGURE_STATUS]: (state, commit) => {
     state.figureStatus = commit.payload
   },
+  [types.SHOW_PORTS]: (state, commit) => {
+    state.isPortsEnabled = commit.payload
+  },
+  [types.SHOW_GRID]: (state, commit) => {
+    state.isGridShown = commit
+  },
   [types.LOGIN]: (state, response) => {
 
   },

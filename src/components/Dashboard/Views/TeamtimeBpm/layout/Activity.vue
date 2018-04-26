@@ -19,6 +19,7 @@
 </template>
 
 <script type="text/babel">
+  import * as types from 'src/store/mutation-types.js'
   import store from 'src/store/index.js'
   import Port from './Port.vue'
   export default {
@@ -50,7 +51,7 @@
     },
     computed: {
       showPorts: function () {
-        return store.state.role === 0
+        return store.state.isPortsEnabled
       }
     },
     created: function () {
@@ -74,8 +75,10 @@
     },
     methods: {
       enablePorts: function () {
-        if (store.state.role === 1) store.state.role = 0
-        else store.state.role = 1
+        store.commit({
+          type: types.SHOW_PORTS,
+          payload: !store.state.isPortsEnabled
+        })
       }
     }
   }

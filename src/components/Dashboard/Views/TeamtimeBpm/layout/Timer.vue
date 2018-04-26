@@ -38,7 +38,7 @@
     },
     computed: {
       showPorts: function () {
-        return store.state.role === 0
+        return store.state.isPortsEnabled
       }
     },
     created: function () {

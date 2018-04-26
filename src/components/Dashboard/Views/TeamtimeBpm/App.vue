@@ -1,7 +1,9 @@
 <template>
-  <div class="container">
-    <ttbpm-sidebar :titles="titles"></ttbpm-sidebar>
-    <ttbpm-swimlane :credentials="credentials"></ttbpm-swimlane>
+  <div class="container-fluid">
+    <div class="row">
+      <ttbpm-sidebar :titles="titles"></ttbpm-sidebar>
+      <ttbpm-swimlane :credentials="credentials"></ttbpm-swimlane>
+    </div>
   </div>
 </template>
 
@@ -19,7 +21,7 @@
     data () {
       return {
         titles: {
-          'process_name': 'Диаграмма бизнес-процессов',
+          'process_name': 'Постановка дома на обследование',
           'total_plan_hours': '10',
           'total_fact_hours': '8'
         },

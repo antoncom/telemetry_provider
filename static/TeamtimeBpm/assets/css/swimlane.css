@@ -3,17 +3,15 @@
 #SwimlanePanel-rows-container {
   left: 0px;
   top: 32px;
-	height: 3840px;
-
-	position:absolute;
+  /*height: 3840px;*/
+  position:absolute;
 }
 
 #SwimlanePanel-cols-container {
   left: 32px;
   top: 0px;
-  width: 5760px;
-
-	position: absolute;
+  /*width: 5760px;*/
+  position: absolute;
 }
 
 #SwimlanePanel-rows {
@@ -46,8 +44,8 @@
   position:absolute;
   left: 34px;
   top: 34px;
-  width: 5760px;
-  height: 3840px;
+  /*width: 5760px;*/
+  /*height: 3840px;*/
 
   overflow:hidden;
   overflow-x:hidden;
@@ -57,10 +55,18 @@
 #SwimlanePanel-paintarea {
   left: 0px;
   top: 0px;
-  width: 5760px;
-  height: 3840px;
+  /*width: 5760px;*/
+  /*height: 3840px;*/
+  cursor: default;
+  position:absolute;
+}
 
-	position:absolute;
+#SwimlanePanel-paintarea.show-grid {
+	background: url("http://teamlog.teamtime.info/media/com_teamtimebpm/assets/js/draw2d/bpmn/resources/grid_10.png") transparent;
+}
+
+#SwimlanePanel-paintarea.hide-grid {
+	background: none;
 }
 
 #SwimlanePanel-rows li div {
@@ -88,10 +94,11 @@
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 
-	height: 3840px;
+	height: 100%;
 	border:none;
 	border-left: 2px solid;
 	border-color: #ccc;
+	z-index: 1;
 }
 
 .horizontal_line {
@@ -99,10 +106,11 @@
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 
-	width: 5760px;
+	width: 100%;
 	border:none;
 	border-top: 2px solid;
 	border-color: #ccc;
+	z-index: 1;
 }
 
 .active_cell {

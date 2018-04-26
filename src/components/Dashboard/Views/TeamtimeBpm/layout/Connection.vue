@@ -1,17 +1,18 @@
 <template>
   <div v-bind:id="makeId()">
     <connection-line v-for="(line, index) in lines" v-bind:properties="line" :key="makeId() + index"></connection-line>
-    <!--<arrow data="arrowData"></arrow>-->
+    <arrow :position="arrow.position" :orientation="arrow.orientation"></arrow>
   </div>
 </template>
 
 <script type="text/babel">
   import ConnectionLine from './ConnectionLine.vue'
   import store from 'src/store/index.js'
-  // import Arrow from './Arrow.vue'
+  import Arrow from './Arrow.vue'
   export default {
     components: {
-      ConnectionLine
+      ConnectionLine,
+      Arrow
     },
     props: {
       data: {
@@ -86,6 +87,35 @@
             height: h + 'px',
             clip: 'rect(0, ' + w + 'px, ' + h + 'px, 0)'}
           )
+        }
+        return result
+      },
+      arrow: function () {
+        let targetFigureId = this.data.target.figureId
+        let targetPortType = this.data.target.name
+        let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+        let shiftLeft = 0
+        let shiftTop = 0
+        let isPortsEnabled = store.state.isPortsEnabled
+
+        if (targetPortType === 'input') {
+          [shiftLeft, shiftTop] = [-9, -4]
+          if (isPortsEnabled) shiftLeft -= 3
+        }
+        if (targetPortType === 'input1') {
+          [shiftLeft, shiftTop] = [-4, -9]
+          if (isPortsEnabled) shiftTop -= 3
+        }
+        if (targetPortType === 'input2') {
+          [shiftLeft, shiftTop] = [9, -4]
+          if (isPortsEnabled) shiftTop = 3
+        }
+        var result = {
+          position: {
+            left: toPt.x + shiftLeft + 'px',
+            top: toPt.y + shiftTop + 'px'
+          },
+          orientation: targetPortType
         }
         return result
       }

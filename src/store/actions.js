@@ -5,6 +5,7 @@ import store from 'src/store/index.js'
 
 
 export const loadWorkflow = ({commit}, payload) => {
+  axios.defaults.timeout = 15000
   return new Promise((resolve, reject) => {
     let id = payload
     let apiDiagram = 'http://teamlog.teamtime.info/administrator/index.php?option=com_teamtimebpm&controller=process&task=loadDiagram&id=' + id + '&username=' + credentials.username + '&passwd=' + credentials.passwd

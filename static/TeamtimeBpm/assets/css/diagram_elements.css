@@ -371,8 +371,27 @@
 	background-position: 0px -14px;
 }
 
-.line, .arrow {
+.line {
 	position:absolute;
 	background-color:rgb(0,118,170);
 	overflow:hidden;
+	z-index: 2;
+}
+
+.arrow {
+	position:absolute;
+	overflow:hidden;
+	background-image: url('../images/bg_arrow.png');
+	background-repeat: no-repeat;
+	width: 9px;height: 9px;
+	display: block;
+}
+.arrow.input2 {
+	background-position: 0px -27px;
+}
+.arrow.input1 {
+	background-position: 0px -18px;
+}
+.arrow.input {
+	background-position: 0px 0px;
 }
