@@ -83,8 +83,10 @@
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
   // axios.defaults.baseURL = 'http://5ab289c362a6ae001408c272.mockapi.io/api/v1'
-  axios.defaults.baseURL = 'https://my.api.mockaroo.com'
+  // axios.defaults.baseURL = 'https://my.api.mockaroo.com'
+  axios.defaults.baseURL = 'https://heat.appix.ru/api'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = 'ADMIN_TEST'
   axios.defaults.withCredentials = false
 
   Vue.use(Table)
@@ -153,7 +155,8 @@
     },
     data () {
       return {
-        api_operators: '/operators?key=ddde2fd0',
+        // api_operators: '/operators?key=ddde2fd0',
+        api_operators: 'https://heat.appix.ru/api/operators?table=false',
         pagination: {
           perPage: 10,
           currentPage: 1,
