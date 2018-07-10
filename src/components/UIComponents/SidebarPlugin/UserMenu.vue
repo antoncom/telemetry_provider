@@ -21,7 +21,7 @@
               </a>
             </li>
             <li>
-              <a href="/#/login">
+              <a href="javascript:;" v-on:click.stop.prevent="logout">
                 <span class="sidebar-mini">В</span>
                 <span class="sidebar-normal">Выход</span>
               </a>
@@ -32,7 +32,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/babel">
   import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
   export default {
     components: {
@@ -44,6 +44,11 @@
       }
     },
     methods: {
+      logout () {
+        this.$store.dispatch('logout').then(() => {
+          this.$router.push('/login')
+        })
+      },
       toggleMenu () {
         this.isClosed = !this.isClosed
       }

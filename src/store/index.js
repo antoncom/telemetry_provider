@@ -12,7 +12,11 @@ const state = {
   connections: [],
   figureStatus: [],
   isPortsEnabled: false,
-  isGridShown: false
+  isGridShown: false,
+  userId: null,
+  userToken: '',
+  userType: '',
+  userAuthorized: false
 }
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -24,6 +28,15 @@ export default new Vuex.Store({
   strict: debug,
   plugins: debug ? [createLogger()] : [],
   getters: {
+    getUserId: (state) => {
+      return state.userId
+    },
+    getToken: (state) => {
+      return state.userToken
+    },
+    userAuthorized: state => {
+      return state.userAuthorized
+    },
     getPortLocalXY: (state) => (figureId, portType) => {
       var result = {x: 0, y: 0}
 

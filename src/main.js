@@ -36,9 +36,22 @@ Vue.use(VeeValidate)
 locale.use(lang)
 
 // configure router
-const router = new VueRouter({
+export const router = new VueRouter({
   routes, // short for routes: routes
   linkActiveClass: 'active'
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiredAuth) {
+    if (to.meta.roles.indexOf(store.state.userType) >= 0) {
+      next()
+    } else {
+      // router.push('/login')
+      router.push({name: 'Login', params: {from: to.path}})
+    }
+  } else {
+    next()
+  }
 })
 
 /* eslint-disable no-new */
@@ -48,3 +61,4 @@ new Vue({
   router,
   store
 })
+

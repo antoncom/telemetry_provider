@@ -12,16 +12,29 @@ export default [
   {
     name: 'Домовладельцы',
     icon: 'ti-gift',
-    path: '/provider/householders'
+    path: '/householders',
+    children: [
+      {
+        name: 'Список домовладельцев',
+        path: '/householders/list'
+      },
+      {
+        name: 'Добавить домовладельца',
+        path: '/householders/add'
+      }]
   },
   {
     name: 'Дома',
     icon: 'ti-gift',
-    path: '/provider/houses',
+    path: '/houses',
     children: [
       {
         name: 'Список домов',
-        path: '/provider/houses'
+        path: '/houses'
+      },
+      {
+        name: 'Добавить дом',
+        path: '/houses/add'
       },
       {
         name: 'Каточка дома',

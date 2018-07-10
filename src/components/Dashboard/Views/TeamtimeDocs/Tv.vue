@@ -1,12 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-12">
-      <h4 class="title">Операторы системы</h4>
-    </div>
     <div class="col-md-12 card">
-      <div class="card-header">
-        <div class="category">Список операторов, зарегистрированных в системе</div>
-      </div>
       <div class="card-content row">
         <div class="col-sm-6">
           <el-select
@@ -24,19 +18,20 @@
         </div>
         <div class="col-sm-6">
           <div class="pull-right">
-            <label>
-              <input type="search" class="form-control input-sm" placeholder="Search records" v-model="searchQuery" aria-controls="datatables">
-            </label>
+              <label>
+                <input type="search" class="form-control input-sm" placeholder="Search records" v-model="searchQuery" aria-controls="datatables">
+              </label>
+              <div style="color: darkgrey; font-size: 12px; margin-bottom: 15px;">Например: дельта, input, operator</div>
           </div>
         </div>
         <div class="col-sm-12">
           <el-table class="table-striped"
+                    :data="queriedData"
+                    border
                     v-loading="loading2"
                     element-loading-text="Ждите..."
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
-                    :data="queriedData"
-                    border
                     style="width: 100%">
             <el-table-column v-for="column in tableColumns"
                              sortable
@@ -50,7 +45,6 @@
                     fixed="right"
                     label="Actions">
               <template slot-scope="props">
-                <a class="btn btn-simple btn-xs btn-info btn-icon like" @click="handleLike(props.$index, props.row)"><i class="ti-heart"></i></a>
                 <a class="btn btn-simple btn-xs btn-warning btn-icon edit" @click="handleEdit(props.$index, props.row)"><i class="ti-pencil-alt"></i></a>
                 <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(props.$index, props.row)"><i class="ti-close"></i></a>
               </template>
@@ -58,7 +52,7 @@
           </el-table>
         </div>
         <div class="col-sm-6 pagination-info">
-          <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+          <p class="category">Показано с {{from + 1}} по {{to}} среди {{total}} записей</p>
         </div>
         <div class="col-sm-6">
           <p-pagination class="pull-right"
@@ -76,20 +70,15 @@
   import Vue from 'vue'
   import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
-  import store from 'src/store/index.js'
 
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
+
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
-  // axios.defaults.baseURL = 'http://5ab289c362a6ae001408c272.mockapi.io/api/v1'
   axios.defaults.baseURL = 'https://my.api.mockaroo.com'
-  // axios.defaults.baseURL = 'https://heat.appix.ru/api'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-  axios.defaults.headers.common['X-AUTH-TOKEN'] = 'ADMIN_TEST'
-  console.log('TOKEN', store.state.userToken)
-
   axios.defaults.withCredentials = false
 
   Vue.use(Table)
@@ -146,7 +135,7 @@
       }
     },
     created () {
-      axios.get(this.api_operators)
+      axios.get(this.api_tv)
               .then(response => {
                 this.loading2 = false
                 // JSON responses are automatically parsed.
@@ -158,45 +147,44 @@
     },
     data () {
       return {
-        // api_operators: '/operators?key=ddde2fd0',
-        api_operators: 'https://heat.appix.ru/api/operators?table=false',
+        api_tv: '/tv.json?key=ddde2fd0',
         pagination: {
-          perPage: 10,
+          perPage: 5,
           currentPage: 1,
           perPageOptions: [5, 10, 25, 50],
           total: 0
         },
         searchQuery: '',
-        propsToSearch: ['company', 'inn', 'location'],
+        propsToSearch: ['name', 'tag', 'space'],
         tableColumns: [
           {
-            prop: 'reg_date',
-            label: 'Регистрация',
+            prop: 'id',
+            label: 'ID',
+            minWidth: 40
+          },
+          {
+            prop: 'name',
+            label: 'Название переменной',
+            minWidth: 160
+          },
+          {
+            prop: 'tag',
+            label: 'Идентификатор',
+            minWidth: 120
+          },
+          {
+            prop: 'default_value',
+            label: 'По умолчанию',
             minWidth: 70
           },
+//          {
+//            prop: 'description',
+//            label: 'Описание',
+//            minWidth: 100
+//          },
           {
-            prop: 'inn',
-            label: 'ИНН',
-            minWidth: 60
-          },
-          {
-            prop: 'company',
-            label: 'Компания',
-            minWidth: 100
-          },
-          {
-            prop: 'location',
-            label: 'География',
-            minWidth: 100
-          },
-          {
-            prop: 'contracted',
-            label: 'Статус контракта',
-            minWidth: 80
-          },
-          {
-            prop: 'email',
-            label: 'Email',
+            prop: 'space',
+            label: 'Область видимости',
             minWidth: 120
           }
         ],
@@ -205,11 +193,8 @@
       }
     },
     methods: {
-      handleLike (index, row) {
-        alert(`Your want to like ${row.inn}`)
-      },
       handleEdit (index, row) {
-        alert(`Your want to edit ${row.inn}`)
+        alert(`Your want to edit ${row.tag}`)
       },
       handleDelete (index, row) {
         let indexToDelete = this.tableData.findIndex((tableRow) => tableRow.id === row.id)

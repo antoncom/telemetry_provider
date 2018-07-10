@@ -50,7 +50,6 @@
                     fixed="right"
                     label="Actions">
               <template slot-scope="props">
-                <a class="btn btn-simple btn-xs btn-info btn-icon like" @click="handleLike(props.$index, props.row)"><i class="ti-heart"></i></a>
                 <a class="btn btn-simple btn-xs btn-warning btn-icon edit" @click="handleEdit(props.$index, props.row)"><i class="ti-pencil-alt"></i></a>
                 <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(props.$index, props.row)"><i class="ti-close"></i></a>
               </template>
@@ -72,10 +71,15 @@
   </div>
 </template>
 <script type="text/babel">
-
+  import credentials from 'src/api/credentials.js'
   import Vue from 'vue'
   import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
+
+  import store from 'src/store/index.js'
+
+  // import routes from 'src/routes/routes'
+  import {router} from 'src/main'
 
   // Axios
   import axios from 'axios'
@@ -83,8 +87,7 @@
 
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
-  // axios.defaults.baseURL = 'http://5ab289c362a6ae001408c272.mockapi.io/api/v1'
-  axios.defaults.baseURL = 'https://my.api.mockaroo.com'
+  // axios.defaults.baseURL = 'https://my.api.mockaroo.com'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.withCredentials = false
 
@@ -142,7 +145,9 @@
       }
     },
     created () {
-      axios.get(this.api_operators)
+      this.api = credentials.appix_api + '/householders?org_id=' + store.getters.getUserId
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
+      axios.get(this.api)
               .then(response => {
                 this.loading2 = false
                 // JSON responses are automatically parsed.
@@ -154,7 +159,7 @@
     },
     data () {
       return {
-        api_operators: '/householders?key=ddde2fd0',
+        api: '',
         pagination: {
           perPage: 10,
           currentPage: 1,
@@ -162,42 +167,32 @@
           total: 0
         },
         searchQuery: '',
-        propsToSearch: ['company', 'inn', 'operator', 'location'],
+        propsToSearch: ['address', 'tin', 'name', 'email'],
         tableColumns: [
           {
-            prop: 'reg_date',
-            label: 'Регистрация',
+            prop: 'id',
+            label: 'ID',
             minWidth: 70
           },
           {
-            prop: 'inn',
+            prop: 'name',
+            label: 'Название домовладелеца',
+            minWidth: 200
+          },
+          {
+            prop: 'tin',
             label: 'ИНН',
-            minWidth: 60
+            minWidth: 200
           },
           {
-            prop: 'company',
-            label: 'Домовладелец',
-            minWidth: 100
-          },
-          {
-            prop: 'location',
-            label: 'География',
-            minWidth: 100
+            prop: 'address',
+            label: 'Адрес домовладельца',
+            minWidth: 300
           },
           {
             prop: 'email',
             label: 'Email',
             minWidth: 120
-          },
-          {
-            prop: 'houses',
-            label: 'Дома',
-            minWidth: 40
-          },
-          {
-            prop: 'operator',
-            label: 'Оператор',
-            minWidth: 100
           }
         ],
         tableData: [],
@@ -205,11 +200,8 @@
       }
     },
     methods: {
-      handleLike (index, row) {
-        alert(`Your want to like ${row.inn}`)
-      },
       handleEdit (index, row) {
-        alert(`Your want to edit ${row.inn}`)
+        router.push('/householders/edit/' + row.id)
       },
       handleDelete (index, row) {
         let indexToDelete = this.tableData.findIndex((tableRow) => tableRow.id === row.id)

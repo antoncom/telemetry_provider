@@ -35,19 +35,19 @@
           <div class="container">
             <div class="row">
               <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
-                <form method="#" action="#">
+                <form @submit.prevent="login({ username, password })">
                   <div class="card" data-background="color" data-color="blue">
                     <div class="card-header">
                       <h3 class="card-title">Вход в систему</h3>
                     </div>
                     <div class="card-content">
                       <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" placeholder="Введите емайл" class="form-control input-no-border">
+                        <label>Логин</label>
+                        <input type="text" v-model="username" v-on:focus="error=''" placeholder="Введите логин" class="form-control input-no-border">
                       </div>
                       <div class="form-group">
                         <label>Пароль</label>
-                        <input type="password" placeholder="Введите пароль" class="form-control input-no-border">
+                        <input type="password" v-model="password" v-on:focus="error=''" placeholder="Введите пароль" class="form-control input-no-border">
                       </div>
                     </div>
                     <div class="card-footer text-center">
@@ -61,6 +61,10 @@
                   </div>
                 </form>
               </div>
+            </div>
+            <div class="alert alert-danger" v-show="error">
+              <button type="button" class="close" v-on:click="error=''">×</button>
+              <span>{{ error }}</span>
             </div>
           </div>
         </div>
@@ -87,9 +91,22 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/babel">
   export default {
+    data () {
+      return {
+        error: '',
+        status: '',
+        username: 'user1',
+        password: 'pass1',
+        from: '/' // redirect after login to requested page
+      }
+    },
     methods: {
+      login () {
+        if (this.$router.history.pending !== null) this.from = this.$router.history.pending.path
+        this.$store.dispatch('login', this.$data)
+      },
       toggleNavbar () {
         document.body.classList.toggle('nav-open')
       },

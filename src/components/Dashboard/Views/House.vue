@@ -186,7 +186,7 @@
     data () {
       return {
         api_base_consumption: '/base_consumption?key=ddde2fd0',
-        showTabs: 4,
+        showTabs: 2,
         tabPosition: 'top',
         dialogImageUrl: '',
         dialogVisible: false,

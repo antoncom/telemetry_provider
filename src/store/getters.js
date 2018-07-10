@@ -19,3 +19,4 @@ export function getFigureStatus (state) {
   return state.figureStatus
 }
 */
+

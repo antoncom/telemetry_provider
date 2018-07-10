@@ -38,6 +38,9 @@
               <li>
                 <a href="/#/provider/house">Карточка дома</a>
               </li>
+              <li>
+                {{ userAuthorized }}
+              </li>
               <!--<li>
                 <a href="/#/provider/techproc">Визуализация бизнес-процессов</a>
               </li>-->
@@ -58,6 +61,11 @@
     },
     mounted: function () {
       this.links = sidebarLinks
+    },
+    computed: {
+      userAuthorized () {
+        return this.$store.state.userAuthorized
+      }
     }
   }
 </script>
