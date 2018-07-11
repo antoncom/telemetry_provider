@@ -8,7 +8,10 @@ import Login from 'src/components/Dashboard/Views/Pages/Login.vue'
 import Register from 'src/components/Dashboard/Views/Pages/Register.vue'
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
 import Lock from 'src/components/Dashboard/Views/Pages/Lock.vue'
-import Operators from 'src/components/Dashboard/Views/Operators.vue'
+
+import Operators from 'src/components/Dashboard/Views/provider/Operators.vue'
+import AddOperator from 'src/components/Dashboard/Views/provider/AddOperator.vue'
+import EditOperator from 'src/components/Dashboard/Views/provider/EditOperator.vue'
 
 import HouseHolders from 'src/components/Dashboard/Views/operator/HouseHolders.vue'
 import AddHouseholder from 'src/components/Dashboard/Views/operator/AddHouseholder.vue'
@@ -95,13 +98,43 @@ const routes = [
         }
       },
       {
-        path: '/provider/operators',
+        path: '/operators',
         name: 'Операторы',
         component: Operators,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator', 'householder'],
+          roles: ['provider'],
           breadcrumbs: false
+        }
+      },
+      {
+        path: '/operators/list',
+        name: 'Список оператороа',
+        component: Operators,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider'],
+          breadcrumbs: false
+        }
+      },
+      {
+        path: '/operators/add',
+        name: 'Добавить оператора',
+        component: AddOperator,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider'],
+          breadcrumbs: true
+        }
+      },
+      {
+        path: '/operators/edit/:id',
+        name: 'Редактировать оператора',
+        component: EditOperator,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider'],
+          breadcrumbs: true
         }
       },
       {
@@ -175,7 +208,7 @@ const routes = [
         }
       },
       {
-        path: '/houses/edit',
+        path: '/houses/edit/:id',
         name: 'Редактировать дом',
         component: EditHouse,
         meta: {

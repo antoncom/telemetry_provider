@@ -3,13 +3,13 @@
     <form class="form-horizontal">
       <div class="card-header">
         <h4 class="card-title">
-          Заполните данные домовладельца:
+          Заполните данные оператора:
         </h4>
       </div>
       <div class="card-content">
         <fieldset>
           <div class="form-group">
-          <label class="col-sm-2 control-label">Название домовладельца</label>
+          <label class="col-sm-2 control-label">Название оператора</label>
           <div class="col-sm-6">
             <input type="text"
                name="name"
@@ -66,7 +66,7 @@
         </fieldset>
         <fieldset>
           <div class="form-group">
-          <label class="col-sm-2 control-label">Адрес домовладельца</label>
+          <label class="col-sm-2 control-label">Адрес оператора</label>
           <div class="col-sm-6">
             <input type="url"
                name="url"
@@ -144,7 +144,7 @@
         </div>
       </div>
       <div class="card-footer text-center">
-        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Сохранить домовладельца</button>
+        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Сохранить оператора</button>
       </div>
     </form>
   </div>
@@ -166,11 +166,11 @@
     data () {
       return {
         model: {
-          name: 'Домовладелец №100',
-          email: 'd100@mail.ru',
-          tin: '121503842042',
-          address: '424032, г. Йошкар-Ола, ул. Мира, д.8',
-          username: 'hh101',
+          name: 'Оператор №1',
+          email: 'op1@mail.ru',
+          tin: '121603842042',
+          address: '424000, г. Йошкар-Ола, ул. Петрова, д.8',
+          username: 'op1',
           password: '',
           confirmedPassword: '',
           generate_password: true,
@@ -210,14 +210,7 @@
           generate_password: {
             required: false
           }
-        },
-        // password generator
-        size: '8',
-        characters: 'a-z,A-Z,0-9,#',
-        placeholder: 'Password',
-        auto: [String, Boolean],
-        value: '',
-        generatedPassword: ''
+        }
       }
     },
     methods: {
@@ -226,13 +219,11 @@
       },
       validate () {
         this.$validator.validateAll().then(isValid => {
-          console.log('== VALIDATED ==')
-          // this.$emit('on-submit', this.registerForm, isValid)
-          this.addHouseholder()
+          this.addOperator()
         })
       },
-      addHouseholder () {
-        this.$store.dispatch('addHouseholder', this.$data.model)
+      addOperator () {
+        this.$store.dispatch('addOperator', this.$data.model)
       }
     }
   }

@@ -1,14 +1,14 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <h4 class="title">Дома</h4>
+      <h4 class="title">Операторы системы</h4>
     </div>
     <div class="col-md-12 card">
       <div class="card-header">
-        <div class="category">Список домов, зарегистрированных в системе</div>
+        <div class="category">Список операторов, зарегистрированных в системе</div>
       </div>
       <div class="card-content row">
-        <div class="col-sm-2">
+        <div class="col-sm-6">
           <el-select
                   class="select-default"
                   v-model="pagination.perPage"
@@ -23,27 +23,6 @@
           </el-select>
         </div>
         <div class="col-sm-6">
-          <el-select
-                  clearable
-                  class="select-default"
-                  v-model="householder"
-                  v-on:change="handleFilter"
-                  placeholder="Выберите домовладельца">
-            <el-option
-                    class="select-default"
-                    label="- Все домовладельцы -"
-                    value="">
-            </el-option>
-            <el-option
-                    class="select-default"
-                    v-for="item in householders"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="col-sm-4">
           <div class="pull-right">
             <label>
               <input type="search" class="form-control input-sm" placeholder="Search records" v-model="searchQuery" aria-controls="datatables">
@@ -52,6 +31,7 @@
         </div>
         <div class="col-sm-12">
           <el-table class="table-striped"
+                    ref="householders"
                     :data="queriedData"
                     border
                     v-loading="loading2"
@@ -88,7 +68,7 @@
           </p-pagination>
         </div>
         <div class="col-sm-12 text-center">
-          <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Добавить дом</button>
+          <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Добавить оператора</button>
         </div>
       </div>
     </div>
@@ -101,6 +81,8 @@
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
   import store from 'src/store/index.js'
+
+  // import routes from 'src/routes/routes'
   import {router} from 'src/main'
 
   // Axios
@@ -126,9 +108,6 @@
     computed: {
       pagedData () {
         return this.tableData.slice(this.from, this.to)
-      },
-      householders () {
-        return store.state.householders
       },
       /***
        * Searches through table data and returns a paginated array.
@@ -168,13 +147,9 @@
         this.pagination.total = this.tableData.length
         return this.tableData.length
       }
-//      org_id () {
-//        return this.houseHolderId
-//      }
     },
     created () {
-      this.model.org_id = store.getters.getUserId
-      this.api = credentials.appix_api + '/houses?org_id=' + this.householder // store.getters.getUserId
+      this.api = credentials.appix_api + '/operators'
       axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
       axios.get(this.api)
               .then(response => {
@@ -185,16 +160,9 @@
               .catch(e => {
                 this.errors.push(e)
               })
-      this.$store.dispatch('listHouseholders', this.$data.model)
     },
     data () {
       return {
-        householder: '',
-//        houseHolderId: '',
-        model: {
-          error: '',
-          org_id: ''
-        },
         api: '',
         pagination: {
           perPage: 10,
@@ -203,7 +171,7 @@
           total: 0
         },
         searchQuery: '',
-        propsToSearch: ['address'],
+        propsToSearch: ['address', 'tin', 'name', 'email'],
         tableColumns: [
           {
             prop: 'id',
@@ -211,9 +179,24 @@
             minWidth: 70
           },
           {
+            prop: 'name',
+            label: 'Название оператора',
+            minWidth: 200
+          },
+          {
+            prop: 'tin',
+            label: 'ИНН',
+            minWidth: 200
+          },
+          {
             prop: 'address',
-            label: 'Адрес дома',
-            minWidth: 400
+            label: 'Адрес оператора',
+            minWidth: 300
+          },
+          {
+            prop: 'email',
+            label: 'Email',
+            minWidth: 120
           }
         ],
         tableData: [],
@@ -221,29 +204,16 @@
       }
     },
     methods: {
-      handleFilter () {
-        this.api = credentials.appix_api + '/houses?org_id=' + this.householder // store.getters.getUserId
-        axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
-        axios.get(this.api)
-                .then(response => {
-                  this.loading2 = false
-                  // JSON responses are automatically parsed.
-                  this.tableData = response.data
-                })
-                .catch(e => {
-                  this.errors.push(e)
-                })
-      },
       handleEdit (index, row) {
-        router.push('/houses/edit/' + row.id)
+        router.push('/operators/edit/' + row.id)
       },
       gotoAdd () {
-        router.push('/houses/add')
+        router.push('/operators/add')
       },
       handleDelete (index, row) {
         Vue.swal({
           title: 'Вы уверены?',
-          html: 'После удаления данные дома будут потеряны: <strong>' + row.address + '</strong>',
+          html: 'После удаления данные оператора будут потеряны: <strong>' + row.name + '</strong>',
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -251,7 +221,7 @@
           confirmButtonText: 'Да, удалить!'
         }).then((result) => {
           if (result.value) {
-            this.$store.dispatch('deleteHouse', { row: row, table: this.tableData })
+            this.$store.dispatch('deleteOperator', { row: row, table: this.tableData })
           }
         })
       }

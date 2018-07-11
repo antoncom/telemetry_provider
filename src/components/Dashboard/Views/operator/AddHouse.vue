@@ -9,6 +9,29 @@
       <div class="card-content">
         <fieldset>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Выберите домовладельца</label>
+            <div class="col-sm-6">
+              <el-select
+                      clearable
+                      class="select-default"
+                      v-model="model.householder"
+                      placeholder="Выберите домовладельца">
+                <el-option
+                        class="select-default"
+                        v-for="item in householders"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
+            <div class="col-sm-4">
+              <code></code>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div class="form-group">
           <label class="col-sm-2 control-label">Адрес дома</label>
           <div class="col-sm-6">
             <input type="url"
@@ -31,7 +54,7 @@
         </div>
       </div>
       <div class="card-footer text-center">
-        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Добавить дом</button>
+        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Сохранить дом</button>
       </div>
     </form>
   </div>
@@ -41,6 +64,8 @@
   import VeeValidate, { mapFields, Validator } from 'vee-validate'
   import ru from 'vee-validate/dist/locale/ru'
 
+  import store from 'src/store/index.js'
+
   // Localize takes the locale object as the second argument (optional) and merges it.
   Validator.localize('ru', ru)
   // Install the Plugin.
@@ -48,18 +73,29 @@
 
   export default {
     computed: {
-      ...mapFields(['address'])
+      ...mapFields(['address']),
+      householders () {
+        return store.state.householders
+      }
+    },
+    created () {
+      this.$store.dispatch('listHouseholders', this.$data.model)
     },
     data () {
       return {
         model: {
           address: '424032, г. Йошкар-Ола, ул. Мира, д.8',
           error: '',
-          status: ''
+          status: '',
+          org_id: '',
+          householder: ''
         },
         modelValidations: {
           address: {
-            required: false
+            required: true
+          },
+          householder: {
+            required: true
           }
         }
       }
@@ -73,7 +109,8 @@
           this.addHouse()
         })
       },
-      addHouseholder () {
+      addHouse () {
+        console.log('MODEL', this.$data.model)
         this.$store.dispatch('addHouse', this.$data.model)
       }
     }

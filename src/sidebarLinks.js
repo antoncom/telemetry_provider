@@ -7,7 +7,16 @@ export default [
   {
     name: 'Операторы',
     icon: 'ti-gift',
-    path: '/provider/operators'
+    path: '/operators',
+    children: [
+      {
+        name: 'Список операторов',
+        path: '/operators/list'
+      },
+      {
+        name: 'Добавить оператора',
+        path: '/operators/add'
+      }]
   },
   {
     name: 'Домовладельцы',
@@ -35,11 +44,11 @@ export default [
       {
         name: 'Добавить дом',
         path: '/houses/add'
-      },
-      {
+      }]
+/*      {
         name: 'Каточка дома',
         path: '/provider/house'
-      }]
+      } */
   },
   {
     name: 'Сообщения',

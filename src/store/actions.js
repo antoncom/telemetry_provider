@@ -8,7 +8,9 @@ import store from 'src/store/index.js'
 // import routes from 'src/routes/routes'
 import {router} from 'src/main'
 
+import VueSweetalert2 from 'vue-sweetalert2'
 
+Vue.use(VueSweetalert2)
 Vue.use(VueAxios, axios)
 
 export const login = ({commit}, payload) => {
@@ -56,6 +58,173 @@ export const logout = ({commit}, payload) => {
   })
 }
 
+export const listOperators = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.get(credentials.appix_api + '/operators').then(response => {
+    if (Object.prototype.toString.call(response.data) === '[object Array]') {
+      commit({
+        type: types.LIST_OPERATORS,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const getOperator = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.get(credentials.appix_api + '/operators/' + payload.id).then(response => {
+    if (response.data.id > 0) {
+      commit({
+        type: types.GET_OPERATOR,
+        payload: response.data
+      })
+      // populate the form fields
+      payload.name = response.data.name
+      payload.tin = response.data.tin
+      payload.email = response.data.email
+      payload.username = response.data.username
+      payload.address = response.data.address
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const addOperator = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  let data = new FormData()
+  data.append('org_id', store.getters.getUserId)
+  data.append('name', payload.name)
+  data.append('email', payload.email)
+  data.append('tin', payload.tin)
+  data.append('address', payload.address)
+  data.append('username', payload.username)
+  data.append('password', payload.password)
+  data.append('generate_password', payload.generate_password)
+
+  axios.post(credentials.appix_api + '/operators', data).then(response => {
+    if (response.data.status === 'ok') {
+      commit({
+        type: types.ADD_OPERATOR,
+        payload: response.data
+      })
+      if (response.data.status === 'ok') {
+        router.push('/operators/list')
+      }
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const editOperator = ({commit}, payload) => {
+  axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  var qs = require('qs')
+  axios.put(credentials.appix_api + '/operators/' + payload.id, qs.stringify(payload)).then(response => {
+    if (response.data.status === 'ok') {
+      commit({
+        type: types.EDIT_OPERATOR,
+        payload: response.data
+      })
+      if (response.data.status === 'ok') {
+        router.push('/operators/list')
+      }
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const deleteOperator = ({commit}, payload) => {
+  axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.delete(credentials.appix_api + '/operators/' + payload.row.id).then(response => {
+    if (response.data.status === 'ok') {
+      Vue.swal({
+        title: 'Удалено!',
+        html: 'Оператор удалён из системы: <strong>' + payload.row.name + '</strong>',
+        type: 'success',
+        timer: 3000
+      })
+      let indexToDelete = payload.table.findIndex((tableRow) => tableRow.id === payload.row.id)
+      if (indexToDelete >= 0) {
+        payload.table.splice(indexToDelete, 1)
+      }
+      commit({
+        type: types.DELETE_OPERATOR,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+// --------------------------------------
+
+export const listHouseholders = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.get(credentials.appix_api + '/householders?org_id=' + payload.org_id).then(response => {
+    if (Object.prototype.toString.call(response.data) === '[object Array]') {
+      commit({
+        type: types.LIST_HOUSEHOLDERS,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
 export const getHouseholder = ({commit}, payload) => {
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
@@ -78,6 +247,9 @@ export const getHouseholder = ({commit}, payload) => {
     }
   }).catch(e => {
     payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
   })
 }
 
@@ -110,25 +282,19 @@ export const addHouseholder = ({commit}, payload) => {
     }
   }).catch(e => {
     payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
   })
 }
 
 export const editHouseholder = ({commit}, payload) => {
-  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
   axios.defaults.withCredentials = false
 
-  let data = new FormData()
-  data.append('id', payload.id)
-  data.append('name', payload.name)
-  data.append('email', payload.email)
-  data.append('tin', payload.tin)
-  data.append('address', payload.address)
-  data.append('username', payload.username)
-  data.append('password', payload.password)
-  data.append('generate_password', payload.generate_password)
-
-  axios.put(credentials.appix_api + '/householders/' + payload.id, data).then(response => {
+  var qs = require('qs')
+  axios.put(credentials.appix_api + '/householders/' + payload.id, qs.stringify(payload)).then(response => {
     if (response.data.status === 'ok') {
       commit({
         type: types.EDIT_HOUSEHOLDER,
@@ -142,6 +308,41 @@ export const editHouseholder = ({commit}, payload) => {
     }
   }).catch(e => {
     payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const deleteHouseholder = ({commit}, payload) => {
+  axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.delete(credentials.appix_api + '/householders/' + payload.row.id).then(response => {
+    if (response.data.status === 'ok') {
+      Vue.swal({
+        title: 'Удалено!',
+        html: 'Домовладелец удалён из системы: <strong>' + payload.row.name + '</strong>',
+        type: 'success',
+        timer: 3000
+      })
+      let indexToDelete = payload.table.findIndex((tableRow) => tableRow.id === payload.row.id)
+      if (indexToDelete >= 0) {
+        payload.table.splice(indexToDelete, 1)
+      }
+      commit({
+        type: types.DELETE_HOUSEHOLDER,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
   })
 }
 
@@ -151,7 +352,7 @@ export const addHouse = ({commit}, payload) => {
   axios.defaults.withCredentials = false
 
   let data = new FormData()
-  data.append('org_id', store.getters.getUserId)
+  data.append('org_id', payload.householder)
   data.append('address', payload.address)
 
   axios.post(credentials.appix_api + '/houses', data).then(response => {
@@ -168,6 +369,91 @@ export const addHouse = ({commit}, payload) => {
     }
   }).catch(e => {
     payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const editHouse = ({commit}, payload) => {
+  axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  var qs = require('qs')
+  axios.put(credentials.appix_api + '/houses/' + payload.id, qs.stringify(payload)).then(response => {
+    if (response.data.status === 'ok') {
+      commit({
+        type: types.EDIT_HOUSE,
+        payload: response.data
+      })
+      if (response.data.status === 'ok') {
+        router.push('/houses/list')
+      }
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const getHouse = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.get(credentials.appix_api + '/houses/' + payload.id).then(response => {
+    if (response.data.id > 0) {
+      commit({
+        type: types.GET_HOUSE,
+        payload: response.data
+      })
+      // populate the form fields
+      payload.address = response.data.address
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const deleteHouse = ({commit}, payload) => {
+  axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.delete(credentials.appix_api + '/houses/' + payload.row.id).then(response => {
+    if (response.data.status === 'ok') {
+      Vue.swal({
+        title: 'Удалено!',
+        html: 'Дом удалён из системы: <strong>' + payload.row.address + '</strong>',
+        type: 'success',
+        timer: 3000
+      })
+      let indexToDelete = payload.table.findIndex((tableRow) => tableRow.id === payload.row.id)
+      if (indexToDelete >= 0) {
+        payload.table.splice(indexToDelete, 1)
+      }
+      commit({
+        type: types.DELETE_HOUSE,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
   })
 }
 

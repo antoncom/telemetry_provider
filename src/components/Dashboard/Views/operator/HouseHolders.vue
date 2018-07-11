@@ -31,6 +31,7 @@
         </div>
         <div class="col-sm-12">
           <el-table class="table-striped"
+                    ref="householders"
                     :data="queriedData"
                     border
                     v-loading="loading2"
@@ -65,6 +66,9 @@
                         :per-page="pagination.perPage"
                         :total="pagination.total">
           </p-pagination>
+        </div>
+        <div class="col-sm-12 text-center">
+          <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Добавить домовладельца</button>
         </div>
       </div>
     </div>
@@ -203,14 +207,30 @@
       handleEdit (index, row) {
         router.push('/householders/edit/' + row.id)
       },
+      gotoAdd () {
+        router.push('/householders/add')
+      },
       handleDelete (index, row) {
-        let indexToDelete = this.tableData.findIndex((tableRow) => tableRow.id === row.id)
-        if (indexToDelete >= 0) {
-          this.tableData.splice(indexToDelete, 1)
-        }
+        Vue.swal({
+          title: 'Вы уверены?',
+          html: 'После удаления данные домовладельца будут потеряны: <strong>' + row.name + '</strong>',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Да, удалить!'
+        }).then((result) => {
+          if (result.value) {
+            this.$store.dispatch('deleteHouseholder', { row: row, table: this.tableData })
+            // this.$refs.householders.doLayout()
+          }
+        })
       }
     }
   }
 </script>
 <style>
+  .swal2-icon.swal2-warning {
+    font-size: 21px;
+  }
 </style>

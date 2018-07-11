@@ -9,20 +9,20 @@
       <div class="card-content">
         <fieldset>
           <div class="form-group">
-          <label class="col-sm-2 control-label">Адрес дома</label>
-          <div class="col-sm-6">
-            <input type="url"
-               name="url"
-               v-validate="modelValidations.address"
-               v-model="model.address"
-               class="form-control">
-            <small class="text-danger" v-show="address.invalid">
-              {{ getError('address') }}
-            </small>
-          </div>
-          <div class="col-sm-4">
-            <code></code>
-          </div>
+            <label class="col-sm-2 control-label">Адрес дома</label>
+            <div class="col-sm-6">
+              <input type="url"
+                     name="url"
+                     v-validate="modelValidations.address"
+                     v-model="model.address"
+                     class="form-control">
+              <small class="text-danger" v-show="address.invalid">
+                {{ getError('address') }}
+              </small>
+            </div>
+            <div class="col-sm-4">
+              <code></code>
+            </div>
           </div>
         </fieldset>
         <div class="alert alert-danger" v-show="model.error">
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="card-footer text-center">
-        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Добавить дом</button>
+        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Сохранить дом</button>
       </div>
     </form>
   </div>
@@ -50,16 +50,20 @@
     computed: {
       ...mapFields(['address'])
     },
+    mounted () {
+      this.$data.model.id = this.$route.params.id
+      this.$store.dispatch('getHouse', this.$data.model)
+    },
     data () {
       return {
         model: {
-          address: '424032, г. Йошкар-Ола, ул. Мира, д.8',
+          address: '',
           error: '',
           status: ''
         },
         modelValidations: {
           address: {
-            required: false
+            required: true
           }
         }
       }
@@ -70,11 +74,11 @@
       },
       validate () {
         this.$validator.validateAll().then(isValid => {
-          this.addHouse()
+          this.editHouse()
         })
       },
-      addHouseholder () {
-        this.$store.dispatch('addHouse', this.$data.model)
+      editHouse () {
+        this.$store.dispatch('editHouse', this.$data.model)
       }
     }
   }
