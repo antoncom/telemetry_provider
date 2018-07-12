@@ -11,16 +11,17 @@
           <p>Предварительная структура разделов сайта:</p>
           <ul>
             <li v-for="(link, index) in links">
-              <a v-bind:href="'/#'+link.path">{{link.name}}</a>
+              <!--<a v-bind:href="'/#'+link.path">{{link.name}}</a>-->
+              <router-link v-bind:to="link.path">{{link.name}}</router-link>
             </li>
           </ul>
           <br />
           <h6>Служебные страницы:</h6>
           <ul>
-            <li><a href="/#/login">Login</a></li>
-            <li><a href="/#/register">Регистрация</a></li>
-            <li><a href="/#/provider/user">Мой профайл</a></li>
-            <li><a href="/#/lock">Блокировка экрана</a></li>
+            <li><router-link to="/login">Login</router-link></li>
+            <li><router-link to="/register">Регистрация</router-link></li>
+            <li><router-link to="/profile">Мой профайл</router-link></li>
+            <li><router-link to="/lock">Блокировка экрана</router-link></li>
           </ul>
         </div>
         <div class="card-content row"></div>
@@ -35,12 +36,6 @@
           <div class="col-md-12">
             <p>Сейчас в работе:</p>
             <ul>
-              <li>
-                <a href="/#/provider/house">Карточка дома</a>
-              </li>
-              <li>
-                {{ userAuthorized }}
-              </li>
               <!--<li>
                 <a href="/#/provider/techproc">Визуализация бизнес-процессов</a>
               </li>-->

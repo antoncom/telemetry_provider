@@ -457,6 +457,168 @@ export const deleteHouse = ({commit}, payload) => {
   })
 }
 
+export const listHouses = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.get(credentials.appix_api + '/houses?org_id=' + payload.org_id).then(response => {
+    if (Object.prototype.toString.call(response.data) === '[object Array]') {
+      commit({
+        type: types.LIST_HOUSES,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+// ---------------------- EQUIPMENT -------------------------------
+
+export const addEquipment = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  let data = new FormData()
+  data.append('house_id', payload.house_id)
+  data.append('address', payload.address)
+  data.append('line1', payload.line1)
+  data.append('line2', payload.line2)
+  data.append('line1_name', payload.line1_name)
+  data.append('line2_name', payload.line2_name)
+
+
+  axios.post(credentials.appix_api + '/equipment', data).then(response => {
+    if (response.data.status === 'ok') {
+      commit({
+        type: types.ADD_EQUIPMENT,
+        payload: response.data
+      })
+      if (response.data.status === 'ok') {
+        router.push('/equipment/list')
+      }
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const editEquipment = ({commit}, payload) => {
+  axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  var qs = require('qs')
+  axios.put(credentials.appix_api + '/equipment/' + payload.id, qs.stringify(payload)).then(response => {
+    if (response.data.status === 'ok') {
+      commit({
+        type: types.EDIT_EQUIPMENT,
+        payload: response.data
+      })
+      if (response.data.status === 'ok') {
+        router.push('/equipment/list')
+      }
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const getEquipment = ({commit}, payload) => {
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  axios.get(credentials.appix_api + '/equipment/' + payload.id).then(response => {
+    if (response.data.id > 0) {
+      commit({
+        type: types.GET_EQUIPMENT,
+        payload: response.data
+      })
+      // populate the form fields
+      payload.id = response.data.id
+      payload.address = response.data.address
+      payload.line1_name = response.data.line1_name
+      payload.line2_name = response.data.line2_name
+      payload.line1 = (response.data.line1 === 1)
+      payload.line2 = (response.data.line2 === 1)
+      console.log('PRIBOR', payload)
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
+export const unbindEquipment = ({commit}, payload) => {
+  axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+  axios.defaults.withCredentials = false
+
+  // var qs = require('qs')
+  // let payload2 = payload
+  // payload2.line1 = (payload2.line1) ? 1 : 0
+  // payload2.line2 = (payload2.line2) ? 1 : 0
+  // console.log('SSS', qs.stringify(payload2))
+  // axios.delete(credentials.appix_api + '/equipment/' + payload.id, qs.stringify(payload2)).then(response => {
+  axios.delete(credentials.appix_api + '/equipment/' + payload.id + '?line1=' + !payload.line1 + '&line2=' + !payload.line2).then(response => {
+    if (response.data.status === 'ok') {
+      let lineText = ''
+      let lineOtviaz = ''
+      if (payload.line1 && payload.line2) {
+        lineText = 'Линии 1 и 2'
+        lineOtviaz = ' отвязаны от дома '
+      }
+      if (payload.line1 && !payload.line2) {
+        lineText = 'Линия 1'
+        lineOtviaz = ' отвязана от дома '
+      }
+      if (!payload.line1 && payload.line2) {
+        lineText = 'Линия 2'
+        lineOtviaz = ' отвязана от дома '
+      }
+      lineText += ' прибора ID: ' + payload.id + lineOtviaz + payload.house_address
+      Vue.swal({
+        title: 'Отвязано!',
+        html: lineText,
+        type: 'success'
+      })
+      commit({
+        type: types.UNBIND_EQUIPMENT,
+        payload: response.data
+      })
+    } else if (response.data.status === 'error') {
+      payload.error = response.data.message
+    }
+  }).catch(e => {
+    payload.error = e.message
+    if (payload.code === 401) {
+      router.push('/login')
+    }
+  })
+}
+
 export const loadWorkflow = ({commit}, payload) => {
   axios.defaults.timeout = 15000
   return new Promise((resolve, reject) => {

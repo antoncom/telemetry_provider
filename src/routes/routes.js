@@ -20,8 +20,13 @@ import EditHouseholder from 'src/components/Dashboard/Views/operator/EditHouseho
 import Houses from 'src/components/Dashboard/Views/operator/Houses.vue'
 import AddHouse from 'src/components/Dashboard/Views/operator/AddHouse.vue'
 import EditHouse from 'src/components/Dashboard/Views/operator/EditHouse.vue'
-
 import House from 'src/components/Dashboard/Views/House.vue'
+
+import Equipment from 'src/components/Dashboard/Views/operator/Equipment.vue'
+import AddEquipment from 'src/components/Dashboard/Views/operator/AddEquipment.vue'
+import EditEquipment from 'src/components/Dashboard/Views/operator/EditEquipment.vue'
+import UnbindEquipment from 'src/components/Dashboard/Views/operator/UnbindEquipment.vue'
+
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
 import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
@@ -143,7 +148,7 @@ const routes = [
         component: HouseHolders,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator'],
+          roles: ['operator'],
           breadcrumbs: false
         }
       },
@@ -153,7 +158,7 @@ const routes = [
         component: HouseHolders,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator'],
+          roles: ['operator'],
           breadcrumbs: false
         }
       },
@@ -163,7 +168,7 @@ const routes = [
         component: AddHouseholder,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator'],
+          roles: ['operator'],
           breadcrumbs: true
         }
       },
@@ -173,7 +178,7 @@ const routes = [
         component: EditHouseholder,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator'],
+          roles: ['operator'],
           breadcrumbs: true
         }
       },
@@ -183,7 +188,7 @@ const routes = [
         component: Houses,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator'],
+          roles: ['provider', 'operator', 'householder'],
           breadcrumbs: false
         }
       },
@@ -193,7 +198,7 @@ const routes = [
         component: Houses,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator'],
+          roles: ['provider', 'operator', 'householder'],
           breadcrumbs: false
         }
       },
@@ -228,7 +233,57 @@ const routes = [
         }
       },
       {
-        path: '/provider/user',
+        path: '/equipment',
+        name: 'Оборудование',
+        component: Equipment,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: false
+        }
+      },
+      {
+        path: '/equipment/list',
+        name: 'Список оборудования',
+        component: Equipment,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: false
+        }
+      },
+      {
+        path: '/equipment/add',
+        name: 'Привязать оборудование',
+        component: AddEquipment,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: true
+        }
+      },
+      {
+        path: '/equipment/edit/:id',
+        name: 'Переименование линии прибора',
+        component: EditEquipment,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: true
+        }
+      },
+      {
+        path: '/equipment/unbind/:id',
+        name: 'Отвязка линии прибора',
+        component: UnbindEquipment,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: true
+        }
+      },
+      {
+        path: '/profile',
         name: 'Профиль пользователя',
         component: User,
         meta: {
@@ -253,7 +308,7 @@ const routes = [
         component: DocuProc,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator', 'householder'],
+          roles: ['provider'],
           breadcrumbs: false
         }
       },
@@ -263,7 +318,7 @@ const routes = [
         component: TechProc,
         meta: {
           requiredAuth: true,
-          roles: ['provider', 'operator', 'householder'],
+          roles: ['provider'],
           breadcrumbs: false
         }
       },

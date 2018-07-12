@@ -15,10 +15,10 @@
         <el-collapse-transition>
           <ul class="nav" v-show="!isClosed">
             <li>
-              <a href="/#/provider/user">
+              <router-link to="/profile">
                 <span class="sidebar-mini">Mp</span>
                 <span class="sidebar-normal">Мой профайл</span>
-              </a>
+              </router-link>
             </li>
             <li>
               <a href="javascript:;" v-on:click.stop.prevent="logout">

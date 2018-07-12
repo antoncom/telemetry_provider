@@ -16,7 +16,11 @@ const state = {
   userId: null,
   userToken: '',
   userType: '',
-  userAuthorized: false
+  userAuthorized: false,
+  houses: [],
+  householders: [],
+  selectedHouse: '',
+  selectedHouseholder: ''
 }
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -28,6 +32,18 @@ export default new Vuex.Store({
   strict: debug,
   plugins: debug ? [createLogger()] : [],
   getters: {
+    selectedHouse: (state) => {
+      return state.selectedHouse
+    },
+    selectedHouseholder: (state) => {
+      return state.selectedHouseholder
+    },
+    getHouseholders: (state) => {
+      return state.householders
+    },
+    getHouses: (state) => {
+      return state.houses
+    },
     getUserId: (state) => {
       return state.userId
     },

@@ -21,10 +21,12 @@
       <ul :class="navClasses">
         <slot name="links">
           <sidebar-item v-for="(link, index) in sidebarLinks"
+                        v-if="isMenuShownForUser(link.roles)"
                         :key="link.name + index"
                         :link="link">
 
             <sidebar-item v-for="(subLink, index) in link.children"
+                          v-if="isMenuShownForUser(subLink.roles)"
                           :key="subLink.name + index"
                           :link="subLink">
             </sidebar-item>
@@ -36,6 +38,7 @@
   </div>
 </template>
 <script type="text/babel">
+  import store from 'src/store/index.js'
   export default {
     props: {
       title: {
@@ -96,6 +99,11 @@
         await import('perfect-scrollbar/dist/css/perfect-scrollbar.css')
         const PerfectScroll = await import('perfect-scrollbar')
         PerfectScroll.initialize(this.$refs.sidebarScrollArea)
+      },
+      isMenuShownForUser: (roles) => {
+        if (typeof roles !== 'object') return true
+        if (roles.indexOf(store.state.userType) > -1) return true
+        else return false
       }
     },
     mounted () {

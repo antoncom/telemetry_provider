@@ -53,6 +53,9 @@ export default {
   [types.LIST_HOUSEHOLDERS]: (state, commit) => {
     state.householders = commit.payload
   },
+  [types.KEEP_HOUSEHOLDERID]: (state, commit) => {
+    state.selectedHouseholder = commit
+  },
 
   [types.ADD_HOUSE]: (state, commit) => {
   },
@@ -61,6 +64,21 @@ export default {
   [types.GET_HOUSE]: (state, commit) => {
   },
   [types.DELETE_HOUSE]: (state, commit) => {
+  },
+  [types.LIST_HOUSES]: (state, commit) => {
+    state.houses = commit.payload
+  },
+  [types.KEEP_HOUSEID]: (state, commit) => {
+    state.selectedHouse = commit
+  },
+
+  [types.ADD_EQUIPMENT]: (state, commit) => {
+  },
+  [types.EDIT_EQUIPMENT]: (state, commit) => {
+  },
+  [types.GET_EQUIPMENT]: (state, commit) => {
+  },
+  [types.UNBIND_EQUIPMENT]: (state, commit) => {
   },
 
   [types.LOAD_WORKFLOW]: (state, commit) => {
