@@ -78,6 +78,28 @@ export default [
       }]
   },
   {
+    name: 'Потребление',
+    icon: 'ti-gift',
+    path: '/consumption',
+    roles: ['provider', 'operator'],
+    children: [
+      {
+        name: 'Потребление тепла',
+        path: '/consumption/heat',
+        roles: ['provider', 'operator']
+      },
+      {
+        name: 'Потребление холодной воды',
+        path: '/consumption/cwater',
+        roles: ['provider', 'operator']
+      },
+      {
+        name: 'Потребление горячей воды',
+        path: '/consumption/hwater',
+        roles: ['provider', 'operator']
+      }]
+  },
+  {
     name: 'Сообщения',
     icon: 'ti-gift',
     path: '/provider/messenger',

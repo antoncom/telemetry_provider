@@ -27,6 +27,8 @@ import AddEquipment from 'src/components/Dashboard/Views/operator/AddEquipment.v
 import EditEquipment from 'src/components/Dashboard/Views/operator/EditEquipment.vue'
 import UnbindEquipment from 'src/components/Dashboard/Views/operator/UnbindEquipment.vue'
 
+import HeatConsumption from 'src/components/Dashboard/Views/householder/HeatConsumption.vue'
+
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
 import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
@@ -223,13 +225,13 @@ const routes = [
         }
       },
       {
-        path: '/provider/house',
+        path: '/houses/info/:id',
         name: 'Карточка дома',
         component: House,
         meta: {
           requiredAuth: true,
           roles: ['provider', 'operator', 'householder'],
-          breadcrumbs: false
+          breadcrumbs: true
         }
       },
       {
@@ -280,6 +282,46 @@ const routes = [
           requiredAuth: true,
           roles: ['provider', 'operator'],
           breadcrumbs: true
+        }
+      },
+      {
+        path: '/consumption',
+        name: 'Потребление',
+        component: HeatConsumption,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: false
+        }
+      },
+      {
+        path: '/consumption/heat',
+        name: 'Потребление тепла',
+        component: HeatConsumption,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: false
+        }
+      },
+      {
+        path: '/consumption/cwater',
+        name: 'Потребление холодной воды',
+        component: HeatConsumption,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: false
+        }
+      },
+      {
+        path: '/consumption/hwater',
+        name: 'Потребление горячей воды',
+        component: HeatConsumption,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: false
         }
       },
       {

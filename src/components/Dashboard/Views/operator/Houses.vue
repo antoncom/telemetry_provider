@@ -65,6 +65,14 @@
                              :min-width="column.minWidth"
                              :prop="column.prop"
                              :label="column.label">
+              <template slot-scope="scope">
+                <span v-if="column.prop === 'address'">
+                    <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="gotoHouseCard(scope.row.id)">{{ scope.row.address }}</a>
+                </span>
+                <span v-else>
+                  {{ scope.row[column.prop] }}
+                </span>
+              </template>
             </el-table-column>
             <el-table-column
                     v-if="userCanSee()"
@@ -244,6 +252,9 @@
       },
       gotoAdd () {
         router.push('/houses/add')
+      },
+      gotoHouseCard (houseId) {
+        router.push('/houses/info/' + houseId)
       },
       handleDelete (index, row) {
         Vue.swal({

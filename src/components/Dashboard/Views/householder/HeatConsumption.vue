@@ -1,11 +1,11 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <h4 class="title">Оборудование</h4>
+      <h4 class="title">Потребление тепла</h4>
     </div>
     <div class="col-md-12 card">
       <div class="card-header">
-        <div class="category">Список оборудования, зарегистрированного в системе</div>
+        <div class="category">Теплопотребление дома {{ model.house_address }}</div>
       </div>
       <div class="card-content row">
         <div v-if="userCanSee()" class="col-sm-2">
@@ -58,45 +58,23 @@
           </div>
         </div>
         <div class="col-sm-12">
-          <el-table class="table-striped"
-                    :data="queriedData"
-                    border
-                    v-loading="loading2"
-                    element-loading-text="Ждите..."
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(0, 0, 0, 0.8)"
-                    style="width: 100%">
-            <el-table-column v-for="column in tableColumns"
-              sortable
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label">
-              <template slot-scope="scope">
-                <span v-if="column.prop === 'line1' || column.prop === 'line2'">
-                  <span v-if="scope.row[column.prop]">
-                    ВКЛ <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(scope.row, scope.column, scope.$index)">Отвязать</a>
-                  </span>
-                  <span v-else>
-                    Выкл
-                  </span>
-                </span>
-                <span v-else>
-                  {{ scope.row[column.prop] }}
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column
-                    v-if="userCanSee()"
-                    :min-width="120"
-                    fixed="right"
-                    label="Actions">
-              <template slot-scope="props">
-                <a class="btn btn-simple btn-xs btn-warning btn-icon edit" @click="handleEdit(props.$index, props.row)"><i class="ti-pencil-alt"></i></a>
-                <!--<a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(props.row, props.column, props.$index)"><i class="ti-close"></i></a>-->
-              </template>
-            </el-table-column>
-          </el-table>
+          <!--<el-table class="table-striped"-->
+                  <!--:data="pagedData"-->
+                  <!--border-->
+                  <!--v-loading="loading2"-->
+                  <!--element-loading-text="Ждите..."-->
+                  <!--element-loading-spinner="el-icon-loading"-->
+                  <!--element-loading-background="rgba(0, 0, 0, 0.8)"-->
+                  <!--style="width: 100%">-->
+            <!--<el-table-column v-for="column in tableColumns"-->
+                             <!--sortable-->
+                             <!--:key="column.label"-->
+                             <!--:min-width="column.minWidth"-->
+                             <!--:prop="column.prop"-->
+                             <!--colspan="{{ (column.prop === 'name') ? 12 : 1}}"-->
+                             <!--:label="column.label">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
         </div>
         <div class="col-sm-2" style="margin-top:15px;">
           <el-select
@@ -122,9 +100,6 @@
                         :total="pagination.total">
           </p-pagination>
         </div>
-        <div v-if="userCanSee()" class="col-sm-12 text-center">
-          <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Привязка прибора</button>
-        </div>
       </div>
     </div>
   </div>
@@ -136,7 +111,6 @@
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
   import store from 'src/store/index.js'
-  import {router} from 'src/main'
 
   // Axios
   import axios from 'axios'
@@ -159,7 +133,13 @@
       PPagination
     },
     computed: {
-      pagedData () {
+      pagedData (prop) {
+        var result = []
+//        if (prop === 'name') {
+//          result = [
+//            { name: }
+//          ]
+//        }
         return this.tableData.slice(this.from, this.to)
       },
       householders () {
@@ -220,7 +200,10 @@
         model: {
           error: '',
           org_id: '',
-          house_id: ''
+          house_id: '',
+          house_address: '',
+          from: '',
+          to: ''
         },
         pagination: {
           perPage: 10,
@@ -229,22 +212,35 @@
           total: 0
         },
         searchQuery: '',
-        propsToSearch: ['address', 'line1_name', 'line2_name'],
+        propsToSearch: [],
+        tableExpandableRows: [
+          {
+            prop: 'name',
+            label: 'Линия учёта'
+          }
+        ],
+        tableExpandableRowsData: [],
+
         tableColumns: [
           {
-            prop: 'id',
-            label: 'ID',
-            minWidth: 70
+            prop: 'name',
+            label: 'Линия учёта',
+            minWidth: 500
           },
           {
-            prop: 'address',
-            label: 'Системный адрес',
-            minWidth: 200
+            prop: 'timestamp',
+            label: 'Дата/время',
+            minWidth: 100
           },
           {
-            prop: 'type',
-            label: 'Тип оборудования',
-            minWidth: 200
+            prop: 't1',
+            label: 't1',
+            minWidth: 50
+          },
+          {
+            prop: 't2',
+            label: 't2',
+            minWidth: 50
           },
           {
             prop: 'line1_name',
@@ -252,19 +248,49 @@
             minWidth: 200
           },
           {
-            prop: 'line1',
-            label: 'Статус линии 1',
-            minWidth: 200
+            prop: 'dT',
+            label: 'dT',
+            minWidth: 50
           },
           {
-            prop: 'line2_name',
-            label: 'Название линии 2',
-            minWidth: 200
+            prop: 'v1',
+            label: 'v1',
+            minWidth: 50
           },
           {
-            prop: 'line2',
-            label: 'Статус линии 2',
-            minWidth: 200
+            prop: 'v2',
+            label: 'v2',
+            minWidth: 50
+          },
+          {
+            prop: 'dV',
+            label: 'dV',
+            minWidth: 50
+          },
+          {
+            prop: 'pV',
+            label: 'pV',
+            minWidth: 50
+          },
+          {
+            prop: 'p1',
+            label: 'p1',
+            minWidth: 50
+          },
+          {
+            prop: 'p2',
+            label: 'p2',
+            minWidth: 50
+          },
+          {
+            prop: 'dP',
+            label: 'dP',
+            minWidth: 50
+          },
+          {
+            prop: 'q',
+            label: 'q',
+            minWidth: 50
           }
         ],
         tableData: [],
@@ -281,9 +307,10 @@
         } else if (filterType === 'house') {
           store.commit('KEEP_HOUSEID', this.model.house_id)
         }
-        if (this.model.org_id > 0 || this.model.house_id > 0) {
+        if (this.model.house_id > 0) {
           this.loading2 = true
-          this.api = credentials.appix_api + '/equipment?org_id=' + this.model.org_id + '&house_id=' + this.model.house_id
+          let fromTo = '&from=' + this.model.from + '&to=' + this.model.to
+          this.api = credentials.appix_api + '/cons-ht?house_id=' + this.model.house_id + fromTo
           axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
           axios.get(this.api)
                   .then(response => {
@@ -295,55 +322,14 @@
                     this.errors.push(e)
                   })
         } else {
-          this.model.error = 'Не указан ID дома или ID домовладельца!'
+          this.model.error = 'Не указан ID дома!'
           this.loading2 = false
           // обнуляем таблицу
           this.tableData = []
         }
       },
-      handleEdit (index, row) {
-        router.push('/equipment/edit/' + row.id)
-      },
       userCanSee () {
         return (store.state.userType === 'provider' || store.state.userType === 'operator')
-      },
-      gotoAdd () {
-        router.push('/equipment/add')
-      },
-      handleDelete (row, col, index) {
-        Vue.swal({
-          title: 'Вы уверены?',
-          html: 'Отвязка линии прибора <strong>' + row.address + '</strong> от дома.',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Да, отвязать!'
-        }).then((result) => {
-          if (result.value) {
-            // Get address of house (only if the address is selected in dropdown)
-            var adr = ''
-            if (store.getters.selectedHouse !== '') {
-              let index = 0
-              let houses = store.getters.getHouses
-              for (index = 0; index < houses.length; index++) {
-                if (houses[index].id === store.getters.selectedHouse) {
-                  adr = houses[index].address
-                }
-              }
-            }
-            let payload = {
-              id: row.id,
-              line: col.property,
-              name: row[col.property + '_name'],
-              equipment_address: row.address,
-              house_address: adr,
-              refresh: this.handleFilter
-            }
-//            console.log('payload', payload)
-            this.$store.dispatch('unbindEquipment', payload)
-          }
-        })
       }
     }
   }

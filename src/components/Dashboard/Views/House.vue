@@ -1,56 +1,16 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-lg-6 col-md-12">
-
+      <div class="col-lg-12 col-md-12">
         <div class="card">
           <div class="card-header">
-            <h4 class="card-title">Карточка дома</h4>
+            <h4 class="card-title">{{ model.address }}</h4>
             <p class="category">Основные сведения, документы</p>
           </div>
-          <div class="card-content">
-            <div class="typo-line">
-              <h5><p class="category">Адрес</p>г. Волжск, ул.Набережная, д.25.<br />Телефон ответственного: 8 (8363) 7-22-40.</h5>
-            </div>
-            <!--<div class="typo-line">
-              <h5><p class="category">Фото</p>
-                <el-upload
-                        class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove"
-                        :file-list="fileList2"
-                        list-type="picture-card">
-                  <i class="el-icon-plus"></i>
-                  <div slot="tip" class="el-upload__tip">jpg/png файлы не более 500kb</div>
-                  <el-dialog :visible.sync="dialogVisible"
-                             append-to-body>
-                    <img width="100%" :src="dialogImageUrl" alt>
-                  </el-dialog>
-                </el-upload>
-              </h5>
-            </div>-->
-            <div class="typo-line">
-              <!--<h5><p class="category">Документы</p>-->
-                <!--<el-table class="table-striped" :data="tableData">
-                  <el-table-column
-                          label="Город"
-                          width="180">
-                    <template slot-scope="scope">
-                      <span style="text-align: left; margin-left: 10px">{{ scope.row.city }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="Адрес" property="address"></el-table-column>
-                  <el-table-column label="Телефон" property="phone"></el-table-column>
-                </el-table>-->
-              </h5>
-            </div>
-          </div>
         </div>
-
       </div>
-      <div class="col-lg-6 col-md-12">
-        <div class="card card-plain">
+      <div class="col-lg-12 col-md-12">
+        <div class="card">
           <div class="card-header">
             <h4 class="card-title">Энергоснабжение дома</h4>
             <p class="category">Учётные данные, данные ОДПУ, настроечные данные</p>
@@ -185,8 +145,12 @@
     },
     data () {
       return {
+        model: {
+          id: '',
+          address: ''
+        },
         api_base_consumption: '/base_consumption?key=ddde2fd0',
-        showTabs: 2,
+        showTabs: 1,
         tabPosition: 'top',
         dialogImageUrl: '',
         dialogVisible: false,
@@ -288,6 +252,10 @@
               .catch(e => {
                 this.errors.push(e)
               })
+    },
+    mounted () {
+      this.$data.model.id = this.$route.params.id
+      this.$store.dispatch('getHouse', this.$data.model)
     }
   }
 </script>

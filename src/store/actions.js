@@ -576,34 +576,19 @@ export const unbindEquipment = ({commit}, payload) => {
   axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
   axios.defaults.withCredentials = false
 
-  // var qs = require('qs')
-  // let payload2 = payload
-  // payload2.line1 = (payload2.line1) ? 1 : 0
-  // payload2.line2 = (payload2.line2) ? 1 : 0
-  // console.log('SSS', qs.stringify(payload2))
-  // axios.delete(credentials.appix_api + '/equipment/' + payload.id, qs.stringify(payload2)).then(response => {
-  axios.delete(credentials.appix_api + '/equipment/' + payload.id + '?line1=' + !payload.line1 + '&line2=' + !payload.line2).then(response => {
+  let params = '?' + payload.line + '=true'
+
+  axios.delete(credentials.appix_api + '/equipment/' + payload.id + params).then(response => {
     if (response.data.status === 'ok') {
-      let lineText = ''
-      let lineOtviaz = ''
-      if (payload.line1 && payload.line2) {
-        lineText = 'Линии 1 и 2'
-        lineOtviaz = ' отвязаны от дома '
-      }
-      if (payload.line1 && !payload.line2) {
-        lineText = 'Линия 1'
-        lineOtviaz = ' отвязана от дома '
-      }
-      if (!payload.line1 && payload.line2) {
-        lineText = 'Линия 2'
-        lineOtviaz = ' отвязана от дома '
-      }
-      lineText += ' прибора ID: ' + payload.id + lineOtviaz + payload.house_address
+      let messageHtml = 'Линия <strong>' + payload.name + ' [' + payload.line + ']</strong>'
+      messageHtml += ' прибора [' + payload.equipment_address + ']'
+      messageHtml += ' отвязана от дома <i>' + payload.house_address + '</i>!'
       Vue.swal({
         title: 'Отвязано!',
-        html: lineText,
+        html: messageHtml,
         type: 'success'
       })
+      payload.refresh()
       commit({
         type: types.UNBIND_EQUIPMENT,
         payload: response.data
