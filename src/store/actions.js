@@ -406,7 +406,7 @@ export const getHouse = ({commit}, payload) => {
   axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
   axios.defaults.withCredentials = false
 
-  axios.get(credentials.appix_api + '/houses/' + payload.id).then(response => {
+  axios.get(credentials.appix_api + '/houses/' + payload.house_id).then(response => {
     if (response.data.id > 0) {
       commit({
         type: types.GET_HOUSE,
@@ -559,7 +559,6 @@ export const getEquipment = ({commit}, payload) => {
       payload.line2_name = response.data.line2_name
       payload.line1 = (response.data.line1 === 1)
       payload.line2 = (response.data.line2 === 1)
-      console.log('PRIBOR', payload)
     } else if (response.data.status === 'error') {
       payload.error = response.data.message
     }
@@ -568,6 +567,36 @@ export const getEquipment = ({commit}, payload) => {
     if (payload.code === 401) {
       router.push('/login')
     }
+  })
+}
+
+export const getConsumption = ({commit}, payload) => {
+  console.log('CONS')
+  return new Promise((resolve, reject) => {
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+    axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
+    axios.defaults.withCredentials = false
+
+    let params = '?house_id=' + payload.house_id + '&from=' + payload.from + '&to=' + payload.to
+    axios.get(credentials.appix_api + '/' + payload.consumption_type + params).then(response => {
+      if (response.data.length >= 0) {
+        commit({
+          type: types.GET_CONSUMPTION,
+          payload: {
+            type: payload.consumption_type,
+            data: response.data
+          }
+        })
+        resolve()
+      } else if (response.data.status === 'error') {
+        payload.error = response.data.message
+      }
+    }).catch(e => {
+      payload.error = e.message
+      if (payload.code === 401) {
+        router.push('/login')
+      }
+    })
   })
 }
 

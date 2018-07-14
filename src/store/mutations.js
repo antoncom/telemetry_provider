@@ -81,6 +81,11 @@ export default {
   [types.UNBIND_EQUIPMENT]: (state, commit) => {
   },
 
+  [types.GET_CONSUMPTION]: (state, commit) => {
+    state.consumption_data = commit.payload.data
+    state.consumption_type = commit.payload.type
+  },
+
   [types.LOAD_WORKFLOW]: (state, commit) => {
     console.log('DIAG', commit.payload)
     state.rows = commit.payload.rows

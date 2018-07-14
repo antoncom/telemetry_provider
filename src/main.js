@@ -26,6 +26,9 @@ import './assets/sass/demo.scss'
 
 import sidebarLinks from './sidebarLinks'
 
+import DateFilter from './filters/date' // Import date
+Vue.filter('date', DateFilter) // register filter globally
+
 // plugin setup
 Vue.use(VueRouter)
 Vue.use(GlobalDirectives)

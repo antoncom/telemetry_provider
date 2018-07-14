@@ -66,7 +66,6 @@
 
     <div class="row">
       <div class="col-lg-6 col-md-12">
-
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">Tabs</h4>

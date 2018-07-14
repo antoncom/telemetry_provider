@@ -20,7 +20,9 @@ const state = {
   houses: [],
   householders: [],
   selectedHouse: '',
-  selectedHouseholder: ''
+  selectedHouseholder: '',
+  consumption_data: [],
+  consumption_type: ''
 }
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -32,6 +34,12 @@ export default new Vuex.Store({
   strict: debug,
   plugins: debug ? [createLogger()] : [],
   getters: {
+    consumption_data: (state) => {
+      return state.consumption_data
+    },
+    consumption_type: (state) => {
+      return state.consumption_type
+    },
     selectedHouse: (state) => {
       return state.selectedHouse
     },

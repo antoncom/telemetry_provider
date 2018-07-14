@@ -5,30 +5,93 @@
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">{{ model.address }}</h4>
-            <p class="category">Основные сведения, документы</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">Энергоснабжение дома</h4>
             <p class="category">Учётные данные, данные ОДПУ, настроечные данные</p>
           </div>
           <div class="card-content">
-            <button v-on:click="showTabs=1" v-bind:class="{ 'btn-fill': showTabs == 1 }" class="btn btn-primary">Тепло</button>
-            <button v-on:click="showTabs=2" v-bind:class="{ 'btn-fill': showTabs == 2 }" class="btn btn-primary">ГВС</button>
-            <button v-on:click="showTabs=3" v-bind:class="{ 'btn-fill': showTabs == 3 }" class="btn btn-primary">ХВС</button>
-            <button v-on:click="showTabs=4" v-bind:class="{ 'btn-fill': showTabs == 4 }" class="btn btn-primary">Энергосервис</button>
+            <button v-on:click="model.consumption_type='cons-ht'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-ht' }" class="btn btn-primary">Тепло</button>
+            <button v-on:click="model.consumption_type='cons-hw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-hw' }" class="btn btn-primary">ГВС</button>
+            <button v-on:click="model.consumption_type='cons-cw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'chater' }" class="btn btn-primary">ХВС</button>
 
-            <vue-tabs class="card-content" v-show="showTabs == 1">
+            <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-ht'">
               <v-tab title="Потребление" icon="ti-bar-chart">
-                <h5>Теплоснабжение - потребление</h5>
+                <!--#######Graphic & data tabs###########-->
+                <div class="row">
+                  <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
+                    <div class="btn-group">
+                        <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
+                        <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
+                    </div>
+                  </div>
+                  <div class="form-group col-lg-9" style="text-align: left;">
+                    <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
+                                    :picker-options="pickerOptions1">
+                    </el-date-picker>
+                    <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
+                                    :picker-options="pickerOptions1">
+                    </el-date-picker>
+                  </div>
+                </div>
+                <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
+                  <v-tab>
+                    <div class="row">
+                      <div class="col-lg-3">
+                        <div style="text-align: left;">
+                          <template v-for="line in consumption_lines">
+                            <p-checkbox v-model="model.consumption_lines" v-bind:value="line">{{ line }}</p-checkbox>
+                          </template>
+                          <!--<template v-for="line in consumption_lines">-->
+                            <!--<input type="checkbox" v-bind:value="line" v-model="model.consumption_lines">-->
+                            <!--<label>{{line}}</label><br>-->
+                          <!--</template>-->
+                          <el-select class="select-danger"
+                                     size="large"
+                                     placeholder="Выбрать параметр"
+                                     v-model="model.selected_param">
+                            <el-option v-for="option in consumption_params"
+                                       class="select-danger"
+                                       :value="option"
+                                       :label="option"
+                                       :key="option">
+                            </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div class="col-lg-9">
+                        <div class="card">
+                          <div class="card-header">
+                            <h4 class="card-title">Потребление тепла</h4>
+                            <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                          </div>
+                          <div class="card-content">
+                            <div id="chartConsumption" class="ct-chart"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </v-tab>
+                </vue-tabs>
+                <vue-tabs class="card-content viewresult" v-show="dataViewType == 'table'">
+                  <v-tab>
+                    <div class="row">
+                      <div class="col-lg-3">
+                        <div style="text-align: left;">
+                          <p-radio v-model="enabledRadio" label="1">Линия 1 (например, 5-й подъезд)</p-radio>
+                          <p-radio v-model="enabledRadio" label="2">Линия 2 (например, чердак)</p-radio>
+                        </div>
+                      </div>
+                      <div class="col-lg-9">
+                        Data
+                      </div>
+                    </div>
+                  </v-tab>
+                </vue-tabs>
+                <!--######### End of graphic & data tabs ###########-->
               </v-tab>
-              <v-tab title="Отопление" icon="ti-user"><h5>Теплоснабжение - отопление</h5></v-tab>
-              <v-tab title="Качество" icon="ti-files"><h5>Теплоснабжение - качество теплоносителя</h5></v-tab>
+              <v-tab title="Энергосервис" icon="ti-files">
+                <h5>Теплоснабжение - энергосервис</h5>
+              </v-tab>
             </vue-tabs>
-            <vue-tabs class="card-content" v-show="showTabs == 2">
+            <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-hw'">
               <v-tab title="Потребление" icon="ti-user">
                 <div class="card">
                   <form class="form-horizontal">
@@ -67,43 +130,15 @@
                   </form>
                 </div>
               </v-tab>
-            </vue-tabs>
-            <vue-tabs class="card-content" v-show="showTabs == 3">
-              <v-tab title="Потребление" icon="ti-user"><h5>Холодное водоснабжение - потребление</h5></v-tab>
-            </vue-tabs>
-            <vue-tabs class="card-content" v-show="showTabs == 4">
-              <v-tab title="Базовое" icon="ti-bar-chart">
-                <div class="col-sm-12">
-                  <h5>Энергосервис - базовое энергопотребление</h5>
-                  <el-table class="table-striped"
-                            :data="queriedData"
-                            border
-                            v-loading="loading2"
-                            element-loading-text="Ждите..."
-                            element-loading-spinner="el-icon-loading"
-                            element-loading-background="rgba(0, 0, 0, 0.8)"
-                            style="width: 100%">
-                    <el-table-column v-for="column in tableColumns"
-                                     sortable
-                                     :key="column.label"
-                                     :min-width="column.minWidth"
-                                     :prop="column.prop"
-                                     :label="column.label">
-                    </el-table-column>
-                  </el-table>
-                </div>
-                <div class="col-sm-6 pagination-info">
-                  <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
-                </div>
-                <div class="col-sm-6">
-                  <p-pagination class="pull-right"
-                                v-model="pagination.currentPage"
-                                :per-page="pagination.perPage"
-                                :total="pagination.total">
-                  </p-pagination>
-                </div>
+              <v-tab title="Энергосервис" icon="ti-files">
+                <h5>ГВС - энергосервис</h5>
               </v-tab>
-              <v-tab title="Коэффициенты" icon="ti-user"><h5>Энергосервис - коэффициенты</h5></v-tab>
+            </vue-tabs>
+            <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-cw'">
+              <v-tab title="Потребление" icon="ti-user"><h5>Холодное водоснабжение - потребление</h5></v-tab>
+              <v-tab title="Энергосервис" icon="ti-files">
+                <h5>ХВС - энергосервис</h5>
+              </v-tab>
             </vue-tabs>
           </div>
         </div>
@@ -113,54 +148,37 @@
 </template>
 <script type="text/babel">
   import Vue from 'vue'
-  import {Upload, Dialog, Table, TableColumn, Select, Option, Loading} from 'element-ui'
+  // import {DatePicker, Table, TableColumn, Select, Option, Loading, Collapse, CollapseItem} from 'element-ui'
+  import {DatePicker, Table, TableColumn, Loading, Select, Option} from 'element-ui'
   import 'element-ui/lib/theme-chalk/index.css'
   import VueTabs from 'vue-nav-tabs'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
-
-  // Axios
-  import axios from 'axios'
-  import VueAxios from 'vue-axios'
-
-  Vue.use(VueAxios, axios)
-  axios.defaults.timeout = 5000
-  // axios.defaults.baseURL = 'http://5ab289c362a6ae001408c272.mockapi.io/api/v1'
-  axios.defaults.baseURL = 'https://my.api.mockaroo.com'
-  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-  axios.defaults.withCredentials = false
+  // import ChartCard from 'src/components/UIComponents/Cards/ChartCard.vue'
 
   Vue.use(Table)
   Vue.use(TableColumn)
-  Vue.use(Select)
-  Vue.use(Option)
   Vue.use(Loading)
-
   Vue.use(VueTabs)
-  Vue.use(Upload)
-  Vue.use(Dialog)
 
   export default {
     components: {
-      PPagination
+      [DatePicker.name]: DatePicker,
+      PPagination,
+      [Option.name]: Option,
+      [Select.name]: Select
     },
     data () {
       return {
         model: {
-          id: '',
-          address: ''
+          house_id: '',
+          address: '',
+          consumption_type: 'cons-ht',
+          from: '2018-06-01',
+          to: '',
+          selected_param: '',
+          consumption_lines: []
         },
-        api_base_consumption: '/base_consumption?key=ddde2fd0',
-        showTabs: 1,
-        tabPosition: 'top',
-        dialogImageUrl: '',
-        dialogVisible: false,
-        fileList2: [{
-          name: 'house.jpeg',
-          url: 'http://yamskoyepole.rossia.news/upload/resize_cache/iblock/cde/300_0_1/cde396f106c15b3838b06b95f768ab54.JPG'
-        }, {
-          name: 'house2.jpeg', url: 'http://static.house2you.ru/i/realty/2017/11/22/c8/c8d093371c570bdc155c8b33cb84b952.jpg'
-        }],
-        activeName: 'first',
+        dataViewType: 'graphic',
         pagination: {
           perPage: 10,
           currentPage: 1,
@@ -168,7 +186,7 @@
           total: 0
         },
         searchQuery: '',
-        propsToSearch: ['company', 'inn', 'operator', 'location'],
+        propsToSearch: [],
         tableColumns: [
           {
             prop: 'reg_date',
@@ -187,19 +205,185 @@
           }
         ],
         tableData: [],
-        loading2: true
+        loading2: true,
+        pickerOptions1: {
+          shortcuts: [{
+            text: 'Сегодня',
+            onClick (picker) {
+              picker.$emit('pick', new Date())
+            }
+          },
+          {
+            text: 'Вчера',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24)
+              picker.$emit('pick', date)
+            }
+          },
+          {
+            text: 'Неделю назад',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', date)
+            }
+          }]
+        },
+        enabledRadio: '',
+        $Chartist: null
+      }
+    },
+    watch: {
+      'model.selected_param': function () {
+        console.log('==WATCHING==')
+        this.initCharts()
       }
     },
     methods: {
-      handleRemove (file, fileList) {
-        console.log(file, fileList)
+      initConsumptionChart () {
+        var lines = this.model.consumption_lines
+        var param = this.model.selected_param
+        // var self = this
+
+        console.log('INIT lines', lines)
+        console.log('INIT param', param)
+
+        var timePoints = ['18:00', '20:00', '22:00', '00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00']
+        var series = []
+        if (lines && lines.length) {
+          for (let i = 0; i < lines.length; i++) {
+            let lineData = this.consumption_graphData(lines[i], param, timePoints)
+            series.push(lineData)
+          }
+        }
+        var dataConsumption = {
+          labels: timePoints,
+          series: series
+        }
+
+        console.log('INIT dataConsumption', dataConsumption)
+
+        const optionsConsumption = {
+          showPoint: false,
+          lineSmooth: true,
+          axisX: {
+            showGrid: false,
+            showLabel: true
+          },
+          axisY: {
+            offset: 40
+
+          },
+          low: 0,
+          high: 16,
+          height: '250px'
+        }
+
+        this.$Chartist.Line('#chartConsumption', dataConsumption, optionsConsumption)
       },
-      handlePictureCardPreview (file) {
-        this.dialogImageUrl = file.url
-        this.dialogVisible = true
+      initCharts () {
+        this.initConsumptionChart()
+      },
+      // line = 'Линия 1 (например, 1-й подъезд)'
+      // param = 'p1'
+      // timePoints = ['6:00', '9:00', '11:00', '14:00'],
+      // returns [
+      //   {
+      //     timestamp: 23:00,
+      //     t2: 62.5
+      //   },
+      //   {
+      //     timestamp: 00:00,
+      //     t2: 50.1
+      //   },
+
+      // ]
+      consumption_graphData (line, param, timePoints) {
+        var result = []
+        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
+          var dataArray = this.$store.getters.consumption_data
+          // iterate lines
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].name === line) {
+              // line found
+              // iterate records of the line
+              for (var record of dataArray[i].data) {
+                var timepoint = record.timestamp.substring(11, 16)
+                if (timePoints.indexOf(timepoint) > -1) {
+                  // get record only if time in timePoints array
+                  let obj = {}
+                  obj['timestamp'] = timepoint
+                  obj[param] = record[param]
+
+                  result.push(obj)
+                }
+              }
+              // break iterations if the line found
+              break
+            }
+          }
+          console.log('-------------', result)
+          return result
+        }
       }
     },
+    async mounted () {
+      const Chartist = await import('chartist')
+      this.$Chartist = Chartist
+
+      this.$data.model.house_id = this.$route.params.id
+      this.$store.dispatch('getHouse', this.$data.model)
+      this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+        this.initCharts()
+      })
+    },
     computed: {
+      consumption_type () {
+        return this.$store.getters.consumption_type
+      },
+      consumption_data () {
+        return this.$store.getters.consumption_data
+      },
+      consumption_lines () {
+        var result = []
+        if (this.$store.getters.consumption_data) {
+          var dataArray = this.$store.getters.consumption_data
+          for (let i = 0; i < dataArray.length; i++) {
+            result.push(dataArray[i].name)
+          }
+        }
+        return result
+      },
+      consumption_params () {
+        var result = []
+        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
+          var dataArray = this.$store.getters.consumption_data
+          // iterate datas
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].data && dataArray[i].data.length > 0) {
+              // data found
+              result = Object.keys(dataArray[i].data[0])
+              delete result['timestamp']
+              // break iterations if the line found
+              break
+            }
+          }
+          return result
+        }
+
+//        //////
+//        if (this.$store.getters.consumption_data && this.$store.getters.consumption_data.length > 0) {
+//          var dataArray = this.$store.getters.consumption_data
+//          // for (let i = 0; i < dataArray.d)
+//          console.log('dataArray', dataArray[1])
+//          if (dataArray.data && dataArray.data.length >= 0) {
+//            result = Object.keys(dataArray.data[0])
+//            delete result['timestamp']
+//          }
+//        }
+//        return result
+      },
       pagedData () {
         return this.tableData.slice(this.from, this.to)
       },
@@ -243,24 +427,18 @@
       }
     },
     created () {
-      axios.get(this.api_base_consumption)
-              .then(response => {
-                this.loading2 = false
-                // JSON responses are automatically parsed.
-                this.tableData = response.data
-              })
-              .catch(e => {
-                this.errors.push(e)
-              })
-    },
-    mounted () {
-      this.$data.model.id = this.$route.params.id
-      this.$store.dispatch('getHouse', this.$data.model)
     }
+//    mounted () {
+//      this.$data.model.id = this.$route.params.id
+//      this.$store.dispatch('getHouse', this.$data.model)
+//    }
   }
 </script>
 <style>
   input[type='file'] {
+    display: none;
+  }
+  .viewresult .nav-tabs-navigation {
     display: none;
   }
 </style>
