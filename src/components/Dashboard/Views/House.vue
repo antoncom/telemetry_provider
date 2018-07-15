@@ -24,10 +24,12 @@
                   </div>
                   <div class="form-group col-lg-9" style="text-align: left;">
                     <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
-                                    :picker-options="pickerOptions1">
+                                    :picker-options="pickerOptions1"
+                                    value-format="yyyy-MM-dd">
                     </el-date-picker>
                     <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
-                                    :picker-options="pickerOptions1">
+                                    :picker-options="pickerOptions1"
+                                    value-format="yyyy-MM-dd">
                     </el-date-picker>
                   </div>
                 </div>
@@ -36,13 +38,9 @@
                     <div class="row">
                       <div class="col-lg-3">
                         <div style="text-align: left;">
-                          <template v-for="line in consumption_lines">
-                            <p-checkbox v-model="model.consumption_lines" v-bind:value="line">{{ line }}</p-checkbox>
+                          <template v-for="line in model.consumption_lines">
+                            <p-checkbox v-model="line.selected" v-bind:value="line.name">{{ line.name }}</p-checkbox>
                           </template>
-                          <!--<template v-for="line in consumption_lines">-->
-                            <!--<input type="checkbox" v-bind:value="line" v-model="model.consumption_lines">-->
-                            <!--<label>{{line}}</label><br>-->
-                          <!--</template>-->
                           <el-select class="select-danger"
                                      size="large"
                                      placeholder="Выбрать параметр"
@@ -75,8 +73,9 @@
                     <div class="row">
                       <div class="col-lg-3">
                         <div style="text-align: left;">
-                          <p-radio v-model="enabledRadio" label="1">Линия 1 (например, 5-й подъезд)</p-radio>
-                          <p-radio v-model="enabledRadio" label="2">Линия 2 (например, чердак)</p-radio>
+                          <template v-for="line in model.consumption_lines">
+                            <p-radio v-model="model.line_chosen" :label="line.name">{{ line.name }}</p-radio>
+                          </template>
                         </div>
                       </div>
                       <div class="col-lg-9">
@@ -174,9 +173,11 @@
           address: '',
           consumption_type: 'cons-ht',
           from: '2018-06-01',
-          to: '',
+          to: '2018-06-01',
           selected_param: '',
-          consumption_lines: []
+          consumption_lines: [],
+          line_chosen: '',
+          max_param_value: 0
         },
         dataViewType: 'graphic',
         pagination: {
@@ -236,47 +237,62 @@
     },
     watch: {
       'model.selected_param': function () {
-        console.log('==WATCHING==')
         this.initCharts()
+      },
+      'model.from': function () {
+        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+          this.initCharts()
+        })
+      },
+      'model.to': function () {
+        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+          this.initCharts()
+        })
+      },
+      'model.consumption_lines': {
+        handler (val) {
+          this.initCharts()
+        },
+        deep: true
       }
     },
     methods: {
       initConsumptionChart () {
         var lines = this.model.consumption_lines
         var param = this.model.selected_param
-        // var self = this
-
-        console.log('INIT lines', lines)
-        console.log('INIT param', param)
 
         var timePoints = ['18:00', '20:00', '22:00', '00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00']
+        // var timePoints = []
+        // timePoints.push(this.model.from)
+        // timePoints.push(this.model.to)
         var series = []
         if (lines && lines.length) {
           for (let i = 0; i < lines.length; i++) {
-            let lineData = this.consumption_graphData(lines[i], param, timePoints)
-            series.push(lineData)
+            if (lines[i].selected) {
+              let lineData = this.consumption_graphData(lines[i].name, param, timePoints)
+              series.push(lineData)
+            }
           }
         }
         var dataConsumption = {
-          labels: timePoints,
+          // labels: timePoints,
           series: series
         }
 
-        console.log('INIT dataConsumption', dataConsumption)
-
         const optionsConsumption = {
-          showPoint: false,
+          showPoint: true,
           lineSmooth: true,
           axisX: {
-            showGrid: false,
-            showLabel: true
+            showGrid: true,
+            showLabel: false,
+            offset: 0
           },
           axisY: {
-            offset: 40
+            offset: 60
 
           },
           low: 0,
-          high: 16,
+          high: this.model.max_param_value + this.model.max_param_value * 0.5,
           height: '250px'
         }
 
@@ -309,21 +325,32 @@
               // line found
               // iterate records of the line
               for (var record of dataArray[i].data) {
-                var timepoint = record.timestamp.substring(11, 16)
-                if (timePoints.indexOf(timepoint) > -1) {
-                  // get record only if time in timePoints array
-                  let obj = {}
-                  obj['timestamp'] = timepoint
-                  obj[param] = record[param]
+                var timepoint = record.timestamp
 
-                  result.push(obj)
+// 12 hours only a day
+//                var timepoint = record.timestamp.substring(11, 16)
+//                if (timePoints.indexOf(timepoint) > -1) {
+//                  // get record only if time in timePoints array
+//                  let obj = {}
+//                  obj['timestamp'] = timepoint
+//                  obj[param] = record[param]
+//
+//                  result.push(record[param])
+//                }
+                let obj = {}
+                obj['timestamp'] = timepoint
+                obj[param] = record[param]
+                result.push(record[param])
+
+                // define max value
+                if (this.model.max_param_value < record[param]) {
+                  this.model.max_param_value = record[param]
                 }
               }
               // break iterations if the line found
               break
             }
           }
-          console.log('-------------', result)
           return result
         }
       }
@@ -345,16 +372,22 @@
       consumption_data () {
         return this.$store.getters.consumption_data
       },
-      consumption_lines () {
-        var result = []
-        if (this.$store.getters.consumption_data) {
-          var dataArray = this.$store.getters.consumption_data
-          for (let i = 0; i < dataArray.length; i++) {
-            result.push(dataArray[i].name)
-          }
-        }
-        return result
-      },
+//      consumption_lines () {
+//        var result = []
+//        if (this.$store.getters.consumption_data) {
+//          var dataArray = this.$store.getters.consumption_data
+//          for (let i = 0; i < dataArray.length; i++) {
+//            result.push(dataArray[i].name)
+//            let obj = {
+//              line_name: dataArray[i].name,
+//              selected: false
+//            }
+//            this.model.consumption_lines.push(obj)
+//          }
+//        }
+//        return result
+//        return this.$store.getters.consumption_lines
+//      },
       consumption_params () {
         var result = []
         if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {

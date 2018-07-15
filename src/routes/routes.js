@@ -27,7 +27,7 @@ import AddEquipment from 'src/components/Dashboard/Views/operator/AddEquipment.v
 import EditEquipment from 'src/components/Dashboard/Views/operator/EditEquipment.vue'
 import UnbindEquipment from 'src/components/Dashboard/Views/operator/UnbindEquipment.vue'
 
-import HeatConsumption from 'src/components/Dashboard/Views/householder/HeatConsumption.vue'
+// import HeatConsumption from 'src/components/Dashboard/Views/householder/HeatConsumption.vue'
 
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
 import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
@@ -285,16 +285,16 @@ const routes = [
         }
       },
       {
-        path: '/consumption',
+        path: '/houses/list',
         name: 'Потребление',
-        component: HeatConsumption,
+        component: Houses,
         meta: {
           requiredAuth: true,
           roles: ['provider', 'operator'],
           breadcrumbs: false
         }
       },
-      {
+/*      {
         path: '/consumption/heat',
         name: 'Потребление тепла',
         component: HeatConsumption,
@@ -323,7 +323,7 @@ const routes = [
           roles: ['provider', 'operator'],
           breadcrumbs: false
         }
-      },
+      }, */
       {
         path: '/profile',
         name: 'Профиль пользователя',

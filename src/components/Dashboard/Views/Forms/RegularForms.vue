@@ -152,6 +152,8 @@
                   <p-checkbox v-model="checkboxes.disabledChecked" :disabled="true">Disabled checked</p-checkbox>
                 </div>
 
+                {{ checkboxes }}
+
                 <div class="col-sm-5">
                   <p-radio label="1" v-model="radios.radio2">Radio is off</p-radio>
                   <p-radio label="2" v-model="radios.radio2">Radio is on</p-radio>

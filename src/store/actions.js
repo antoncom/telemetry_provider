@@ -571,7 +571,6 @@ export const getEquipment = ({commit}, payload) => {
 }
 
 export const getConsumption = ({commit}, payload) => {
-  console.log('CONS')
   return new Promise((resolve, reject) => {
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
@@ -580,6 +579,16 @@ export const getConsumption = ({commit}, payload) => {
     let params = '?house_id=' + payload.house_id + '&from=' + payload.from + '&to=' + payload.to
     axios.get(credentials.appix_api + '/' + payload.consumption_type + params).then(response => {
       if (response.data.length >= 0) {
+        // make consumption lines array for handling by checkboxes / radios
+        var dataArray = response.data
+        for (let i = 0; i < dataArray.length; i++) {
+          let obj = {
+            name: dataArray[i].name,
+            selected: false
+          }
+          payload.consumption_lines.push(obj)
+        }
+
         commit({
           type: types.GET_CONSUMPTION,
           payload: {
