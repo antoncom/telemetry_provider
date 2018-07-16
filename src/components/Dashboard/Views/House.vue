@@ -8,18 +8,21 @@
             <p class="category">Учётные данные, данные ОДПУ, настроечные данные</p>
           </div>
           <div class="card-content">
+            <!--<template v-for="cons in consumption_types">-->
+              <!--<button v-on:click="model.consumption_type=cons.type" v-bind:class="{ 'btn-fill': model.consumption_type == cons.type }" class="btn btn-primary">{{ cons.label }}</button>-->
+            <!--</template>-->
             <button v-on:click="model.consumption_type='cons-ht'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-ht' }" class="btn btn-primary">Тепло</button>
             <button v-on:click="model.consumption_type='cons-hw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-hw' }" class="btn btn-primary">ГВС</button>
             <button v-on:click="model.consumption_type='cons-cw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'chater' }" class="btn btn-primary">ХВС</button>
-
             <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-ht'">
               <v-tab title="Потребление" icon="ti-bar-chart">
+
                 <!--#######Graphic & data tabs###########-->
                 <div class="row">
                   <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
                     <div class="btn-group">
-                        <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
-                        <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
+                      <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
+                      <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
                     </div>
                   </div>
                   <div class="form-group col-lg-9" style="text-align: left;">
@@ -36,11 +39,8 @@
                 <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
                   <v-tab>
                     <div class="row">
-                      <div class="col-lg-3">
+                      <div class="col-lg-3" style="padding-left: 0px;">
                         <div style="text-align: left;">
-                          <template v-for="line in model.consumption_lines">
-                            <p-checkbox v-model="line.selected" v-bind:value="line.name">{{ line.name }}</p-checkbox>
-                          </template>
                           <el-select class="select-danger"
                                      size="large"
                                      placeholder="Выбрать параметр"
@@ -52,16 +52,19 @@
                                        :key="option">
                             </el-option>
                           </el-select>
+                          <template v-for="line in model.consumption_lines">
+                            <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
+                          </template>
                         </div>
                       </div>
                       <div class="col-lg-9">
                         <div class="card">
                           <div class="card-header">
-                            <h4 class="card-title">Потребление тепла</h4>
+                            <h4 class="card-title">Потребление: Тепло</h4>
                             <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
                           </div>
                           <div class="card-content">
-                            <div id="chartConsumption" class="ct-chart"></div>
+                            <div id="chartConsumption_cons-ht" class="ct-chart"></div>
                           </div>
                         </div>
                       </div>
@@ -74,7 +77,7 @@
                       <div class="col-lg-3">
                         <div style="text-align: left;">
                           <template v-for="line in model.consumption_lines">
-                            <p-radio v-model="model.line_chosen" :label="line.name">{{ line.name }}</p-radio>
+                            <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
                           </template>
                         </div>
                       </div>
@@ -85,15 +88,86 @@
                   </v-tab>
                 </vue-tabs>
                 <!--######### End of graphic & data tabs ###########-->
+
               </v-tab>
               <v-tab title="Энергосервис" icon="ti-files">
-                <h5>Теплоснабжение - энергосервис</h5>
+                <h5>Тепло - энергосервис</h5>
               </v-tab>
             </vue-tabs>
             <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-hw'">
               <v-tab title="Потребление" icon="ti-user">
                 <div class="card">
-
+                  <!--#######Graphic & data tabs###########-->
+                  <div class="row">
+                    <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
+                      <div class="btn-group">
+                        <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
+                        <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
+                      </div>
+                    </div>
+                    <div class="form-group col-lg-9" style="text-align: left;">
+                      <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
+                                      :picker-options="pickerOptions1"
+                                      value-format="yyyy-MM-dd">
+                      </el-date-picker>
+                      <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
+                                      :picker-options="pickerOptions1"
+                                      value-format="yyyy-MM-dd">
+                      </el-date-picker>
+                    </div>
+                  </div>
+                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
+                    <v-tab>
+                      <div class="row">
+                        <div class="col-lg-3" style="padding-left: 0px;">
+                          <div style="text-align: left;">
+                            <el-select class="select-danger"
+                                       size="large"
+                                       placeholder="Выбрать параметр"
+                                       v-model="model.selected_param">
+                              <el-option v-for="option in consumption_params"
+                                         class="select-danger"
+                                         :value="option"
+                                         :label="option"
+                                         :key="option">
+                              </el-option>
+                            </el-select>
+                            <template v-for="line in model.consumption_lines">
+                              <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
+                            </template>
+                          </div>
+                        </div>
+                        <div class="col-lg-9">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4 class="card-title">Потребление: ГВС</h4>
+                              <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                            </div>
+                            <div class="card-content">
+                              <div id="chartConsumption_cons-hw" class="ct-chart"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </v-tab>
+                  </vue-tabs>
+                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'table'">
+                    <v-tab>
+                      <div class="row">
+                        <div class="col-lg-3">
+                          <div style="text-align: left;">
+                            <template v-for="line in model.consumption_lines">
+                              <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
+                            </template>
+                          </div>
+                        </div>
+                        <div class="col-lg-9">
+                          Будет готово позже
+                        </div>
+                      </div>
+                    </v-tab>
+                  </vue-tabs>
+                  <!--######### End of graphic & data tabs ###########-->
                 </div>
               </v-tab>
               <v-tab title="Энергосервис" icon="ti-files">
@@ -101,7 +175,81 @@
               </v-tab>
             </vue-tabs>
             <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-cw'">
-              <v-tab title="Потребление" icon="ti-user"><h5>Холодное водоснабжение - потребление</h5></v-tab>
+              <v-tab title="Потребление" icon="ti-user">
+                <div class="card">
+                  <!--#######Graphic & data tabs###########-->
+                  <div class="row">
+                    <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
+                      <div class="btn-group">
+                        <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
+                        <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
+                      </div>
+                    </div>
+                    <div class="form-group col-lg-9" style="text-align: left;">
+                      <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
+                                      :picker-options="pickerOptions1"
+                                      value-format="yyyy-MM-dd">
+                      </el-date-picker>
+                      <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
+                                      :picker-options="pickerOptions1"
+                                      value-format="yyyy-MM-dd">
+                      </el-date-picker>
+                    </div>
+                  </div>
+                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
+                    <v-tab>
+                      <div class="row">
+                        <div class="col-lg-3" style="padding-left: 0px;">
+                          <div style="text-align: left;">
+                            <el-select class="select-danger"
+                                       size="large"
+                                       placeholder="Выбрать параметр"
+                                       v-model="model.selected_param">
+                              <el-option v-for="option in consumption_params"
+                                         class="select-danger"
+                                         :value="option"
+                                         :label="option"
+                                         :key="option">
+                              </el-option>
+                            </el-select>
+                            <template v-for="line in model.consumption_lines">
+                              <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
+                            </template>
+                          </div>
+                        </div>
+                        <div class="col-lg-9">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4 class="card-title">Потребление: ХВС</h4>
+                              <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                            </div>
+                            <div class="card-content">
+                              <div id="chartConsumption_cons-cw" class="ct-chart"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </v-tab>
+                  </vue-tabs>
+                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'table'">
+                    <v-tab>
+                      <div class="row">
+                        <div class="col-lg-3">
+                          <div style="text-align: left;">
+                            <template v-for="line in model.consumption_lines">
+                              <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
+                            </template>
+                          </div>
+                        </div>
+                        <div class="col-lg-9">
+                          Будет готово позже
+                        </div>
+                      </div>
+                    </v-tab>
+                  </vue-tabs>
+                  <!--######### End of graphic & data tabs ###########-->
+                </div>
+              </v-tab>
               <v-tab title="Энергосервис" icon="ti-files">
                 <h5>ХВС - энергосервис</h5>
               </v-tab>
@@ -146,6 +294,20 @@
           line_chosen: '', // for radio buttons in table mode
           max_param_value: 0 // for correct scaling of Y axis
         },
+        consumption_types: [
+          {
+            label: 'Тепло',
+            type: 'cons-ht'
+          },
+          {
+            label: 'ГВС',
+            type: 'cons-hw'
+          },
+          {
+            label: 'ХВС',
+            type: 'cons-cw'
+          }
+        ],
         dataViewType: 'graphic',
         pagination: {
           perPage: 10,
@@ -221,6 +383,11 @@
           this.initCharts()
         },
         deep: true
+      },
+      'model.consumption_type': function () {
+        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+          this.initCharts()
+        })
       }
     },
     methods: {
@@ -262,8 +429,15 @@
           high: this.model.max_param_value + this.model.max_param_value * 0.5,
           height: '250px'
         }
-
-        this.$Chartist.Line('#chartConsumption', dataConsumption, optionsConsumption)
+        if (this.model.consumption_type === 'cons-ht') {
+          this.$Chartist.Line('#chartConsumption_cons-ht', dataConsumption, optionsConsumption)
+        }
+        if (this.model.consumption_type === 'cons-hw') {
+          this.$Chartist.Line('#chartConsumption_cons-hw', dataConsumption, optionsConsumption)
+        }
+        if (this.model.consumption_type === 'cons-cw') {
+          this.$Chartist.Line('#chartConsumption_cons-cw', dataConsumption, optionsConsumption)
+        }
       },
       initCharts () {
         this.initConsumptionChart()
@@ -364,7 +538,7 @@
             if (dataArray[i].data && dataArray[i].data.length > 0) {
               // data found
               result = Object.keys(dataArray[i].data[0])
-              delete result['timestamp']
+              result.shift() // remove 'timestamp' as it's not a param
               // break iterations if the line found
               break
             }
