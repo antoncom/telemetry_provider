@@ -92,7 +92,51 @@
                         </div>
                       </div>
                       <div class="col-lg-9">
-                        Будет готово позже
+                        <!--============= Table =============-->
+                        <div class="col-sm-12">
+                          <el-table class="table-striped"
+                                    ref="consht"
+                                    :data="queriedData"
+                                    border
+                                    v-loading="loading2"
+                                    element-loading-text="Ждите..."
+                                    element-loading-spinner="el-icon-loading"
+                                    element-loading-background="rgba(0, 0, 0, 0.8)"
+                                    style="width: 100%">
+                            <el-table-column v-for="column in consumption_tableColumns"
+                                             sortable
+                                             :key="column.label"
+                                             :min-width="column.minWidth"
+                                             :prop="column.prop"
+                                             :label="column.label">
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                        <div class="col-sm-2" style="margin-top:15px;">
+                          <el-select
+                                  class="select-default"
+                                  v-model="pagination.perPage"
+                                  placeholder="Per page">
+                            <el-option
+                                    class="select-default"
+                                    v-for="item in pagination.perPageOptions"
+                                    :key="item"
+                                    :label="item"
+                                    :value="item">
+                            </el-option>
+                          </el-select>
+                        </div>
+                        <div class="col-sm-4 pagination-info" style="margin-top:25px;">
+                          <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+                        </div>
+                        <div class="col-sm-6">
+                          <p-pagination class="pull-right"
+                                        v-model="pagination.currentPage"
+                                        :per-page="pagination.perPage"
+                                        :total="pagination.total">
+                          </p-pagination>
+                        </div>
+                        <!--=========== End Table ===========-->
                       </div>
                     </div>
                   </v-tab>
@@ -182,7 +226,51 @@
                           </div>
                         </div>
                         <div class="col-lg-9">
-                          Будет готово позже
+                          <!--============= Table =============-->
+                          <div class="col-sm-12">
+                            <el-table class="table-striped"
+                                      ref="consht"
+                                      :data="queriedData"
+                                      border
+                                      v-loading="loading2"
+                                      element-loading-text="Ждите..."
+                                      element-loading-spinner="el-icon-loading"
+                                      element-loading-background="rgba(0, 0, 0, 0.8)"
+                                      style="width: 100%">
+                              <el-table-column v-for="column in consumption_tableColumns"
+                                               sortable
+                                               :key="column.label"
+                                               :min-width="column.minWidth"
+                                               :prop="column.prop"
+                                               :label="column.label">
+                              </el-table-column>
+                            </el-table>
+                          </div>
+                          <div class="col-sm-2" style="margin-top:15px;">
+                            <el-select
+                                    class="select-default"
+                                    v-model="pagination.perPage"
+                                    placeholder="Per page">
+                              <el-option
+                                      class="select-default"
+                                      v-for="item in pagination.perPageOptions"
+                                      :key="item"
+                                      :label="item"
+                                      :value="item">
+                              </el-option>
+                            </el-select>
+                          </div>
+                          <div class="col-sm-4 pagination-info" style="margin-top:25px;">
+                            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+                          </div>
+                          <div class="col-sm-6">
+                            <p-pagination class="pull-right"
+                                          v-model="pagination.currentPage"
+                                          :per-page="pagination.perPage"
+                                          :total="pagination.total">
+                            </p-pagination>
+                          </div>
+                          <!--=========== End Table ===========-->
                         </div>
                       </div>
                     </v-tab>
@@ -272,7 +360,51 @@
                           </div>
                         </div>
                         <div class="col-lg-9">
-                          Будет готово позже
+                          <!--============= Table =============-->
+                          <div class="col-sm-12">
+                            <el-table class="table-striped"
+                                      ref="consht"
+                                      :data="queriedData"
+                                      border
+                                      v-loading="loading2"
+                                      element-loading-text="Ждите..."
+                                      element-loading-spinner="el-icon-loading"
+                                      element-loading-background="rgba(0, 0, 0, 0.8)"
+                                      style="width: 100%">
+                              <el-table-column v-for="column in consumption_tableColumns"
+                                               sortable
+                                               :key="column.label"
+                                               :min-width="column.minWidth"
+                                               :prop="column.prop"
+                                               :label="column.label">
+                              </el-table-column>
+                            </el-table>
+                          </div>
+                          <div class="col-sm-2" style="margin-top:15px;">
+                            <el-select
+                                    class="select-default"
+                                    v-model="pagination.perPage"
+                                    placeholder="Per page">
+                              <el-option
+                                      class="select-default"
+                                      v-for="item in pagination.perPageOptions"
+                                      :key="item"
+                                      :label="item"
+                                      :value="item">
+                              </el-option>
+                            </el-select>
+                          </div>
+                          <div class="col-sm-4 pagination-info" style="margin-top:25px;">
+                            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+                          </div>
+                          <div class="col-sm-6">
+                            <p-pagination class="pull-right"
+                                          v-model="pagination.currentPage"
+                                          :per-page="pagination.perPage"
+                                          :total="pagination.total">
+                            </p-pagination>
+                          </div>
+                          <!--=========== End Table ===========-->
                         </div>
                       </div>
                     </v-tab>
@@ -347,25 +479,9 @@
         },
         searchQuery: '',
         propsToSearch: [],
-        tableColumns: [
-          {
-            prop: 'reg_date',
-            label: 'Дата',
-            minWidth: 120
-          },
-          {
-            prop: 'temperature',
-            label: 't среды',
-            minWidth: 100
-          },
-          {
-            prop: 'consumption',
-            label: 'Энергопотребление',
-            minWidth: 200
-          }
-        ],
+        tableColumns: [],
         tableData: [],
-        loading2: true,
+        loading2: false,
         pickerOptions1: {
           shortcuts: [{
             text: 'Сегодня',
@@ -498,16 +614,6 @@
               for (var record of dataArray[i].data) {
                 var timepoint = record.timestamp
 
-// 12 hours only a day
-//                var timepoint = record.timestamp.substring(11, 16)
-//                if (timePoints.indexOf(timepoint) > -1) {
-//                  // get record only if time in timePoints array
-//                  let obj = {}
-//                  obj['timestamp'] = timepoint
-//                  obj[param] = record[param]
-//
-//                  result.push(record[param])
-//                }
                 let obj = {}
                 obj['timestamp'] = timepoint
                 obj[param] = record[param]
@@ -524,6 +630,22 @@
           }
           return result
         }
+      },
+      consumption_lineData (line) {
+        var result = []
+        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
+          var dataArray = this.$store.getters.consumption_data
+          // iterate lines
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].name === line) {
+              // line found
+              result = dataArray[i].data
+              // break iterations if the line found
+              break
+            }
+          }
+        }
+        return result
       }
     },
     async mounted () {
@@ -545,22 +667,6 @@
       consumption_data () {
         return this.$store.getters.consumption_data
       },
-//      consumption_lines () {
-//        var result = []
-//        if (this.$store.getters.consumption_data) {
-//          var dataArray = this.$store.getters.consumption_data
-//          for (let i = 0; i < dataArray.length; i++) {
-//            result.push(dataArray[i].name)
-//            let obj = {
-//              line_name: dataArray[i].name,
-//              selected: false
-//            }
-//            this.model.consumption_lines.push(obj)
-//          }
-//        }
-//        return result
-//        return this.$store.getters.consumption_lines
-//      },
       consumption_params () {
         var result = []
         if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
@@ -577,21 +683,32 @@
           }
           return result
         }
-
-//        //////
-//        if (this.$store.getters.consumption_data && this.$store.getters.consumption_data.length > 0) {
-//          var dataArray = this.$store.getters.consumption_data
-//          // for (let i = 0; i < dataArray.d)
-//          console.log('dataArray', dataArray[1])
-//          if (dataArray.data && dataArray.data.length >= 0) {
-//            result = Object.keys(dataArray.data[0])
-//            delete result['timestamp']
-//          }
-//        }
-//        return result
+      },
+      consumption_tableColumns () {
+        var result = []
+        if (this.consumption_params && this.consumption_params.length > 0) {
+          var labels = ['timestamp'].concat(this.consumption_params)
+          for (let i = 0; i < labels.length; i++) {
+            let obj = {
+              prop: labels[i],
+              label: (labels[i] === 'timestamp') ? 'Дата' : labels[i],
+              minWidth: (labels[i] === 'timestamp') ? 60 : 30
+            }
+            result.push(obj)
+          }
+        }
+        return result
+      },
+      consumption_tableData () {
+        var result = []
+        var line = this.model.line_chosen
+        if (line !== '') {
+          result = this.consumption_lineData(line)
+        }
+        return result
       },
       pagedData () {
-        return this.tableData.slice(this.from, this.to)
+        return this.consumption_tableData.slice(this.from, this.to)
       },
       /***
        * Searches through table data and returns a paginated array.
@@ -601,10 +718,10 @@
        */
       queriedData () {
         if (!this.searchQuery) {
-          this.pagination.total = this.tableData.length
+          this.pagination.total = this.consumption_tableData.length
           return this.pagedData
         }
-        let result = this.tableData.filter((row) => {
+        let result = this.consumption_tableData.filter((row) => {
           let isIncluded = false
           for (let key of this.propsToSearch) {
             let rowValue = row[key].toString()
@@ -628,8 +745,8 @@
         return this.pagination.perPage * (this.pagination.currentPage - 1)
       },
       total () {
-        this.pagination.total = this.tableData.length
-        return this.tableData.length
+        this.pagination.total = this.consumption_tableData.length
+        return this.consumption_tableData.length
       }
     },
     created () {

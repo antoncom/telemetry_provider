@@ -580,19 +580,24 @@ export const getConsumption = ({commit}, payload) => {
     axios.get(credentials.appix_api + '/' + payload.consumption_type + params).then(response => {
       if (response.data.length >= 0) {
         // make consumption lines array for handling by checkboxes / radios
-        if ((store.getters.consumption_type !== payload.consumption_type) || (payload.consumption_lines.length === 0)) { // do it only if another consumption data type is loaded
-          payload.consumption_lines = [] // clear it before populate
-          payload.selected_param = ''
-          var dataArray = response.data
-          for (let i = 0; i < dataArray.length; i++) {
-            dataArray[i].data.reverse()
-            let obj = {
-              name: dataArray[i].name,
-              selected: false,
-              noData: (dataArray[i].data.length === 0)
-            }
-            payload.consumption_lines.push(obj)
+        var consLines = []
+        for (let i = 0; i < response.data.length; i++) {
+          // make line names checkbnoxes and radios model data
+          response.data[i].data.reverse()
+          let obj = {
+            name: response.data[i].name,
+            selected: false,
+            noData: (response.data[i].data.length === 0)
           }
+          consLines.push(obj)
+
+          // make table columns & table data
+          // if
+        }
+        // update checkboxes / radios only when change consumption type of if checkboxes list is empty
+        if ((store.getters.consumption_type !== payload.consumption_type) || (payload.consumption_lines.length === 0)) { // do it only if another consumption data type is loaded
+          payload.consumption_lines = consLines
+          payload.selected_param = ''
         }
 
         commit({
