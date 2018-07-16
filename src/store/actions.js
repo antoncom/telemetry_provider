@@ -580,7 +580,7 @@ export const getConsumption = ({commit}, payload) => {
     axios.get(credentials.appix_api + '/' + payload.consumption_type + params).then(response => {
       if (response.data.length >= 0) {
         // make consumption lines array for handling by checkboxes / radios
-        if (store.getters.consumption_type !== payload.consumption_type) {
+        if (store.getters.consumption_type !== payload.consumption_type) { // do it only if another consumption data type is loaded
           payload.consumption_lines = [] // clear it before populate
           payload.selected_param = ''
           var dataArray = response.data
