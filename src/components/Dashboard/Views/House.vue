@@ -13,7 +13,7 @@
             <!--</template>-->
             <button v-on:click="model.consumption_type='cons-ht'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-ht' }" class="btn btn-primary">Тепло</button>
             <button v-on:click="model.consumption_type='cons-hw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-hw' }" class="btn btn-primary">ГВС</button>
-            <button v-on:click="model.consumption_type='cons-cw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'chater' }" class="btn btn-primary">ХВС</button>
+            <button v-on:click="model.consumption_type='cons-cw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-cw' }" class="btn btn-primary">ХВС</button>
             <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-ht'">
               <v-tab title="Потребление" icon="ti-bar-chart">
 
@@ -41,27 +41,34 @@
                     <div class="row">
                       <div class="col-lg-3" style="padding-left: 0px;">
                         <div style="text-align: left;">
-                          <el-select class="select-danger"
-                                     size="large"
-                                     placeholder="Выбрать параметр"
-                                     v-model="model.selected_param">
-                            <el-option v-for="option in consumption_params"
-                                       class="select-danger"
-                                       :value="option"
-                                       :label="option"
-                                       :key="option">
-                            </el-option>
-                          </el-select>
                           <template v-for="line in model.consumption_lines">
                             <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
                           </template>
+                          <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                            <span>Нет привязанных линий"</span>
+                          </div>
                         </div>
                       </div>
                       <div class="col-lg-9">
                         <div class="card">
                           <div class="card-header">
-                            <h4 class="card-title">Потребление: Тепло</h4>
-                            <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                            <div class="col-lg-3">
+                              <el-select class="select-danger"
+                                         size="large"
+                                         placeholder="Выбрать параметр"
+                                         v-model="model.selected_param">
+                                <el-option v-for="option in consumption_params"
+                                           class="select-danger"
+                                           :value="option"
+                                           :label="option"
+                                           :key="option">
+                                </el-option>
+                              </el-select>
+                            </div>
+                            <div class="col-lg-9" style="text-align: left;">
+                              <h4 class="card-title">Потребление: Тепло</h4>
+                              <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                            </div>
                           </div>
                           <div class="card-content">
                             <div id="chartConsumption_cons-ht" class="ct-chart"></div>
@@ -79,6 +86,9 @@
                           <template v-for="line in model.consumption_lines">
                             <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
                           </template>
+                          <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                            <span>Нет привязанных линий"</span>
+                          </div>
                         </div>
                       </div>
                       <div class="col-lg-9">
@@ -121,27 +131,34 @@
                       <div class="row">
                         <div class="col-lg-3" style="padding-left: 0px;">
                           <div style="text-align: left;">
-                            <el-select class="select-danger"
-                                       size="large"
-                                       placeholder="Выбрать параметр"
-                                       v-model="model.selected_param">
-                              <el-option v-for="option in consumption_params"
-                                         class="select-danger"
-                                         :value="option"
-                                         :label="option"
-                                         :key="option">
-                              </el-option>
-                            </el-select>
                             <template v-for="line in model.consumption_lines">
                               <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
                             </template>
+                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                              <span>Нет привязанных линий"</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-lg-9">
                           <div class="card">
                             <div class="card-header">
-                              <h4 class="card-title">Потребление: ГВС</h4>
-                              <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                              <div class="col-lg-3">
+                                <el-select class="select-danger"
+                                           size="large"
+                                           placeholder="Выбрать параметр"
+                                           v-model="model.selected_param">
+                                  <el-option v-for="option in consumption_params"
+                                             class="select-danger"
+                                             :value="option"
+                                             :label="option"
+                                             :key="option">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="col-lg-9" style="text-align: left;">
+                                <h4 class="card-title">Потребление: ГВС</h4>
+                                <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                              </div>
                             </div>
                             <div class="card-content">
                               <div id="chartConsumption_cons-hw" class="ct-chart"></div>
@@ -159,6 +176,9 @@
                             <template v-for="line in model.consumption_lines">
                               <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
                             </template>
+                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                              <span>Нет привязанных линий"</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-lg-9">
@@ -201,27 +221,34 @@
                       <div class="row">
                         <div class="col-lg-3" style="padding-left: 0px;">
                           <div style="text-align: left;">
-                            <el-select class="select-danger"
-                                       size="large"
-                                       placeholder="Выбрать параметр"
-                                       v-model="model.selected_param">
-                              <el-option v-for="option in consumption_params"
-                                         class="select-danger"
-                                         :value="option"
-                                         :label="option"
-                                         :key="option">
-                              </el-option>
-                            </el-select>
                             <template v-for="line in model.consumption_lines">
                               <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
                             </template>
+                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                              <span>Нет привязанных линий"</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-lg-9">
                           <div class="card">
                             <div class="card-header">
-                              <h4 class="card-title">Потребление: ХВС</h4>
-                              <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                              <div class="col-lg-3">
+                                <el-select class="select-danger"
+                                           size="large"
+                                           placeholder="Выбрать параметр"
+                                           v-model="model.selected_param">
+                                  <el-option v-for="option in consumption_params"
+                                             class="select-danger"
+                                             :value="option"
+                                             :label="option"
+                                             :key="option">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="col-lg-9" style="text-align: left;">
+                                <h4 class="card-title">Потребление: ХВС</h4>
+                                <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
+                              </div>
                             </div>
                             <div class="card-content">
                               <div id="chartConsumption_cons-cw" class="ct-chart"></div>
@@ -239,6 +266,9 @@
                             <template v-for="line in model.consumption_lines">
                               <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
                             </template>
+                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                              <span>Нет привязанных линий"</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-lg-9">

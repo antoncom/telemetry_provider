@@ -580,16 +580,18 @@ export const getConsumption = ({commit}, payload) => {
     axios.get(credentials.appix_api + '/' + payload.consumption_type + params).then(response => {
       if (response.data.length >= 0) {
         // make consumption lines array for handling by checkboxes / radios
-        payload.consumption_lines = [] // clear it before populate
-        payload.selected_param = ''
-        var dataArray = response.data
-        for (let i = 0; i < dataArray.length; i++) {
-          let obj = {
-            name: dataArray[i].name,
-            selected: false,
-            noData: (dataArray[i].data.length === 0)
+        if (store.getters.consumption_type !== payload.consumption_type) {
+          payload.consumption_lines = [] // clear it before populate
+          payload.selected_param = ''
+          var dataArray = response.data
+          for (let i = 0; i < dataArray.length; i++) {
+            let obj = {
+              name: dataArray[i].name,
+              selected: false,
+              noData: (dataArray[i].data.length === 0)
+            }
+            payload.consumption_lines.push(obj)
           }
-          payload.consumption_lines.push(obj)
         }
 
         commit({
