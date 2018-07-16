@@ -79,7 +79,7 @@
                         </div>
                       </div>
                       <div class="col-lg-9">
-                        Data
+                        Будет готово позже
                       </div>
                     </div>
                   </v-tab>
@@ -93,40 +93,7 @@
             <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-hw'">
               <v-tab title="Потребление" icon="ti-user">
                 <div class="card">
-                  <form class="form-horizontal">
-                    <div class="card-header">
-                      <h4 class="card-title">Индентификаторы приборов учёта</h4>
-                    </div>
-                    <div class="card-content">
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Дата/время:</label><div class="col-md-9"><input type="text" placeholder="Дата/время" class="form-control" value="Time_stamp"></div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Температура теплоносителя T1</label>
-                        <div class="col-md-9"><input type="text" placeholder="T1" class="form-control" value="t_input_ch12"></div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Температура теплоносителя T2</label>
-                        <div class="col-md-9"><input type="text" placeholder="T1" class="form-control" value="t_input_ch22"></div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Объём теплоносителя V1</label>
-                        <div class="col-md-9"><input type="text" placeholder="V1" class="form-control" value="f_flow_ch21"></div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Объём теплоносителя V2</label>
-                        <div class="col-md-9"><input type="text" placeholder="V2" class="form-control" value="f_flow_ch22"></div>
-                      </div>
-                    </div>
-                    <div class="card-footer">
-                      <div class="form-group">
-                        <label class="col-md-3"></label>
-                        <div class="col-md-9">
-                          <button type="submit" class="btn btn-fill btn-info">Сохранить идентификаторы</button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+
                 </div>
               </v-tab>
               <v-tab title="Энергосервис" icon="ti-files">
@@ -175,9 +142,9 @@
           from: '2018-06-01',
           to: '2018-06-01',
           selected_param: '',
-          consumption_lines: [],
-          line_chosen: '',
-          max_param_value: 0
+          consumption_lines: [], // for checkboxes in graphic mode
+          line_chosen: '', // for radio buttons in table mode
+          max_param_value: 0 // for correct scaling of Y axis
         },
         dataViewType: 'graphic',
         pagination: {
