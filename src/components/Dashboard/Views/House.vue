@@ -316,9 +316,9 @@
         model: {
           house_id: '',
           address: '',
-          consumption_type: 'cons-ht',
-          from: '2018-06-01',
-          to: '2018-06-01',
+          consumption_type: '',
+          from: '2018-06-07',
+          to: '2018-06-26',
           selected_param: '',
           consumption_lines: [], // for checkboxes in graphic mode
           line_chosen: '', // for radio buttons in table mode
@@ -532,9 +532,11 @@
 
       this.$data.model.house_id = this.$route.params.id
       this.$store.dispatch('getHouse', this.$data.model)
-      this.$store.dispatch('getConsumption', this.$data.model).then(() => {
-        this.initCharts()
-      })
+      if (this.model.consumption_type !== '') {
+        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+          this.initCharts()
+        })
+      }
     },
     computed: {
       consumption_type () {

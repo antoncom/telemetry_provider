@@ -51,7 +51,7 @@
       ...mapFields(['address'])
     },
     mounted () {
-      this.$data.model.id = this.$route.params.id
+      this.$data.model.house_id = this.$route.params.id
       this.$store.dispatch('getHouse', this.$data.model)
     },
     data () {
@@ -59,7 +59,8 @@
         model: {
           address: '',
           error: '',
-          status: ''
+          status: '',
+          house_id: ''
         },
         modelValidations: {
           address: {
