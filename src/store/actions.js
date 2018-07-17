@@ -381,7 +381,7 @@ export const editHouse = ({commit}, payload) => {
   axios.defaults.withCredentials = false
 
   var qs = require('qs')
-  axios.put(credentials.appix_api + '/houses/' + payload.id, qs.stringify(payload)).then(response => {
+  axios.put(credentials.appix_api + '/houses/' + payload.house_id, qs.stringify(payload)).then(response => {
     if (response.data.status === 'ok') {
       commit({
         type: types.EDIT_HOUSE,
