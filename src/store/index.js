@@ -22,7 +22,8 @@ const state = {
   selectedHouse: '',
   selectedHouseholder: '',
   consumption_data: [],
-  consumption_type: ''
+  consumption_type: '',
+  weather_data: {}
 }
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -34,6 +35,9 @@ export default new Vuex.Store({
   strict: debug,
   plugins: debug ? [createLogger()] : [],
   getters: {
+    weather_data: (state) => {
+      return state.weather_data
+    },
     consumption_data: (state) => {
       return state.consumption_data
     },

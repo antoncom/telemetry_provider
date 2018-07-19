@@ -19,7 +19,7 @@
 
                 <!--#######Graphic & data tabs###########-->
                 <div class="row">
-                  <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
+                  <div class="col-lg-3" style="text-align: left; margin-top: 5px;">
                     <div class="btn-group">
                       <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
                       <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
@@ -71,7 +71,15 @@
                             </div>
                           </div>
                           <div class="card-content">
-                            <div id="chartConsumption_cons-ht" class="ct-chart"></div>
+                            <template>
+                              <div class="small">
+                                <line-chart :chart-data="datacollection"
+                                            :options="dataoptions"
+                                            :width="600"
+                                            :height="400">
+                                </line-chart>
+                              </div>
+                            </template>
                           </div>
                         </div>
                       </div>
@@ -153,7 +161,7 @@
                 <div class="card">
                   <!--#######Graphic & data tabs###########-->
                   <div class="row">
-                    <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
+                    <div class="col-lg-3" style="text-align: left; margin-top: 5px;">
                       <div class="btn-group">
                         <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
                         <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
@@ -205,7 +213,15 @@
                               </div>
                             </div>
                             <div class="card-content">
-                              <div id="chartConsumption_cons-hw" class="ct-chart"></div>
+                              <template>
+                                <div class="small">
+                                  <line-chart :chart-data="datacollection"
+                                              :options="dataoptions"
+                                              :width="600"
+                                              :height="400">
+                                  </line-chart>
+                                </div>
+                              </template>
                             </div>
                           </div>
                         </div>
@@ -287,7 +303,7 @@
                 <div class="card">
                   <!--#######Graphic & data tabs###########-->
                   <div class="row">
-                    <div class="col-lg-3 pull-left" style="text-align: left; margin-top: 5px;">
+                    <div class="col-lg-3" style="text-align: left; margin-top: 5px;">
                       <div class="btn-group">
                         <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
                         <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
@@ -339,7 +355,15 @@
                               </div>
                             </div>
                             <div class="card-content">
-                              <div id="chartConsumption_cons-cw" class="ct-chart"></div>
+                              <template>
+                                <div class="small">
+                                  <line-chart :chart-data="datacollection"
+                                              :options="dataoptions"
+                                              :width="600"
+                                              :height="400">
+                                  </line-chart>
+                                </div>
+                              </template>
                             </div>
                           </div>
                         </div>
@@ -429,6 +453,7 @@
   import 'element-ui/lib/theme-chalk/index.css'
   import VueTabs from 'vue-nav-tabs'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
+  import LineChart from 'src/components/UIComponents/Chartsjs/LineChart.js'
   // import ChartCard from 'src/components/UIComponents/Cards/ChartCard.vue'
 
   Vue.use(Table)
@@ -441,10 +466,41 @@
       [DatePicker.name]: DatePicker,
       PPagination,
       [Option.name]: Option,
-      [Select.name]: Select
+      [Select.name]: Select,
+      LineChart
     },
     data () {
       return {
+        datacolors: ['#5F9EA0', '#D2691E', '#6495ED', '#008B8B', '#8B008B'],
+        datacollection: {
+          labels: [],
+          dataset: []
+        },
+        dataoptions: {
+          scales: {
+            yAxes: [{
+              id: 'A',
+              type: 'linear',
+              position: 'left',
+              scaleLabel: {
+                display: true,
+                labelString: 'Данные от прибора'
+              }
+            }, {
+              id: 'B',
+              type: 'linear',
+              position: 'right',
+              scaleLabel: {
+                display: true,
+                labelString: 'Температура воздуха'
+              },
+              ticks: {
+                max: 40,
+                min: -10
+              }
+            }]
+          }
+        },
         model: {
           house_id: '',
           address: '',
@@ -537,73 +593,57 @@
       }
     },
     methods: {
+      hexToRGB (hex, alpha) {
+        var r = parseInt(hex.slice(1, 3), 16)
+        var g = parseInt(hex.slice(3, 5), 16)
+        var b = parseInt(hex.slice(5, 7), 16)
+        if (alpha) {
+          return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')'
+        } else {
+          return 'rgb(' + r + ', ' + g + ', ' + b + ')'
+        }
+      },
       initConsumptionChart () {
         var lines = this.model.consumption_lines
         var param = this.model.selected_param
-
-        var timePoints = ['18:00', '20:00', '22:00', '00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00']
-        // var timePoints = []
-        // timePoints.push(this.model.from)
-        // timePoints.push(this.model.to)
         var series = []
+        var labels = []
+
+        var weather = {
+          yAxisID: 'B',
+          label: 'Температура воздуха',
+          data: [-5, -3, -2, 0, 5, 12, 15, 7, 2, 15, 28, 28, 28, 17, 10, 10, 5, 6, 6, 5, 7, 8, 5, 6, 4, 3, 5],
+          backgroundColor: this.hexToRGB('#FF0000', 0.1)
+        }
+
         if (lines && lines.length) {
           for (let i = 0; i < lines.length; i++) {
             if (lines[i].selected) {
-              let lineData = this.consumption_graphData(lines[i].name, param, timePoints)
+              let lineData = this.consumption_graphData(lines[i].name, param)
+              labels = lineData.labels
               series.push(lineData)
             }
           }
         }
-        var dataConsumption = {
-          // labels: timePoints,
-          series: series
-        }
-
-        const optionsConsumption = {
-          showPoint: true,
-          lineSmooth: true,
-          axisX: {
-            showGrid: true,
-            showLabel: false,
-            offset: 0
-          },
-          axisY: {
-            offset: 60
-
-          },
-          low: 0,
-          high: this.model.max_param_value + this.model.max_param_value * 0.5,
-          height: '250px'
-        }
-        if (this.model.consumption_type === 'cons-ht') {
-          this.$Chartist.Line('#chartConsumption_cons-ht', dataConsumption, optionsConsumption)
-        }
-        if (this.model.consumption_type === 'cons-hw') {
-          this.$Chartist.Line('#chartConsumption_cons-hw', dataConsumption, optionsConsumption)
-        }
-        if (this.model.consumption_type === 'cons-cw') {
-          this.$Chartist.Line('#chartConsumption_cons-cw', dataConsumption, optionsConsumption)
+        series.push(weather)
+        // show chart
+        if ((series && series.length > 0) && (labels && labels.length > 0)) {
+          this.datacollection = {
+            labels: labels,
+            datasets: series
+          }
+        } else {
+          this.datacollection = {
+            labels: [],
+            datasets: []
+          }
         }
       },
       initCharts () {
         this.initConsumptionChart()
       },
-      // line = 'Линия 1 (например, 1-й подъезд)'
-      // param = 'p1'
-      // timePoints = ['6:00', '9:00', '11:00', '14:00'],
-      // returns [
-      //   {
-      //     timestamp: 23:00,
-      //     t2: 62.5
-      //   },
-      //   {
-      //     timestamp: 00:00,
-      //     t2: 50.1
-      //   },
-
-      // ]
-      consumption_graphData (line, param, timePoints) {
-        var result = []
+      consumption_graphData (line, param) {
+        this.model.max_param_value = 0
         if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
           var dataArray = this.$store.getters.consumption_data
           // iterate lines
@@ -611,24 +651,25 @@
             if (dataArray[i].name === line) {
               // line found
               // iterate records of the line
+              var obj = {
+                label: line, // chart name
+                data: [], // yAxis data
+                labels: [] // xAxis data timestamp)
+              }
               for (var record of dataArray[i].data) {
-                var timepoint = record.timestamp
-
-                let obj = {}
-                obj['timestamp'] = timepoint
-                obj[param] = record[param]
-                result.push(record[param])
-
-                // define max value
+                obj['data'].push(record[param])
+                obj['labels'].push(record['timestamp'])
                 if (this.model.max_param_value < record[param]) {
                   this.model.max_param_value = record[param]
                 }
               }
+              obj['backgroundColor'] = this.hexToRGB(this.datacolors[i], 0.4)
+              obj['yAxisID'] = 'A'
               // break iterations if the line found
               break
             }
           }
-          return result
+          return obj
         }
       },
       consumption_lineData (line) {
@@ -649,9 +690,6 @@
       }
     },
     async mounted () {
-      const Chartist = await import('chartist')
-      this.$Chartist = Chartist
-
       this.$data.model.house_id = this.$route.params.id
       this.$store.dispatch('getHouse', this.$data.model)
       if (this.model.consumption_type !== '') {
