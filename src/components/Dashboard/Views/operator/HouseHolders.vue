@@ -106,6 +106,47 @@
       PPagination
     },
     computed: {
+      tableColumns () {
+        var result = [
+          {
+            prop: 'id',
+            label: 'ID',
+            minWidth: 70
+          },
+          {
+            prop: 'name',
+            label: 'Название домовладелеца',
+            minWidth: 200
+          },
+          {
+            prop: 'tin',
+            label: 'ИНН',
+            minWidth: 200
+          },
+          {
+            prop: 'address',
+            label: 'Адрес домовладельца',
+            minWidth: 300
+          },
+          {
+            prop: 'email',
+            label: 'Email',
+            minWidth: 120
+          }
+        ]
+        let role = store.getters.userType
+        if (role === 'provider') {
+          let columns = [
+            {
+              prop: 'operator',
+              label: 'Оператор',
+              minWidth: 300
+            }
+          ]
+          result = result.concat(columns)
+        }
+        return result
+      },
       pagedData () {
         return this.tableData.slice(this.from, this.to)
       },
@@ -172,33 +213,6 @@
         },
         searchQuery: '',
         propsToSearch: ['address', 'tin', 'name', 'email'],
-        tableColumns: [
-          {
-            prop: 'id',
-            label: 'ID',
-            minWidth: 70
-          },
-          {
-            prop: 'name',
-            label: 'Название домовладелеца',
-            minWidth: 200
-          },
-          {
-            prop: 'tin',
-            label: 'ИНН',
-            minWidth: 200
-          },
-          {
-            prop: 'address',
-            label: 'Адрес домовладельца',
-            minWidth: 300
-          },
-          {
-            prop: 'email',
-            label: 'Email',
-            minWidth: 120
-          }
-        ],
         tableData: [],
         loading2: true
       }

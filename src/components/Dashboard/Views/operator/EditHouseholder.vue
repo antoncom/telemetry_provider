@@ -3,7 +3,7 @@
     <form class="form-horizontal">
       <div class="card-header">
         <h4 class="card-title">
-          Измените данные домовладельца: {{ $route.params.id }}
+          Измените данные домовладельца:
         </h4>
       </div>
       <div class="card-content">

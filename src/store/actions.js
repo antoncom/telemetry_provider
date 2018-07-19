@@ -259,7 +259,7 @@ export const addHouseholder = ({commit}, payload) => {
   axios.defaults.withCredentials = false
 
   let data = new FormData()
-  data.append('org_id', store.getters.getUserId)
+  data.append('org_id', payload.operator)
   data.append('name', payload.name)
   data.append('email', payload.email)
   data.append('tin', payload.tin)

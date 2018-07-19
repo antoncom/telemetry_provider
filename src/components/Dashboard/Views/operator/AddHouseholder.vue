@@ -7,6 +7,29 @@
         </h4>
       </div>
       <div class="card-content">
+        <fieldset v-if="this.$store.getters.userType === 'provider'">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Выберите оператора</label>
+            <div class="col-sm-6">
+              <el-select
+                      clearable
+                      class="select-default"
+                      v-model="model.operator"
+                      placeholder="Выберите оператора">
+                <el-option
+                        class="select-default"
+                        v-for="item in operators"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
+            <div class="col-sm-4">
+              <code></code>
+            </div>
+          </div>
+        </fieldset>
         <fieldset>
           <div class="form-group">
           <label class="col-sm-2 control-label">Название домовладельца</label>
@@ -160,12 +183,30 @@
   Vue.use(VeeValidate)
 
   export default {
+    created () {
+      if (this.$store.getters.userType === 'provider') {
+        this.$store.dispatch('listOperators', this.$data.model)
+      }
+    },
     computed: {
-      ...mapFields(['name', 'email', 'tin', 'address', 'username', 'password', 'confirmedPassword', 'generate_password'])
+      ...mapFields(['operator', 'name', 'email', 'tin', 'address', 'username', 'password', 'confirmedPassword', 'generate_password']),
+      operators () {
+        return this.$store.getters.operators
+      },
+      'model.operator' () {
+        // if authorized as operator then org_id=userid
+        // otherwise org_id got from dropdown in the add householder form
+        var result = ''
+        if (this.$store.getters.userType === 'operator') {
+          result = this.$store.getters.getUserId
+        }
+        return result
+      }
     },
     data () {
       return {
         model: {
+          operator: '',
           name: 'Домовладелец №100',
           email: 'd100@mail.ru',
           tin: '121503842042',
@@ -178,6 +219,9 @@
           status: ''
         },
         modelValidations: {
+          operator: {
+            required: true
+          },
           name: {
             required: true,
             max: 64
@@ -210,14 +254,14 @@
           generate_password: {
             required: false
           }
-        },
-        // password generator
-        size: '8',
-        characters: 'a-z,A-Z,0-9,#',
-        placeholder: 'Password',
-        auto: [String, Boolean],
-        value: '',
-        generatedPassword: ''
+        }
+//        // password generator
+//        size: '8',
+//        characters: 'a-z,A-Z,0-9,#',
+//        placeholder: 'Password',
+//        auto: [String, Boolean],
+//        value: '',
+//        generatedPassword: ''
       }
     },
     methods: {

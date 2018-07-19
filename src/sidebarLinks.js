@@ -26,17 +26,17 @@ export default [
     name: 'Домовладельцы',
     icon: 'ti-gift',
     path: '/householders',
-    roles: ['operator'],
+    roles: ['operator', 'provider'],
     children: [
       {
         name: 'Список домовладельцев',
         path: '/householders/list',
-        roles: ['operator']
+        roles: ['operator', 'provider']
       },
       {
         name: 'Добавить домовладельца',
         path: '/householders/add',
-        roles: ['operator']
+        roles: ['operator', 'provider']
       }]
   },
   {

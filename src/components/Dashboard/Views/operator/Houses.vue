@@ -8,7 +8,7 @@
         <div class="category">Список домов, зарегистрированных в системе</div>
       </div>
       <div class="card-content row">
-        <div class="col-sm-2">
+        <div class="col-lg-1">
           <el-select
                   class="select-default"
                   v-model="pagination.perPage"
@@ -22,7 +22,28 @@
             </el-option>
           </el-select>
         </div>
-        <div v-if="userCanSee()" class="col-sm-6">
+        <div v-if="userCanSee()" class="col-lg-3">
+          <el-select
+                  clearable
+                  class="select-default"
+                  v-model="model_operator.org_id"
+                  v-on:change="getHouseholdersByOperator"
+                  placeholder="Выберите оператора">
+            <el-option
+                    class="select-default"
+                    label="- Все операторы -"
+                    value="">
+            </el-option>
+            <el-option
+                    class="select-default"
+                    v-for="item in operators"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+            </el-option>
+          </el-select>
+        </div>
+        <div v-if="userCanSee()" class="col-lg-3">
           <el-select
                   clearable
                   class="select-default"
@@ -43,7 +64,7 @@
             </el-option>
           </el-select>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-5">
           <div class="pull-right">
             <label>
               <input type="search" class="form-control input-sm" placeholder="Search records" v-model="searchQuery" aria-controls="datatables">
@@ -133,11 +154,67 @@
       PPagination
     },
     computed: {
+      tableColumns () {
+        var result = [
+          {
+            prop: 'id',
+            label: 'ID',
+            minWidth: 70
+          },
+          {
+            prop: 'address',
+            label: 'Адрес дома',
+            minWidth: 400
+          }
+        ]
+        var role = this.$store.getters.userType
+        console.log('ROLE', role)
+        switch (role) {
+          case ('provider'): {
+            let columns = [
+              {
+                prop: 'householder',
+                label: 'Домовладелец',
+                minWidth: 300
+              },
+              {
+                prop: 'operator',
+                label: 'Оператор',
+                minWidth: 300
+              }
+            ]
+            result = result.concat(columns)
+            break
+          }
+          case ('operator'): {
+            let columns = [
+              {
+                prop: 'householder',
+                label: 'Домовладелец',
+                minWidth: 300
+              }
+            ]
+            result = result.concat(columns)
+            break
+          }
+          case ('householder'): {
+            let columns = []
+            result = result.concat(columns)
+            break
+          }
+          default: { }
+        }
+        console.log('RESULT', result)
+        return result
+      },
       pagedData () {
         return this.tableData.slice(this.from, this.to)
       },
       householders () {
         return store.state.householders
+      },
+      operators () {
+        return store.getters.operators
       },
       /***
        * Searches through table data and returns a paginated array.
@@ -195,12 +272,17 @@
                 this.errors.push(e)
               })
       this.$store.dispatch('listHouseholders', this.$data.model)
+      this.$store.dispatch('listOperators', this.$data.model)
     },
     data () {
       return {
         householder: '',
-//        houseHolderId: '',
+        operator: '',
         model: {
+          error: '',
+          org_id: ''
+        },
+        model_operator: {
           error: '',
           org_id: ''
         },
@@ -213,18 +295,6 @@
         },
         searchQuery: '',
         propsToSearch: ['address'],
-        tableColumns: [
-          {
-            prop: 'id',
-            label: 'ID',
-            minWidth: 70
-          },
-          {
-            prop: 'address',
-            label: 'Адрес дома',
-            minWidth: 400
-          }
-        ],
         tableData: [],
         loading2: true
       }
@@ -242,6 +312,9 @@
                 .catch(e => {
                   this.errors.push(e)
                 })
+      },
+      getHouseholdersByOperator () {
+        this.$store.dispatch('listHouseholders', this.$data.model_operator)
       },
       handleEdit (index, row) {
         router.push('/houses/edit/' + row.id)

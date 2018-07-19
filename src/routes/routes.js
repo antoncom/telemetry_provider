@@ -150,7 +150,7 @@ const routes = [
         component: HouseHolders,
         meta: {
           requiredAuth: true,
-          roles: ['operator'],
+          roles: ['operator', 'provider'],
           breadcrumbs: false
         }
       },
@@ -160,7 +160,7 @@ const routes = [
         component: HouseHolders,
         meta: {
           requiredAuth: true,
-          roles: ['operator'],
+          roles: ['operator', 'provider'],
           breadcrumbs: false
         }
       },
@@ -170,7 +170,7 @@ const routes = [
         component: AddHouseholder,
         meta: {
           requiredAuth: true,
-          roles: ['operator'],
+          roles: ['operator', 'provider'],
           breadcrumbs: true
         }
       },
@@ -180,7 +180,7 @@ const routes = [
         component: EditHouseholder,
         meta: {
           requiredAuth: true,
-          roles: ['operator'],
+          roles: ['operator', 'provider'],
           breadcrumbs: true
         }
       },

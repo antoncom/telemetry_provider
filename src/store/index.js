@@ -13,12 +13,13 @@ const state = {
   figureStatus: [],
   isPortsEnabled: false,
   isGridShown: false,
-  userId: null,
+  userId: '',
   userToken: '',
   userType: '',
   userAuthorized: false,
   houses: [],
   householders: [],
+  operators: [],
   selectedHouse: '',
   selectedHouseholder: '',
   consumption_data: [],
@@ -35,6 +36,9 @@ export default new Vuex.Store({
   strict: debug,
   plugins: debug ? [createLogger()] : [],
   getters: {
+    userType: (state) => {
+      return state.userType
+    },
     weather_data: (state) => {
       return state.weather_data
     },
@@ -49,6 +53,9 @@ export default new Vuex.Store({
     },
     selectedHouseholder: (state) => {
       return state.selectedHouseholder
+    },
+    operators: (state) => {
+      return state.operators
     },
     getHouseholders: (state) => {
       return state.householders
