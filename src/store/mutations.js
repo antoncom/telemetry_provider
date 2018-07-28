@@ -86,6 +86,11 @@ export default {
     state.consumption_type = commit.payload.type
   },
 
+  [types.CLEAR_CONSUMPTION]: (state) => {
+    state.consumption_data = []
+    state.consumption_type = ''
+  },
+
   [types.LOAD_WORKFLOW]: (state, commit) => {
     console.log('DIAG', commit.payload)
     state.rows = commit.payload.rows

@@ -7,10 +7,10 @@ import credentials from 'src/api/credentials.js'
 import store from 'src/store/index.js'
 // import routes from 'src/routes/routes'
 import {router} from 'src/main'
+import swal from 'sweetalert2'
+import copyToClipboard from 'src/plugins/copyToClipboard.js'
 
-import VueSweetalert2 from 'vue-sweetalert2'
-
-Vue.use(VueSweetalert2)
+Vue.use(copyToClipboard)
 Vue.use(VueAxios, axios)
 
 export const login = ({commit}, payload) => {
@@ -130,7 +130,33 @@ export const addOperator = ({commit}, payload) => {
         payload: response.data
       })
       if (response.data.status === 'ok') {
-        router.push('/operators/list')
+        swal({
+          title: 'Данные авторизации',
+          html: '<pre>Логин: ' + payload.username + ' Пароль: ' + response.data.password + '</pre>',
+          type: 'success',
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          confirmButtonText: 'Копировать в буфер',
+          customClass: 'swal-password',
+          preConfirm: () => {
+            Vue.copyToClipboard(payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password)
+          }
+        }).then((result) => {
+          swal({
+            title: 'Скопировано!',
+            html:
+            '<pre><code>' +
+            payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password +
+            '</code></pre>',
+            confirmButtonText: 'Ok',
+            buttonsStyling: false,
+            confirmButtonClass: 'btn btn-success btn-fill'
+          }).then((result) => {
+            if (result.value) {
+              router.push('/operators/list')
+            }
+          })
+        })
       }
     } else if (response.data.status === 'error') {
       payload.error = response.data.message
@@ -176,9 +202,9 @@ export const deleteOperator = ({commit}, payload) => {
 
   axios.delete(credentials.appix_api + '/operators/' + payload.row.id).then(response => {
     if (response.data.status === 'ok') {
-      Vue.swal({
+      swal({
         title: 'Удалено!',
-        html: 'Оператор удалён из системы: <strong>' + payload.row.name + '</strong>',
+        html: '<pre>Оператор удалён из системы: \n<strong>' + payload.row.name + '</strong></pre>',
         type: 'success',
         timer: 3000
       })
@@ -275,7 +301,33 @@ export const addHouseholder = ({commit}, payload) => {
         payload: response.data
       })
       if (response.data.status === 'ok') {
-        router.push('/householders/list')
+        swal({
+          title: 'Данные авторизации',
+          html: '<pre>Логин: ' + payload.username + ' Пароль: ' + response.data.password + '</pre>',
+          type: 'success',
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          confirmButtonText: 'Копировать в буфер',
+          customClass: 'swal-password',
+          preConfirm: () => {
+            Vue.copyToClipboard(payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password)
+          }
+        }).then((result) => {
+          swal({
+            title: 'Скопировано!',
+            html:
+            '<pre><code>' +
+            payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password +
+            '</code></pre>',
+            confirmButtonText: 'Ok',
+            buttonsStyling: false,
+            confirmButtonClass: 'btn btn-success btn-fill'
+          }).then((result) => {
+            if (result.value) {
+              router.push('/householders/list')
+            }
+          })
+        })
       }
     } else if (response.data.status === 'error') {
       payload.error = response.data.message
@@ -321,10 +373,12 @@ export const deleteHouseholder = ({commit}, payload) => {
 
   axios.delete(credentials.appix_api + '/householders/' + payload.row.id).then(response => {
     if (response.data.status === 'ok') {
-      Vue.swal({
+      swal({
         title: 'Удалено!',
-        html: 'Домовладелец удалён из системы: <strong>' + payload.row.name + '</strong>',
+        html: '<pre>Домовладелец удалён из системы: \n<strong>' + payload.row.name + '</strong></pre>',
         type: 'success',
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-success btn-fill',
         timer: 3000
       })
       let indexToDelete = payload.table.findIndex((tableRow) => tableRow.id === payload.row.id)
@@ -432,10 +486,12 @@ export const deleteHouse = ({commit}, payload) => {
 
   axios.delete(credentials.appix_api + '/houses/' + payload.row.id).then(response => {
     if (response.data.status === 'ok') {
-      Vue.swal({
+      swal({
         title: 'Удалено!',
-        html: 'Дом удалён из системы: <strong>' + payload.row.address + '</strong>',
+        html: '<pre>Дом удалён из системы: \n<strong>' + payload.row.address + '</strong></pre>',
         type: 'success',
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-success btn-fill',
         timer: 3000
       })
       let indexToDelete = payload.table.findIndex((tableRow) => tableRow.id === payload.row.id)
@@ -572,6 +628,8 @@ export const getEquipment = ({commit}, payload) => {
 
 export const getConsumption = ({commit}, payload) => {
   return new Promise((resolve, reject) => {
+    commit(types.CLEAR_CONSUMPTION)
+
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
     axios.defaults.withCredentials = false
@@ -632,9 +690,11 @@ export const unbindEquipment = ({commit}, payload) => {
       let messageHtml = 'Линия <strong>' + payload.name + ' [' + payload.line + ']</strong>'
       messageHtml += ' прибора [' + payload.equipment_address + ']'
       messageHtml += ' отвязана от дома <i>' + payload.house_address + '</i>!'
-      Vue.swal({
+      swal({
         title: 'Отвязано!',
         html: messageHtml,
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-success btn-fill',
         type: 'success'
       })
       payload.refresh()

@@ -154,6 +154,10 @@
   import VeeValidate, { mapFields, Validator } from 'vee-validate'
   import ru from 'vee-validate/dist/locale/ru'
 
+  // import SweetAlert from 'vue-sweetalert2-component'
+
+//  import MyComponent from 'src/components/Dashboard/Views/provider/MyComponent.vue'
+
   // Localize takes the locale object as the second argument (optional) and merges it.
   Validator.localize('ru', ru)
   // Install the Plugin.
@@ -229,4 +233,14 @@
   }
 </script>
 <style>
+  .swal-password {
+    min-width: 400px;
+  }
+  .table.password tr td {
+    text-align: left;
+    font-size: 18px;
+  }
+  .table.password tr td:last-child {
+    font-weight: bolder;
+  }
 </style>

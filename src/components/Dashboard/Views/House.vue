@@ -8,68 +8,68 @@
             <p class="category">Учётные данные, данные ОДПУ, настроечные данные</p>
           </div>
           <div class="card-content">
-            <!--<template v-for="cons in consumption_types">-->
-              <!--<button v-on:click="model.consumption_type=cons.type" v-bind:class="{ 'btn-fill': model.consumption_type == cons.type }" class="btn btn-primary">{{ cons.label }}</button>-->
-            <!--</template>-->
-            <button v-on:click="model.consumption_type='cons-ht'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-ht' }" class="btn btn-primary">Тепло</button>
-            <button v-on:click="model.consumption_type='cons-hw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-hw' }" class="btn btn-primary">ГВС</button>
-            <button v-on:click="model.consumption_type='cons-cw'" v-bind:class="{ 'btn-fill': model.consumption_type == 'cons-cw' }" class="btn btn-primary">ХВС</button>
-            <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-ht'">
+            <button v-for="ctype in consumption_types" v-on:click="model.consumption_type=ctype.type" v-bind:class="{ 'btn-fill': model.consumption_type == ctype.type }" class="btn btn-primary" style="margin-right: 5px;">{{ ctype.label }}</button>
+            <vue-tabs  v-for="ctype in consumption_types" :key="ctype.type" class="card-content" v-show="model.consumption_type == ctype.type">
               <v-tab title="Потребление" icon="ti-bar-chart">
-
-                <!--#######Graphic & data tabs###########-->
                 <div class="row">
-                  <div class="col-lg-3" style="text-align: left; margin-top: 5px;">
-                    <div class="btn-group">
+                  <div class="col-lg-4 pull-left" style="text-align: left; margin-top: 5px;">
+                    <div class="btn-group" style="margin-bottom: 20px;">
                       <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
                       <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
                     </div>
+                    <div v-show="dataViewType=='graphic'" style="text-align: left; margin-left:5px;">
+                      <template v-for="line in model.consumption_lines">
+                        <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 20px;">{{ line.name }}</p-checkbox>
+                      </template>
+                      <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                        <span>Нет привязанных линий"</span>
+                      </div>
+                    </div>
+                    <div v-show="dataViewType=='table'" style="text-align: left; margin-left:5px;">
+                      <template v-for="line in model.consumption_lines">
+                        <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
+                      </template>
+                      <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
+                        <span>Нет привязанных линий"</span>
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-group col-lg-9" style="text-align: left;">
-                    <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
-                                    :picker-options="pickerOptions1"
-                                    value-format="yyyy-MM-dd">
-                    </el-date-picker>
-                    <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
-                                    :picker-options="pickerOptions1"
-                                    value-format="yyyy-MM-dd">
-                    </el-date-picker>
+                  <div class="col-lg-8">
+                    <div class="row">
+                      <div class="col-lg-12" style="text-align: left;">
+                        <h4 class="card-title">Потребление: {{ ctype.label }}</h4>
+                        <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
+                                        :picker-options="pickerOptions1"
+                                        value-format="yyyy-MM-dd">
+                        </el-date-picker>
+                        <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
+                                        :picker-options="pickerOptions1"
+                                        value-format="yyyy-MM-dd">
+                        </el-date-picker>
+                      </div>
+                    </div>
+                    <div  v-show="dataViewType=='graphic'" class="row">
+                      <div class="form-group col-lg-6 pull-left" style="text-align: left; margin-top: 15px;">
+                        <el-select class="select-danger"
+                                   size="large"
+                                   placeholder="Выбрать параметр"
+                                   v-model="model.selected_param">
+                          <el-option v-for="option in consumption_params"
+                                     class="select-danger"
+                                     :value="option"
+                                     :label="option"
+                                     :key="option">
+                          </el-option>
+                        </el-select>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
                   <v-tab>
                     <div class="row">
-                      <div class="col-lg-3" style="padding-left: 0px;">
-                        <div style="text-align: left;">
-                          <template v-for="line in model.consumption_lines">
-                            <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
-                          </template>
-                          <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
-                            <span>Нет привязанных линий"</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-lg-9">
+                      <div class="col-lg-12">
                         <div class="card">
-                          <div class="card-header">
-                            <div class="col-lg-3">
-                              <el-select class="select-danger"
-                                         size="large"
-                                         placeholder="Выбрать параметр"
-                                         v-model="model.selected_param">
-                                <el-option v-for="option in consumption_params"
-                                           class="select-danger"
-                                           :value="option"
-                                           :label="option"
-                                           :key="option">
-                                </el-option>
-                              </el-select>
-                            </div>
-                            <div class="col-lg-9" style="text-align: left;">
-                              <h4 class="card-title">Потребление: Тепло</h4>
-                              <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
-                            </div>
-                          </div>
                           <div class="card-content">
                             <template>
                               <div class="small">
@@ -88,356 +88,60 @@
                 </vue-tabs>
                 <vue-tabs class="card-content viewresult" v-show="dataViewType == 'table'">
                   <v-tab>
-                    <div class="row">
-                      <div class="col-lg-3">
-                        <div style="text-align: left;">
-                          <template v-for="line in model.consumption_lines">
-                            <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
-                          </template>
-                          <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
-                            <span>Нет привязанных линий"</span>
-                          </div>
-                        </div>
+                    <div class="card-content row">
+                      <!--============= Table =============-->
+                      <div class="col-sm-12">
+                        <el-table class="table-striped"
+                                  :data="queriedData"
+                                  border
+                                  max-height="720"
+                                  v-loading="loading2"
+                                  element-loading-text="Ждите..."
+                                  element-loading-spinner="el-icon-loading"
+                                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                                  style="width: 100%">
+                          <el-table-column v-for="column in consumption_tableColumns"
+                                           sortable
+                                           :fixed="column.prop === 'timestamp'"
+                                           :resizable="false"
+                                           :key="column.label"
+                                           :min-width="consumption_params_size[column.prop]"
+                                           :prop="column.prop"
+                                           :label="column.label">
+                          </el-table-column>
+                        </el-table>
                       </div>
-                      <div class="col-lg-9">
-                        <!--============= Table =============-->
-                        <div class="col-sm-12">
-                          <el-table class="table-striped"
-                                    ref="consht"
-                                    :data="queriedData"
-                                    border
-                                    v-loading="loading2"
-                                    element-loading-text="Ждите..."
-                                    element-loading-spinner="el-icon-loading"
-                                    element-loading-background="rgba(0, 0, 0, 0.8)"
-                                    style="width: 100%">
-                            <el-table-column v-for="column in consumption_tableColumns"
-                                             sortable
-                                             :key="column.label"
-                                             :min-width="column.minWidth"
-                                             :prop="column.prop"
-                                             :label="column.label">
-                            </el-table-column>
-                          </el-table>
-                        </div>
-                        <div class="col-sm-2" style="margin-top:15px;">
-                          <el-select
+                      <div class="col-sm-2" style="margin-top:15px;">
+                        <el-select
+                                class="select-default"
+                                v-model="pagination.perPage"
+                                placeholder="Per page">
+                          <el-option
                                   class="select-default"
-                                  v-model="pagination.perPage"
-                                  placeholder="Per page">
-                            <el-option
-                                    class="select-default"
-                                    v-for="item in pagination.perPageOptions"
-                                    :key="item"
-                                    :label="item"
-                                    :value="item">
-                            </el-option>
-                          </el-select>
-                        </div>
-                        <div class="col-sm-4 pagination-info" style="margin-top:25px;">
-                          <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
-                        </div>
-                        <div class="col-sm-6">
-                          <p-pagination class="pull-right"
-                                        v-model="pagination.currentPage"
-                                        :per-page="pagination.perPage"
-                                        :total="pagination.total">
-                          </p-pagination>
-                        </div>
-                        <!--=========== End Table ===========-->
+                                  v-for="item in pagination.perPageOptions"
+                                  :key="item"
+                                  :label="item"
+                                  :value="item">
+                          </el-option>
+                        </el-select>
                       </div>
+                      <div class="col-sm-4 pagination-info" style="margin-top:25px;">
+                        <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-pagination class="pull-right"
+                                      v-model="pagination.currentPage"
+                                      :per-page="pagination.perPage"
+                                      :total="pagination.total">
+                        </p-pagination>
+                      </div>
+                      <!--=========== End Table ===========-->
                     </div>
                   </v-tab>
                 </vue-tabs>
-                <!--######### End of graphic & data tabs ###########-->
-
               </v-tab>
               <v-tab title="Энергосервис" icon="ti-files">
                 <h5>Тепло - энергосервис</h5>
-              </v-tab>
-            </vue-tabs>
-            <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-hw'">
-              <v-tab title="Потребление" icon="ti-user">
-                <div class="card">
-                  <!--#######Graphic & data tabs###########-->
-                  <div class="row">
-                    <div class="col-lg-3" style="text-align: left; margin-top: 5px;">
-                      <div class="btn-group">
-                        <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
-                        <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-9" style="text-align: left;">
-                      <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
-                                      :picker-options="pickerOptions1"
-                                      value-format="yyyy-MM-dd">
-                      </el-date-picker>
-                      <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
-                                      :picker-options="pickerOptions1"
-                                      value-format="yyyy-MM-dd">
-                      </el-date-picker>
-                    </div>
-                  </div>
-                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
-                    <v-tab>
-                      <div class="row">
-                        <div class="col-lg-3" style="padding-left: 0px;">
-                          <div style="text-align: left;">
-                            <template v-for="line in model.consumption_lines">
-                              <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
-                            </template>
-                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
-                              <span>Нет привязанных линий"</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-9">
-                          <div class="card">
-                            <div class="card-header">
-                              <div class="col-lg-3">
-                                <el-select class="select-danger"
-                                           size="large"
-                                           placeholder="Выбрать параметр"
-                                           v-model="model.selected_param">
-                                  <el-option v-for="option in consumption_params"
-                                             class="select-danger"
-                                             :value="option"
-                                             :label="option"
-                                             :key="option">
-                                  </el-option>
-                                </el-select>
-                              </div>
-                              <div class="col-lg-9" style="text-align: left;">
-                                <h4 class="card-title">Потребление: ГВС</h4>
-                                <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
-                              </div>
-                            </div>
-                            <div class="card-content">
-                              <template>
-                                <div class="small">
-                                  <line-chart :chart-data="datacollection"
-                                              :options="dataoptions"
-                                              :width="600"
-                                              :height="400">
-                                  </line-chart>
-                                </div>
-                              </template>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </v-tab>
-                  </vue-tabs>
-                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'table'">
-                    <v-tab>
-                      <div class="row">
-                        <div class="col-lg-3">
-                          <div style="text-align: left;">
-                            <template v-for="line in model.consumption_lines">
-                              <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
-                            </template>
-                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
-                              <span>Нет привязанных линий"</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-9">
-                          <!--============= Table =============-->
-                          <div class="col-sm-12">
-                            <el-table class="table-striped"
-                                      ref="consht"
-                                      :data="queriedData"
-                                      border
-                                      v-loading="loading2"
-                                      element-loading-text="Ждите..."
-                                      element-loading-spinner="el-icon-loading"
-                                      element-loading-background="rgba(0, 0, 0, 0.8)"
-                                      style="width: 100%">
-                              <el-table-column v-for="column in consumption_tableColumns"
-                                               sortable
-                                               :key="column.label"
-                                               :min-width="column.minWidth"
-                                               :prop="column.prop"
-                                               :label="column.label">
-                              </el-table-column>
-                            </el-table>
-                          </div>
-                          <div class="col-sm-2" style="margin-top:15px;">
-                            <el-select
-                                    class="select-default"
-                                    v-model="pagination.perPage"
-                                    placeholder="Per page">
-                              <el-option
-                                      class="select-default"
-                                      v-for="item in pagination.perPageOptions"
-                                      :key="item"
-                                      :label="item"
-                                      :value="item">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="col-sm-4 pagination-info" style="margin-top:25px;">
-                            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
-                          </div>
-                          <div class="col-sm-6">
-                            <p-pagination class="pull-right"
-                                          v-model="pagination.currentPage"
-                                          :per-page="pagination.perPage"
-                                          :total="pagination.total">
-                            </p-pagination>
-                          </div>
-                          <!--=========== End Table ===========-->
-                        </div>
-                      </div>
-                    </v-tab>
-                  </vue-tabs>
-                  <!--######### End of graphic & data tabs ###########-->
-                </div>
-              </v-tab>
-              <v-tab title="Энергосервис" icon="ti-files">
-                <h5>ГВС - энергосервис</h5>
-              </v-tab>
-            </vue-tabs>
-            <vue-tabs class="card-content" v-show="model.consumption_type == 'cons-cw'">
-              <v-tab title="Потребление" icon="ti-user">
-                <div class="card">
-                  <!--#######Graphic & data tabs###########-->
-                  <div class="row">
-                    <div class="col-lg-3" style="text-align: left; margin-top: 5px;">
-                      <div class="btn-group">
-                        <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
-                        <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-9" style="text-align: left;">
-                      <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
-                                      :picker-options="pickerOptions1"
-                                      value-format="yyyy-MM-dd">
-                      </el-date-picker>
-                      <el-date-picker v-model="model.to" type="date" placeholder="Конечная дата"
-                                      :picker-options="pickerOptions1"
-                                      value-format="yyyy-MM-dd">
-                      </el-date-picker>
-                    </div>
-                  </div>
-                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
-                    <v-tab>
-                      <div class="row">
-                        <div class="col-lg-3" style="padding-left: 0px;">
-                          <div style="text-align: left;">
-                            <template v-for="line in model.consumption_lines">
-                              <p-checkbox v-model="line.selected" v-bind:value="line.name" :disabled="line.noData" style="padding-left: 30px;">{{ line.name }}</p-checkbox>
-                            </template>
-                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
-                              <span>Нет привязанных линий"</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-9">
-                          <div class="card">
-                            <div class="card-header">
-                              <div class="col-lg-3">
-                                <el-select class="select-danger"
-                                           size="large"
-                                           placeholder="Выбрать параметр"
-                                           v-model="model.selected_param">
-                                  <el-option v-for="option in consumption_params"
-                                             class="select-danger"
-                                             :value="option"
-                                             :label="option"
-                                             :key="option">
-                                  </el-option>
-                                </el-select>
-                              </div>
-                              <div class="col-lg-9" style="text-align: left;">
-                                <h4 class="card-title">Потребление: ХВС</h4>
-                                <p class="category">{{ model.from | date }} - {{ model.to | date }}</p>
-                              </div>
-                            </div>
-                            <div class="card-content">
-                              <template>
-                                <div class="small">
-                                  <line-chart :chart-data="datacollection"
-                                              :options="dataoptions"
-                                              :width="600"
-                                              :height="400">
-                                  </line-chart>
-                                </div>
-                              </template>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </v-tab>
-                  </vue-tabs>
-                  <vue-tabs class="card-content viewresult" v-show="dataViewType == 'table'">
-                    <v-tab>
-                      <div class="row">
-                        <div class="col-lg-3">
-                          <div style="text-align: left;">
-                            <template v-for="line in model.consumption_lines">
-                              <p-radio v-model="model.line_chosen" :label="line.name" :disabled="line.noData">{{ line.name }}</p-radio>
-                            </template>
-                            <div v-if="model.consumption_lines.length == 0" class="alert alert-warning">
-                              <span>Нет привязанных линий"</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-9">
-                          <!--============= Table =============-->
-                          <div class="col-sm-12">
-                            <el-table class="table-striped"
-                                      ref="consht"
-                                      :data="queriedData"
-                                      border
-                                      v-loading="loading2"
-                                      element-loading-text="Ждите..."
-                                      element-loading-spinner="el-icon-loading"
-                                      element-loading-background="rgba(0, 0, 0, 0.8)"
-                                      style="width: 100%">
-                              <el-table-column v-for="column in consumption_tableColumns"
-                                               sortable
-                                               :key="column.label"
-                                               :min-width="column.minWidth"
-                                               :prop="column.prop"
-                                               :label="column.label">
-                              </el-table-column>
-                            </el-table>
-                          </div>
-                          <div class="col-sm-2" style="margin-top:15px;">
-                            <el-select
-                                    class="select-default"
-                                    v-model="pagination.perPage"
-                                    placeholder="Per page">
-                              <el-option
-                                      class="select-default"
-                                      v-for="item in pagination.perPageOptions"
-                                      :key="item"
-                                      :label="item"
-                                      :value="item">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="col-sm-4 pagination-info" style="margin-top:25px;">
-                            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
-                          </div>
-                          <div class="col-sm-6">
-                            <p-pagination class="pull-right"
-                                          v-model="pagination.currentPage"
-                                          :per-page="pagination.perPage"
-                                          :total="pagination.total">
-                            </p-pagination>
-                          </div>
-                          <!--=========== End Table ===========-->
-                        </div>
-                      </div>
-                    </v-tab>
-                  </vue-tabs>
-                  <!--######### End of graphic & data tabs ###########-->
-                </div>
-              </v-tab>
-              <v-tab title="Энергосервис" icon="ti-files">
-                <h5>ХВС - энергосервис</h5>
               </v-tab>
             </vue-tabs>
           </div>
@@ -504,7 +208,7 @@
         model: {
           house_id: '',
           address: '',
-          consumption_type: '',
+          consumption_type: 'cons-ht',
           from: '2018-06-07',
           to: '2018-06-26',
           selected_param: '',
@@ -562,8 +266,7 @@
             }
           }]
         },
-        enabledRadio: '',
-        $Chartist: null
+        enabledRadio: ''
       }
     },
     watch: {
@@ -715,6 +418,28 @@
               // data found
               result = Object.keys(dataArray[i].data[0])
               result.shift() // remove 'timestamp' as it's not a param
+              // break iterations if the line found
+              break
+            }
+          }
+          return result
+        }
+      },
+      // calculate width of table columns
+      consumption_params_size () {
+        var keys = []
+        var values = []
+        var result = {}
+        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
+          var dataArray = this.$store.getters.consumption_data
+          // iterate datas
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].data && dataArray[i].data.length > 0) {
+              // data found
+              keys = Object.keys(dataArray[i].data[0])
+              values = Object.values(dataArray[i].data[0])
+              keys.forEach((key, idx) => { result[key] = values[idx].length * 15 })
+              result['timestamp'] = 140
               // break iterations if the line found
               break
             }

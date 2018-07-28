@@ -90,6 +90,14 @@
                 <span v-if="column.prop === 'address'">
                     <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="gotoHouseCard(scope.row.id)">{{ scope.row.address }}</a>
                 </span>
+                <span v-else-if="column.prop === 'binding'">
+                  <span v-if="scope.row[column.prop]">
+                    Есть <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleViewBinding(scope.row, scope.column, scope.$index)">Просмотр</a>
+                  </span>
+                  <span v-else>
+                    –
+                  </span>
+                </span>
                 <span v-else>
                   {{ scope.row[column.prop] }}
                 </span>
@@ -131,11 +139,15 @@
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
   import store from 'src/store/index.js'
+  import * as types from 'src/store/mutation-types.js'
+
   import {router} from 'src/main'
 
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
+
+  import swal from 'sweetalert2'
 
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
@@ -168,10 +180,14 @@
           }
         ]
         var role = this.$store.getters.userType
-        console.log('ROLE', role)
         switch (role) {
           case ('provider'): {
             let columns = [
+              {
+                prop: 'binding',
+                label: 'Оборудование',
+                minWidth: 250
+              },
               {
                 prop: 'householder',
                 label: 'Домовладелец',
@@ -189,6 +205,11 @@
           case ('operator'): {
             let columns = [
               {
+                prop: 'binding',
+                label: 'Оборудование',
+                minWidth: 250
+              },
+              {
                 prop: 'householder',
                 label: 'Домовладелец',
                 minWidth: 300
@@ -204,7 +225,6 @@
           }
           default: { }
         }
-        console.log('RESULT', result)
         return result
       },
       pagedData () {
@@ -313,6 +333,10 @@
                   this.errors.push(e)
                 })
       },
+      handleViewBinding (row, col, index) {
+        this.$store.commit(types.KEEP_HOUSEID, row.id)
+        router.push('/equipment')
+      },
       getHouseholdersByOperator () {
         this.$store.dispatch('listHouseholders', this.$data.model_operator)
       },
@@ -330,14 +354,15 @@
         router.push('/houses/info/' + houseId)
       },
       handleDelete (index, row) {
-        Vue.swal({
+        swal({
           title: 'Вы уверены?',
-          html: 'После удаления данные дома будут потеряны: <strong>' + row.address + '</strong>',
+          html: '<pre><strong>' + row.address + '</strong></pre>',
           type: 'warning',
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          cancelButtonClass: 'btn btn-danger btn-full-width',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Да, удалить!'
+          confirmButtonText: 'Удалить дом!'
         }).then((result) => {
           if (result.value) {
             this.$store.dispatch('deleteHouse', { row: row, table: this.tableData })
@@ -348,7 +373,4 @@
   }
 </script>
 <style>
-  .swal2-icon.swal2-warning {
-    font-size: 21px;
-  }
 </style>

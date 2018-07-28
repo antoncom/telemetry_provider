@@ -340,7 +340,6 @@
               house_address: adr,
               refresh: this.handleFilter
             }
-//            console.log('payload', payload)
             this.$store.dispatch('unbindEquipment', payload)
           }
         })

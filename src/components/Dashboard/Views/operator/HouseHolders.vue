@@ -89,6 +89,8 @@
   import axios from 'axios'
   import VueAxios from 'vue-axios'
 
+  import swal from 'sweetalert2'
+
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
   // axios.defaults.baseURL = 'https://my.api.mockaroo.com'
@@ -225,14 +227,15 @@
         router.push('/householders/add')
       },
       handleDelete (index, row) {
-        Vue.swal({
+        swal({
           title: 'Вы уверены?',
-          html: 'После удаления данные домовладельца будут потеряны: <strong>' + row.name + '</strong>',
+          html: '<pre><strong style="font-size: 16px;">' + row.name + '\n</strong>' + row.address + '</pre>',
           type: 'warning',
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          cancelButtonClass: 'btn btn-danger btn-full-width',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Да, удалить!'
+          confirmButtonText: 'Удалить домовладельца!'
         }).then((result) => {
           if (result.value) {
             this.$store.dispatch('deleteHouseholder', { row: row, table: this.tableData })
@@ -244,7 +247,4 @@
   }
 </script>
 <style>
-  .swal2-icon.swal2-warning {
-    font-size: 21px;
-  }
 </style>

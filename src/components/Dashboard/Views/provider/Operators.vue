@@ -85,6 +85,8 @@
   // import routes from 'src/routes/routes'
   import {router} from 'src/main'
 
+  import swal from 'sweetalert2'
+
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
@@ -211,14 +213,15 @@
         router.push('/operators/add')
       },
       handleDelete (index, row) {
-        Vue.swal({
+        swal({
           title: 'Вы уверены?',
-          html: 'После удаления данные оператора будут потеряны: <strong>' + row.name + '</strong>',
+          html: '<pre><strong>' + row.name + '\n</strong>' + row.address + '</pre>',
           type: 'warning',
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          cancelButtonClass: 'btn btn-danger btn-full-width',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Да, удалить!'
+          confirmButtonText: 'Удалить оператора!'
         }).then((result) => {
           if (result.value) {
             this.$store.dispatch('deleteOperator', { row: row, table: this.tableData })
@@ -229,7 +232,4 @@
   }
 </script>
 <style>
-  .swal2-icon.swal2-warning {
-    font-size: 21px;
-  }
 </style>

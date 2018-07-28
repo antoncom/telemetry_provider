@@ -255,13 +255,6 @@
             required: false
           }
         }
-//        // password generator
-//        size: '8',
-//        characters: 'a-z,A-Z,0-9,#',
-//        placeholder: 'Password',
-//        auto: [String, Boolean],
-//        value: '',
-//        generatedPassword: ''
       }
     },
     methods: {
@@ -282,4 +275,14 @@
   }
 </script>
 <style>
+  .swal-password {
+    min-width: 400px;
+  }
+  .table.password tr td {
+    text-align: left;
+    font-size: 18px;
+  }
+  .table.password tr td:last-child {
+    font-weight: bolder;
+  }
 </style>
