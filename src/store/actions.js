@@ -152,7 +152,7 @@ export const addOperator = ({commit}, payload) => {
             buttonsStyling: false,
             confirmButtonClass: 'btn btn-success btn-fill'
           }).then((result) => {
-            if (result.value) {
+            if (result) {
               router.push('/operators/list')
             }
           })
@@ -323,7 +323,7 @@ export const addHouseholder = ({commit}, payload) => {
             buttonsStyling: false,
             confirmButtonClass: 'btn btn-success btn-fill'
           }).then((result) => {
-            if (result.value) {
+            if (result) {
               router.push('/householders/list')
             }
           })
@@ -483,7 +483,6 @@ export const deleteHouse = ({commit}, payload) => {
   axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.headers.common['X-AUTH-TOKEN'] = store.state.userToken
   axios.defaults.withCredentials = false
-
   axios.delete(credentials.appix_api + '/houses/' + payload.row.id).then(response => {
     if (response.data.status === 'ok') {
       swal({
@@ -687,9 +686,9 @@ export const unbindEquipment = ({commit}, payload) => {
 
   axios.delete(credentials.appix_api + '/equipment/' + payload.id + params).then(response => {
     if (response.data.status === 'ok') {
-      let messageHtml = 'Линия <strong>' + payload.name + ' [' + payload.line + ']</strong>'
+      let messageHtml = '<pre><code>Линия <strong>' + payload.name + ' [' + payload.line + ']</strong>'
       messageHtml += ' прибора [' + payload.equipment_address + ']'
-      messageHtml += ' отвязана от дома <i>' + payload.house_address + '</i>!'
+      messageHtml += ' отвязана от дома <i>' + payload.house_address + '</i>!</code></pre>'
       swal({
         title: 'Отвязано!',
         html: messageHtml,

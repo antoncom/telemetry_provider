@@ -237,11 +237,11 @@
           showCancelButton: true,
           confirmButtonText: 'Удалить домовладельца!'
         }).then((result) => {
-          if (result.value) {
+          if (result) {
             this.$store.dispatch('deleteHouseholder', { row: row, table: this.tableData })
             // this.$refs.householders.doLayout()
           }
-        })
+        }).catch(swal.noop)
       }
     }
   }

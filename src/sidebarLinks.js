@@ -82,44 +82,28 @@ export default [
     icon: 'ti-gift',
     path: '/houses/list',
     roles: ['provider', 'operator']
-    // children: [
-    //  {
-    //    name: 'Потребление тепла',
-    //    path: '/consumption/heat',
-    //    roles: ['provider', 'operator']
-    //  },
-    //  {
-    //    name: 'Потребление холодной воды',
-    //    path: '/consumption/cwater',
-    //    roles: ['provider', 'operator']
-    //  },
-    //  {
-    //    name: 'Потребление горячей воды',
-    //    path: '/consumption/hwater',
-    //    roles: ['provider', 'operator']
-    //  }]
   },
   {
     name: 'Сообщения',
     icon: 'ti-gift',
     path: '/provider/messenger',
     roles: ['provider', 'operator', 'householder']
-  },
-  {
-    name: 'Бизнес процессы',
-    icon: 'ti-gift',
-    path: '/provider/docuproc',
-    roles: ['provider'],
-    children: [
-      {
-        name: 'Документооборот',
-        path: '/provider/docuproc',
-        roles: ['provider']
-      },
-      {
-        name: 'Обследование дома',
-        path: '/provider/obsledproc',
-        roles: ['provider']
-      }]
   }
+  // {
+  //  name: 'Бизнес процессы',
+  //  icon: 'ti-gift',
+  //  path: '/provider/docuproc',
+  //  roles: ['provider'],
+  //  children: [
+  //    {
+  //      name: 'Документооборот',
+  //      path: '/provider/docuproc',
+  //      roles: ['provider']
+  //    },
+  //    {
+  //      name: 'Обследование дома',
+  //      path: '/provider/obsledproc',
+  //      roles: ['provider']
+  //    }]
+  // }
 ]

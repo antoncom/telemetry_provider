@@ -138,6 +138,8 @@
   import store from 'src/store/index.js'
   import {router} from 'src/main'
 
+  import swal from 'sweetalert2'
+
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
@@ -311,16 +313,16 @@
         router.push('/equipment/add')
       },
       handleDelete (row, col, index) {
-        Vue.swal({
+        swal({
           title: 'Вы уверены?',
-          html: 'Отвязка линии прибора <strong>' + row.address + '</strong> от дома.',
+          html: '<pre><strong">Идентификационный адрес прибора: ' + row.address + '\n</strong></pre>',
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Да, отвязать!'
+          confirmButtonText: 'Отвязать прибор!'
         }).then((result) => {
-          if (result.value) {
+          if (result) {
             // Get address of house (only if the address is selected in dropdown)
             var adr = ''
             if (store.getters.selectedHouse !== '') {
@@ -342,13 +344,10 @@
             }
             this.$store.dispatch('unbindEquipment', payload)
           }
-        })
+        }).catch(swal.noop)
       }
     }
   }
 </script>
 <style>
-  .swal2-icon.swal2-warning {
-    font-size: 21px;
-  }
 </style>

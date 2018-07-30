@@ -37,7 +37,7 @@
                   <div class="col-lg-8">
                     <div class="row">
                       <div class="col-lg-12" style="text-align: left;">
-                        <h4 class="card-title">Потребление: {{ ctype.label }}</h4>
+                        <h4 class="card-title">{{ ctype.label }}: {{ consumption_params_labels[model.selected_param] }}</h4>
                         <el-date-picker v-model="model.from" type="date" placeholder="Начальная дата"
                                         :picker-options="pickerOptions1"
                                         value-format="yyyy-MM-dd">
@@ -48,21 +48,37 @@
                         </el-date-picker>
                       </div>
                     </div>
-                    <div  v-show="dataViewType=='graphic'" class="row">
+                    <!--<div  v-show="dataViewType=='graphic'" class="row">-->
+                    <div class="row">
                       <div class="form-group col-lg-6 pull-left" style="text-align: left; margin-top: 15px;">
                         <el-select class="select-danger"
                                    size="large"
                                    placeholder="Выбрать параметр"
                                    v-model="model.selected_param">
-                          <el-option v-for="option in consumption_params"
+                          <el-option v-for="(value, key) in consumption_params_labels"
                                      class="select-danger"
-                                     :value="option"
-                                     :label="option"
-                                     :key="option">
+                                     :value="key"
+                                     :label="value"
+                                     :key="key">
                           </el-option>
                         </el-select>
                       </div>
                     </div>
+<!--                    <div  v-show="dataViewType=='table'" class="row">
+                      <div class="form-group col-lg-6 pull-left" style="text-align: left; margin-top: 15px;">
+                        <el-select class="select-danger"
+                                   size="large"
+                                   placeholder="Выбрать параметр"
+                                   v-model="model.selected_param">
+                          <el-option v-for="(value, key) in consumption_params_labels"
+                                     class="select-danger"
+                                     :value="key"
+                                     :label="value"
+                                     :key="key">
+                          </el-option>
+                        </el-select>
+                      </div>
+                    </div>-->
                   </div>
                 </div>
                 <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
@@ -99,7 +115,8 @@
                                   element-loading-text="Ждите..."
                                   element-loading-spinner="el-icon-loading"
                                   element-loading-background="rgba(0, 0, 0, 0.8)"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :ref="ctype.type">
                           <el-table-column v-for="column in consumption_tableColumns"
                                            sortable
                                            :fixed="column.prop === 'timestamp'"
@@ -107,7 +124,8 @@
                                            :key="column.label"
                                            :min-width="consumption_params_size[column.prop]"
                                            :prop="column.prop"
-                                           :label="column.label">
+                                           :label="column.label"
+                                           class-name="">
                           </el-table-column>
                         </el-table>
                       </div>
@@ -153,7 +171,7 @@
 <script type="text/babel">
   import Vue from 'vue'
   // import {DatePicker, Table, TableColumn, Select, Option, Loading, Collapse, CollapseItem} from 'element-ui'
-  import {DatePicker, Table, TableColumn, Loading, Select, Option} from 'element-ui'
+  import {DatePicker, Table, TableColumn, Loading, Select, Option, Popover, Button} from 'element-ui'
   import 'element-ui/lib/theme-chalk/index.css'
   import VueTabs from 'vue-nav-tabs'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
@@ -164,6 +182,8 @@
   Vue.use(TableColumn)
   Vue.use(Loading)
   Vue.use(VueTabs)
+  Vue.use(Popover)
+  Vue.use(Button)
 
   export default {
     components: {
@@ -219,15 +239,40 @@
         consumption_types: [
           {
             label: 'Тепло',
-            type: 'cons-ht'
+            type: 'cons-ht',
+            params: {
+              timestamp: ['Дата и время', 140], // title of param and its width of value in pixels (for table)
+              t1: ['Температура на подаче', 60],
+              t2: ['Температура на обратке', 60],
+              dT: ['разность температур', 60],
+              v1: ['Объем на подаче', 60],
+              v2: ['Объем на обратке', 60],
+              dV: ['разность объемов', 60],
+              pV: ['Процент от объема на подаче', 70],
+              p1: ['Давление на подаче', 90],
+              p2: ['Давление на обратке', 90],
+              dP: ['ΔP (разность давлений)', 90],
+              q: ['Расход тепла', 90]
+            }
           },
           {
             label: 'ГВС',
-            type: 'cons-hw'
+            type: 'cons-hw',
+            params: {
+              timestamp: ['Дата и время', 140],
+              t: ['Температура горячей воды', 140],
+              v: ['Расход горячей воды', 140],
+              p: ['Давление горячей воды', 140]
+            }
           },
           {
             label: 'ХВС',
-            type: 'cons-cw'
+            type: 'cons-cw',
+            params: {
+              timestamp: ['Дата и время', 140],
+              v: ['Расход холодной воды', 140],
+              p: ['Давление холодной воды', 140]
+            }
           }
         ],
         dataViewType: 'graphic',
@@ -272,6 +317,16 @@
     watch: {
       'model.selected_param': function () {
         this.initCharts()
+
+        // make column of table highlighted according to selected parameter
+        var columns = this.$refs[this.model.consumption_type][0].columns
+        columns.forEach((item, i, columns) => {
+          if (columns[i].property === this.model.selected_param) {
+            columns[i].className = 'lighted_column'
+          } else {
+            columns[i].className = ''
+          }
+        })
       },
       'model.from': function () {
         this.$store.dispatch('getConsumption', this.$data.model).then(() => {
@@ -408,44 +463,64 @@
       consumption_data () {
         return this.$store.getters.consumption_data
       },
+      consumption_params_labels () {
+        var result = []
+        for (var i = 0; i < this.consumption_types.length; i++) {
+          if (this.consumption_types[i].type === this.model.consumption_type) {
+            result = Object.keys(this.consumption_types[i].params)
+            result.shift() // remove 'timestamp' as it's not needed in selector
+            result = result.reduce((previous, current) => {
+              previous[current] = current + ' - ' + this.consumption_types[i].params[current][0]
+              return previous
+            }, {})
+            break
+          }
+        }
+        return result
+      },
+      consumption_params_popover () {
+        var result = []
+        var keys = []
+        for (var i = 0; i < this.consumption_types.length; i++) {
+          if (this.consumption_types[i].type === this.model.consumption_type) {
+            keys = Object.keys(this.consumption_types[i].params)
+            keys.shift() // remove 'timestamp' as it's not needed in selector
+            var obj = {}
+            result = keys.map((key) => {
+              obj = {}
+              obj['param'] = key
+              obj['title'] = this.consumption_types[i].params[key][0]
+              return obj
+            })
+            break
+          }
+        }
+        console.log('POPOVER', result)
+        return result
+      },
       consumption_params () {
         var result = []
-        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
-          var dataArray = this.$store.getters.consumption_data
-          // iterate datas
-          for (let i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].data && dataArray[i].data.length > 0) {
-              // data found
-              result = Object.keys(dataArray[i].data[0])
-              result.shift() // remove 'timestamp' as it's not a param
-              // break iterations if the line found
-              break
-            }
+        for (var i = 0; i < this.consumption_types.length; i++) {
+          if (this.consumption_types[i].type === this.model.consumption_type) {
+            result = Object.keys(this.consumption_types[i].params)
+            result.shift() // remove 'timestamp' as it's not a param
+            break
           }
-          return result
         }
+        return result
       },
-      // calculate width of table columns
       consumption_params_size () {
-        var keys = []
-        var values = []
         var result = {}
-        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
-          var dataArray = this.$store.getters.consumption_data
-          // iterate datas
-          for (let i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].data && dataArray[i].data.length > 0) {
-              // data found
-              keys = Object.keys(dataArray[i].data[0])
-              values = Object.values(dataArray[i].data[0])
-              keys.forEach((key, idx) => { result[key] = values[idx].length * 15 })
-              result['timestamp'] = 140
-              // break iterations if the line found
-              break
-            }
+        for (var i = 0; i < this.consumption_types.length; i++) {
+          if (this.consumption_types[i].type === this.model.consumption_type) {
+            result = Object.keys(this.consumption_types[i].params).reduce((previous, current) => {
+              previous[current] = this.consumption_types[i].params[current][1]
+              return previous
+            }, {})
+            break
           }
-          return result
         }
+        return result
       },
       consumption_tableColumns () {
         var result = []
@@ -526,5 +601,12 @@
   }
   .viewresult .nav-tabs-navigation {
     display: none;
+  }
+  .param-popover {
+    background-color: #fad163;
+    padding: 4px;
+  }
+  .lighted_column {
+    background-color: #fad163;
   }
 </style>

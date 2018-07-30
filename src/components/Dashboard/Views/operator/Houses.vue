@@ -364,10 +364,10 @@
           showCancelButton: true,
           confirmButtonText: 'Удалить дом!'
         }).then((result) => {
-          if (result.value) {
+          if (result) {
             this.$store.dispatch('deleteHouse', { row: row, table: this.tableData })
           }
-        })
+        }).catch(swal.noop)
       }
     }
   }

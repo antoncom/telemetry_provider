@@ -223,10 +223,10 @@
           showCancelButton: true,
           confirmButtonText: 'Удалить оператора!'
         }).then((result) => {
-          if (result.value) {
+          if (result) {
             this.$store.dispatch('deleteOperator', { row: row, table: this.tableData })
           }
-        })
+        }).catch(swal.noop)
       }
     }
   }
