@@ -192,7 +192,10 @@
       }
     },
     created () {
-      this.api = credentials.appix_api + '/householders?org_id=' + store.getters.getUserId
+      var path = ''
+      if (store.getters.userType === 'operator') path = '/householders?org_id=' + store.getters.getUserId
+      else if (store.getters.userType === 'provider') path = '/householders'
+      this.api = credentials.appix_api + path
       axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
       axios.get(this.api)
               .then(response => {
