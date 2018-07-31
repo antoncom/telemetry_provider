@@ -139,23 +139,31 @@ export const addOperator = ({commit}, payload) => {
           confirmButtonText: 'Копировать в буфер',
           customClass: 'swal-password',
           preConfirm: () => {
-            Vue.copyToClipboard(payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password)
+            return new Promise((resolve, reject) => {
+              if (Vue.copyToClipboard(payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password)) {
+                resolve()
+              } else {
+                reject(new Error('Ваш браузер не поддерживает copyToClipboard(). \n Скопируйте данные вручную!'))
+              }
+            })
           }
         }).then((result) => {
-          swal({
-            title: 'Скопировано!',
-            html:
-            '<pre><code>' +
-            payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password +
-            '</code></pre>',
-            confirmButtonText: 'Ok',
-            buttonsStyling: false,
-            confirmButtonClass: 'btn btn-success btn-fill'
-          }).then((result) => {
-            if (result) {
-              router.push('/operators/list')
-            }
-          })
+          if (result) {
+            swal({
+              title: 'Скопировано!',
+              html:
+              '<pre><code>' +
+              payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password +
+              '</code></pre>',
+              confirmButtonText: 'Ok',
+              buttonsStyling: false,
+              confirmButtonClass: 'btn btn-success btn-fill'
+            }).then((result) => {
+              if (result) {
+                router.push('/operators/list')
+              }
+            })
+          }
         })
       }
     } else if (response.data.status === 'error') {
@@ -206,6 +214,8 @@ export const deleteOperator = ({commit}, payload) => {
         title: 'Удалено!',
         html: '<pre>Оператор удалён из системы: \n<strong>' + payload.row.name + '</strong></pre>',
         type: 'success',
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-success btn-fill',
         timer: 3000
       })
       let indexToDelete = payload.table.findIndex((tableRow) => tableRow.id === payload.row.id)
@@ -310,7 +320,13 @@ export const addHouseholder = ({commit}, payload) => {
           confirmButtonText: 'Копировать в буфер',
           customClass: 'swal-password',
           preConfirm: () => {
-            Vue.copyToClipboard(payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password)
+            return new Promise((resolve, reject) => {
+              if (Vue.copyToClipboard(payload.name + ' - Логин: ' + payload.username + ' Пароль: ' + response.data.password)) {
+                resolve()
+              } else {
+                reject(new Error('Ваш браузер не поддерживает copyToClipboard(). \n Скопируйте данные вручную!'))
+              }
+            })
           }
         }).then((result) => {
           swal({

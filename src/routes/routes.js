@@ -30,10 +30,10 @@ import UnbindEquipment from 'src/components/Dashboard/Views/operator/UnbindEquip
 // import HeatConsumption from 'src/components/Dashboard/Views/householder/HeatConsumption.vue'
 
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
-import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
-import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
-import TeamtimeBpm from 'src/components/Dashboard/Views/TeamtimeBpm.vue'
-import TeamtimeDocs from 'src/components/Dashboard/Views/TeamtimeDocs.vue'
+// import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
+// import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
+// import TeamtimeBpm from 'src/components/Dashboard/Views/TeamtimeBpm.vue'
+// import TeamtimeDocs from 'src/components/Dashboard/Views/TeamtimeDocs.vue'
 
 let loginPage = {
   path: '/login',
@@ -343,7 +343,8 @@ const routes = [
           roles: ['provider', 'operator', 'householder'],
           breadcrumbs: false
         }
-      },
+      }
+      /*
       {
         path: '/provider/docuproc',
         name: 'Бизнес-процессы',
@@ -384,6 +385,7 @@ const routes = [
           breadcrumbs: false
         }
       }
+      */
     ]
   },
   loginPage,

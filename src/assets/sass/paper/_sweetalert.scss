@@ -25,7 +25,13 @@
     }
   }
   .btn {
-    margin: 0 5px 15px 5px;
+    margin: 0 5px 15px 5px!important;
+  }
+}
+
+.swal2-modal {
+  .btn {
+    margin: 0 5px 15px 5px!important;
   }
 }
 

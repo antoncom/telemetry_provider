@@ -22,7 +22,7 @@
             </el-option>
           </el-select>
         </div>
-        <div v-if="userCanSee()" class="col-lg-3">
+        <div v-can:see="['provider']" class="col-lg-3">
           <el-select
                   clearable
                   class="select-default"
@@ -43,7 +43,7 @@
             </el-option>
           </el-select>
         </div>
-        <div v-if="userCanSee()" class="col-lg-3">
+        <div v-can:see="['provider', 'operator']" class="col-lg-3">
           <el-select
                   clearable
                   class="select-default"
@@ -104,7 +104,7 @@
               </template>
             </el-table-column>
             <el-table-column
-                    v-if="userCanSee()"
+                    v-can:see="['provider', 'operator']"
                     :min-width="120"
                     fixed="right"
                     label="Actions">
@@ -125,7 +125,7 @@
                         :total="pagination.total">
           </p-pagination>
         </div>
-        <div v-if="userCanSee()" class="col-sm-12 text-center">
+        <div v-can:see="['provider', 'operator']" class="col-sm-12 text-center">
           <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Добавить дом</button>
         </div>
       </div>
@@ -149,6 +149,9 @@
 
   import swal from 'sweetalert2'
 
+  import userCanSee from 'src/plugins/userCanSee.js'
+
+  Vue.use(userCanSee)
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
   // axios.defaults.baseURL = 'https://my.api.mockaroo.com'
@@ -342,10 +345,6 @@
       },
       handleEdit (index, row) {
         router.push('/houses/edit/' + row.id)
-      },
-      userCanSee () {
-        console.log('userCanSee', (store.state.userType === 'provider' || store.state.userType === 'operator'))
-        return (store.state.userType === 'provider' || store.state.userType === 'operator')
       },
       gotoAdd () {
         router.push('/houses/add')
