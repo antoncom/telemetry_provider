@@ -74,6 +74,7 @@
         <div class="col-sm-12">
           <el-table class="table-striped"
                     :data="queriedData"
+                    ref="mmmsss"
                     border
                     v-loading="loading2"
                     element-loading-text="Ждите..."
@@ -104,13 +105,12 @@
               </template>
             </el-table-column>
             <el-table-column
-                    v-can:see="['provider', 'operator']"
                     :min-width="120"
                     fixed="right"
                     label="Actions">
               <template slot-scope="props">
-                <a class="btn btn-simple btn-xs btn-warning btn-icon edit" @click="handleEdit(props.$index, props.row)"><i class="ti-pencil-alt"></i></a>
-                <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(props.$index, props.row)"><i class="ti-close"></i></a>
+                <a v-can:see="['provider', 'operator']" class="btn btn-simple btn-xs btn-warning btn-icon edit" @click="handleEdit(props.$index, props.row)"><i class="ti-pencil-alt"></i></a>
+                <a v-can:see="['provider', 'operator']" class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(props.$index, props.row)"><i class="ti-close"></i></a>
               </template>
             </el-table-column>
           </el-table>
@@ -137,33 +137,25 @@
   import Vue from 'vue'
   import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
-
   import store from 'src/store/index.js'
   import * as types from 'src/store/mutation-types.js'
-
   import {router} from 'src/main'
-
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
-
   import swal from 'sweetalert2'
-
   import userCanSee from 'src/plugins/userCanSee.js'
-
   Vue.use(userCanSee)
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
   // axios.defaults.baseURL = 'https://my.api.mockaroo.com'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.withCredentials = false
-
   Vue.use(Table)
   Vue.use(TableColumn)
   Vue.use(Select)
   Vue.use(Option)
   Vue.use(Loading)
-
   export default{
     components: {
       PPagination
