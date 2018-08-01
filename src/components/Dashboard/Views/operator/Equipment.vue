@@ -78,7 +78,11 @@
                     ВКЛ <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(scope.row, scope.column, scope.$index)">Отвязать</a>
                   </span>
                   <span v-else>
-                    Выкл <router-link :to="{ path: '/equipment/bind/' + scope.row.id, query: { line: scope.column.property, eq_address: scope.row.address }}">Привязать</router-link>
+                    <router-link v-show="model.house_id > 0" :to="{ path: '/equipment/bind/' + scope.row.id, query: { line: scope.column.property, eq_address: scope.row.address }}"><span style="text-decoration: underline; color: darkgreen;">Привязать</span></router-link>
+                    <el-tooltip v-show="model.house_id === ''" content="Выберите дом в списке над таблицей" placement="top">
+                      <span style="text-decoration: underline; color: grey;">Привязать</span>
+                    </el-tooltip>
+
                   </span>
                 </span>
                 <span v-else>
@@ -132,7 +136,7 @@
 <script type="text/babel">
   import credentials from 'src/api/credentials.js'
   import Vue from 'vue'
-  import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
+  import {Table, TableColumn, Select, Option, Loading, Tooltip} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
   import store from 'src/store/index.js'
@@ -155,6 +159,7 @@
   Vue.use(Select)
   Vue.use(Option)
   Vue.use(Loading)
+  Vue.use(Tooltip)
 
   export default{
     components: {
