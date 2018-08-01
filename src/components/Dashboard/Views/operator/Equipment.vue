@@ -75,7 +75,7 @@
               <template slot-scope="scope">
                 <span v-if="column.prop === 'line1' || column.prop === 'line2'">
                   <span v-if="scope.row[column.prop]">
-                    ВКЛ <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(scope.row, scope.column, scope.$index)">Отвязать</a>
+                    <span class="ti-check"></span> <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(scope.row, scope.column, scope.$index)">Отвязать</a>
                   </span>
                   <span v-else>
                     <router-link v-show="model.house_id > 0" :to="{ path: '/equipment/bind/' + scope.row.id, query: { line: scope.column.property, eq_address: scope.row.address }}"><span style="text-decoration: underline; color: darkgreen;">Привязать</span></router-link>

@@ -93,7 +93,7 @@
                 </span>
                 <span v-else-if="column.prop === 'binding'">
                   <span v-if="scope.row[column.prop]">
-                    Есть <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleViewBinding(scope.row, scope.column, scope.$index)">Просмотр</a>
+                    Есть <span class="ti-check"></span> <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleViewBinding(scope.row, scope.column, scope.$index)">Просмотр</a>
                   </span>
                   <span v-else>
                     –

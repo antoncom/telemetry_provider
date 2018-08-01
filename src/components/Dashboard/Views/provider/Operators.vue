@@ -77,7 +77,7 @@
 <script type="text/babel">
   import credentials from 'src/api/credentials.js'
   import Vue from 'vue'
-  import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
+  import {Table, TableColumn, Select, Option, Loading, Scrollbar, Dropdown} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
   import store from 'src/store/index.js'
@@ -97,15 +97,25 @@
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.withCredentials = false
 
+  Vue.prototype.$ELEMENT = { size: 'small', zIndex: 3000 }
   Vue.use(Table)
   Vue.use(TableColumn)
   Vue.use(Select)
   Vue.use(Option)
   Vue.use(Loading)
+  Vue.use(Dropdown)
+  Vue.use(Scrollbar)
 
   export default{
     components: {
-      PPagination
+      PPagination,
+      Table,
+      TableColumn,
+      Select,
+      Option,
+      Loading,
+      Dropdown,
+      Scrollbar
     },
     computed: {
       pagedData () {
@@ -150,7 +160,7 @@
         return this.tableData.length
       }
     },
-    created () {
+    mounted () {
       this.api = credentials.appix_api + '/operators'
       axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
       axios.get(this.api)
