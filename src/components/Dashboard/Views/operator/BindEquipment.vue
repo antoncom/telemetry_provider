@@ -9,21 +9,9 @@
       <div class="card-content">
         <fieldset>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Выберите адрес дома</label>
-            <div class="col-sm-6">
-              <el-select
-                      clearable
-                      class="select-default"
-                      v-model="model.house_id"
-                      placeholder="Адрес дома">
-                <el-option
-                        class="select-default"
-                        v-for="item in houses"
-                        :key="item.id"
-                        :label="item.address"
-                        :value="item.id">
-                </el-option>
-              </el-select>
+            <label class="col-sm-2 control-label">Адрес дома</label>
+            <div class="col-sm-6" style="padding-top: 12px;">
+              {{ house_address }}
             </div>
             <div class="col-sm-4">
               <code></code>
@@ -33,36 +21,24 @@
         <fieldset>
           <div class="form-group">
           <label class="col-sm-2 control-label">Адрес прибора</label>
-          <div class="col-sm-6">
-            <input type="text"
-               name="address"
-               v-validate="modelValidations.address"
-               v-model="model.address"
-               class="form-control">
-            <small class="text-danger" v-show="address.invalid">
-              {{ getError('address') }}
-            </small>
+          <div class="col-sm-6" style="padding-top: 12px;">
+            {{ $route.query.eq_address }}
           </div>
           <div class="col-sm-4">
             <code></code>
           </div>
           </div>
         </fieldset>
-        <fieldset>
+        <fieldset v-if="$route.query.line === 'line1'">
           <div class="form-group">
             <label class="col-sm-2 control-label">Линия 1</label>
-            <div class="col-sm-2">
-              <p-switch v-model="model.line1">
-                <i class="fa fa-check" slot="on"></i>
-                <i class="fa fa-times" slot="off"></i>
-              </p-switch>
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text"
                      name="url"
                      v-validate="modelValidations.line1_name"
                      v-model="model.line1_name"
-                     class="form-control">
+                     class="form-control"
+                     placeholder="напр. Подъезд №1 тепловычислитель">
               <small class="text-danger" v-show="line1_name.invalid">
                 {{ getError('line1_name') }}
               </small>
@@ -72,21 +48,16 @@
             </div>
           </div>
         </fieldset>
-        <fieldset>
+        <fieldset v-if="$route.query.line === 'line2'">
           <div class="form-group">
             <label class="col-sm-2 control-label">Линия 2</label>
-            <div class="col-sm-2">
-              <p-switch v-model="model.line2">
-                <i class="fa fa-check" slot="on"></i>
-                <i class="fa fa-times" slot="off"></i>
-              </p-switch>
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text"
                      name="url"
                      v-validate="modelValidations.line2_name"
                      v-model="model.line2_name"
-                     class="form-control">
+                     class="form-control"
+                     placeholder="напр. Подъезд №2 тепловычислитель">
               <small class="text-danger" v-show="line2_name.invalid">
                 {{ getError('line2_name') }}
               </small>
@@ -104,7 +75,7 @@
         </div>
       </div>
       <div class="card-footer text-center">
-        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Сохранить изменения</button>
+        <button type="submit" @click.prevent="validate" class="btn btn-fill btn-info btn-wd">Привязать прибор</button>
       </div>
     </form>
   </div>
@@ -128,17 +99,28 @@
     },
     computed: {
       ...mapFields(['address', 'line1', 'line2', 'line1_name', 'line2_name']),
-      houses () {
-        return store.state.houses
+      house_address () {
+        var address = ''
+        var houses = store.getters.getHouses
+        for (var h of houses) {
+          if (h.id === store.getters.selectedHouse) {
+            address = h.address
+            break
+          }
+        }
+        return address
       }
     },
     created () {
       this.$store.dispatch('listHouses', this.$data.model)
+      this.model[this.$route.query.line] = true // e.g. model.line1=true
+      this.model.house_id = store.getters.selectedHouse
+      this.model.address = this.$route.query.eq_address
     },
     data () {
       return {
         model: {
-          address: '123456',
+          address: '',
           error: '',
           status: '',
           house_id: '',

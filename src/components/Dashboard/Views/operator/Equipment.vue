@@ -78,7 +78,7 @@
                     ВКЛ <a class="btn btn-simple btn-xs btn-danger btn-icon remove"  @click="handleDelete(scope.row, scope.column, scope.$index)">Отвязать</a>
                   </span>
                   <span v-else>
-                    Выкл
+                    Выкл <router-link :to="{ path: '/equipment/bind/' + scope.row.id, query: { line: scope.column.property, eq_address: scope.row.address }}">Привязать</router-link>
                   </span>
                 </span>
                 <span v-else>
@@ -123,7 +123,7 @@
           </p-pagination>
         </div>
         <div v-if="userCanSee()" class="col-sm-12 text-center">
-          <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Привязка прибора</button>
+          <button type="button" @click="gotoAdd" class="btn btn-fill btn-info btn-wd">Добавить прибор</button>
         </div>
       </div>
     </div>
@@ -236,37 +236,37 @@
           {
             prop: 'id',
             label: 'ID',
-            minWidth: 70
+            minWidth: 50
           },
           {
             prop: 'address',
             label: 'Системный адрес',
-            minWidth: 200
+            minWidth: 100
           },
           {
             prop: 'type',
             label: 'Тип оборудования',
-            minWidth: 200
+            minWidth: 50
           },
           {
             prop: 'line1_name',
             label: 'Название линии 1',
-            minWidth: 200
+            minWidth: 150
           },
           {
             prop: 'line1',
             label: 'Статус линии 1',
-            minWidth: 200
+            minWidth: 115
           },
           {
             prop: 'line2_name',
             label: 'Название линии 2',
-            minWidth: 200
+            minWidth: 150
           },
           {
             prop: 'line2',
             label: 'Статус линии 2',
-            minWidth: 200
+            minWidth: 115
           }
         ],
         tableData: [],
@@ -315,11 +315,12 @@
       handleDelete (row, col, index) {
         swal({
           title: 'Вы уверены?',
-          html: '<pre><strong">Идентификационный адрес прибора: ' + row.address + '\n</strong></pre>',
+          html: '<pre><strong">Линия: ' + row[col.property + '_name'] + '\nИдентификационный адрес прибора: [' + row.address + ']</strong></pre>',
           type: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          cancelButtonClass: 'btn btn-danger btn-full-width',
           confirmButtonText: 'Отвязать прибор!'
         }).then((result) => {
           if (result) {

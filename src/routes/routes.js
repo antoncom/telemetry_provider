@@ -24,6 +24,7 @@ import House from 'src/components/Dashboard/Views/House.vue'
 
 import Equipment from 'src/components/Dashboard/Views/operator/Equipment.vue'
 import AddEquipment from 'src/components/Dashboard/Views/operator/AddEquipment.vue'
+import BindEquipment from 'src/components/Dashboard/Views/operator/BindEquipment.vue'
 import EditEquipment from 'src/components/Dashboard/Views/operator/EditEquipment.vue'
 import UnbindEquipment from 'src/components/Dashboard/Views/operator/UnbindEquipment.vue'
 
@@ -256,7 +257,7 @@ const routes = [
       },
       {
         path: '/equipment/add',
-        name: 'Привязать оборудование',
+        name: 'Добавить оборудование',
         component: AddEquipment,
         meta: {
           requiredAuth: true,
@@ -268,6 +269,17 @@ const routes = [
         path: '/equipment/edit/:id',
         name: 'Переименование линии прибора',
         component: EditEquipment,
+        meta: {
+          requiredAuth: true,
+          roles: ['provider', 'operator'],
+          breadcrumbs: true
+        }
+      },
+      {
+        path: '/equipment/bind/:id',
+        name: 'Привязать прибор',
+        component: BindEquipment,
+        props: (route) => ({ query: route.query.line }), // e.g.: /equipment/bind/123?line=line1
         meta: {
           requiredAuth: true,
           roles: ['provider', 'operator'],
