@@ -63,22 +63,25 @@
                           </el-option>
                         </el-select>
                       </div>
-                    </div>
-<!--                    <div  v-show="dataViewType=='table'" class="row">
-                      <div class="form-group col-lg-6 pull-left" style="text-align: left; margin-top: 15px;">
-                        <el-select class="select-danger"
-                                   size="large"
-                                   placeholder="Выбрать параметр"
-                                   v-model="model.selected_param">
-                          <el-option v-for="(value, key) in consumption_params_labels"
-                                     class="select-danger"
+                      <div v-if="dataViewType === 'table'" class="form-group col-lg-6 pull-left" style="margin-top: 15px; text-align: left;">
+                        <el-select class="select-success"
+                                   size="small"
+                                   :disabled="total === 0"
+                                   placeholder="Выбрать формат файла"
+                                   v-model="model.selected_filetype">
+                          <el-option v-for="(value, key) in file_types"
+                                     class="select-success"
                                      :value="key"
                                      :label="value"
                                      :key="key">
                           </el-option>
                         </el-select>
+                        <el-button type="primary"
+                                   icon="el-icon-download"
+                                   :disabled="model.selected_filetype === '' || total === 0"
+                                   v-on:click="download()">Скачать</el-button>
                       </div>
-                    </div>-->
+                    </div>
                   </div>
                 </div>
                 <vue-tabs class="card-content viewresult" v-show="dataViewType == 'graphic'">
@@ -176,6 +179,7 @@
   import VueTabs from 'vue-nav-tabs'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
   import LineChart from 'src/components/UIComponents/Chartsjs/LineChart.js'
+  import credentials from 'src/api/credentials.js'
   // import ChartCard from 'src/components/UIComponents/Cards/ChartCard.vue'
 
   Vue.use(Table)
@@ -234,7 +238,13 @@
           selected_param: '',
           consumption_lines: [], // for checkboxes in graphic mode
           line_chosen: '', // for radio buttons in table mode
-          max_param_value: 0 // for correct scaling of Y axis
+          max_param_value: 0, // for correct scaling of Y axis
+          selected_filetype: ''
+        },
+        file_types: {
+          xlsx: 'Файл Excel (*.xlsx)',
+          xls: 'Файл Excel 97-2003 (*.xls)',
+          csv: 'CSV (разделители - запятые)'
         },
         consumption_types: [
           {
@@ -351,6 +361,12 @@
       }
     },
     methods: {
+      download () {
+        let params = '?house_id=' + this.model.house_id + '&from=' + this.model.from + '&to=' + this.model.to +
+                '&download=' + this.model.selected_filetype + '&token=' + this.$store.getters.getToken
+        var url = credentials.appix_api + '/' + this.model.consumption_type + params
+        window.open(url, '_blank')
+      },
       hexToRGB (hex, alpha) {
         var r = parseInt(hex.slice(1, 3), 16)
         var g = parseInt(hex.slice(3, 5), 16)
@@ -609,4 +625,5 @@
   .lighted_column {
     background-color: #fad163;
   }
+
 </style>
