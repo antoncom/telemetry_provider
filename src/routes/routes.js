@@ -31,9 +31,9 @@ import UnbindEquipment from 'src/components/Dashboard/Views/operator/UnbindEquip
 // import HeatConsumption from 'src/components/Dashboard/Views/householder/HeatConsumption.vue'
 
 import Messenger from 'src/components/Dashboard/Views/Messenger.vue'
-// import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
-// import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
-// import TeamtimeBpm from 'src/components/Dashboard/Views/TeamtimeBpm.vue'
+import TechProc from 'src/components/Dashboard/Views/TechProc.vue'
+import DocuProc from 'src/components/Dashboard/Views/DocuProc.vue'
+import TeamtimeBpm from 'src/components/Dashboard/Views/TeamtimeBpm.vue'
 // import TeamtimeDocs from 'src/components/Dashboard/Views/TeamtimeDocs.vue'
 
 let loginPage = {
@@ -306,36 +306,6 @@ const routes = [
           breadcrumbs: false
         }
       },
-/*      {
-        path: '/consumption/heat',
-        name: 'Потребление тепла',
-        component: HeatConsumption,
-        meta: {
-          requiredAuth: true,
-          roles: ['provider', 'operator'],
-          breadcrumbs: false
-        }
-      },
-      {
-        path: '/consumption/cwater',
-        name: 'Потребление холодной воды',
-        component: HeatConsumption,
-        meta: {
-          requiredAuth: true,
-          roles: ['provider', 'operator'],
-          breadcrumbs: false
-        }
-      },
-      {
-        path: '/consumption/hwater',
-        name: 'Потребление горячей воды',
-        component: HeatConsumption,
-        meta: {
-          requiredAuth: true,
-          roles: ['provider', 'operator'],
-          breadcrumbs: false
-        }
-      }, */
       {
         path: '/profile',
         name: 'Профиль пользователя',
@@ -355,8 +325,7 @@ const routes = [
           roles: ['provider', 'operator', 'householder'],
           breadcrumbs: false
         }
-      }
-      /*
+      },
       {
         path: '/provider/docuproc',
         name: 'Бизнес-процессы',
@@ -386,18 +355,7 @@ const routes = [
           roles: ['provider'],
           breadcrumbs: false
         }
-      },
-      {
-        path: '/provider/ttdocs',
-        name: 'Хранилище документов',
-        component: TeamtimeDocs,
-        meta: {
-          requiredAuth: true,
-          roles: ['provider', 'operator', 'householder'],
-          breadcrumbs: false
-        }
       }
-      */
     ]
   },
   loginPage,

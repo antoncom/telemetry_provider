@@ -88,22 +88,27 @@ export default [
     icon: 'ti-gift',
     path: '/provider/messenger',
     roles: ['provider', 'operator', 'householder']
+  },
+  {
+    name: 'Бизнес процессы',
+    icon: 'ti-gift',
+    path: '/provider/docuproc',
+    roles: ['provider'],
+    children: [
+      {
+        name: 'Документооборот',
+        path: '/provider/docuproc',
+        roles: ['provider']
+      },
+      {
+        name: 'Обследование дома',
+        path: '/provider/obsledproc',
+        roles: ['provider']
+      },
+      {
+        name: 'TT Bpm',
+        path: '/provider/ttbpm',
+        roles: ['provider']
+      }]
   }
-  // {
-  //  name: 'Бизнес процессы',
-  //  icon: 'ti-gift',
-  //  path: '/provider/docuproc',
-  //  roles: ['provider'],
-  //  children: [
-  //    {
-  //      name: 'Документооборот',
-  //      path: '/provider/docuproc',
-  //      roles: ['provider']
-  //    },
-  //    {
-  //      name: 'Обследование дома',
-  //      path: '/provider/obsledproc',
-  //      roles: ['provider']
-  //    }]
-  // }
 ]

@@ -3,14 +3,15 @@
   <div class="bpmn_condition_xor">
     <div class="bpmn_icon"></div>
     <div class="bpmn_event_content">{{data.text}}</div>
-    <port v-for="pType in portTypes" v-if="showPorts" :position="pType" :key="pType"></port>
+    <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
   </div>
 </div>
 </template>
 
 <script type="text/babel">
-  import store from 'src/store/index.js'
+  import { mapState } from 'vuex'
   import Port from './Port.vue'
+
   export default {
     components: {
       Port
@@ -37,9 +38,7 @@
       }
     },
     computed: {
-      showPorts: function () {
-        return store.state.isPortsEnabled
-      }
+      ...mapState('bpm', ['isPortsEnabled'])
     },
     created: function () {
       // position of the block

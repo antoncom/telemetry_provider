@@ -3,7 +3,7 @@
 </template>
 
 <script type="text/babel">
-  import store from 'src/store/index.js'
+  import { mapGetters } from 'vuex'
   export default {
     props: {
       type: {
@@ -24,6 +24,7 @@
       }
     },
     computed: {
+      ...mapGetters('bpm', ['getPortLocalXY'])
     },
     created: function () {
       // Place port accordingly type of figure and type of the port
@@ -31,7 +32,7 @@
       let portType = this.position
 
       // set port position inside the figure
-      let local = store.getters.getPortLocalXY(figureId, portType)
+      let local = this.getPortLocalXY(figureId, portType)
       if (local !== undefined) {
         let shiftX = 0
         let shiftY = 0

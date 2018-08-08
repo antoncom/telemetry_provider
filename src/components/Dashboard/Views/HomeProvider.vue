@@ -38,7 +38,7 @@
               <el-table :data="browsers_compability">
                 <el-table-column label="N" property="id" width="50"></el-table-column>
                 <el-table-column label="Браузер" property="browser" width="160"></el-table-column>
-                <el-table-column label="OS" property="os" width="100"></el-table-column>
+                <el-table-column label="OS" property="os" width="180"></el-table-column>
                 <el-table-column label="Статус" property="status">
                   <template slot-scope="scope">
                     <span v-if="scope.row.status === 'Ok'" class="ti-check" style="color: darkgreen;"></span>
@@ -95,6 +95,24 @@
             browser: 'Safari 5.1.7',
             os: 'Windows 7',
             status: 'Нет поддержки'
+          },
+          {
+            id: 7,
+            browser: 'Chrome 65.0.3325.162',
+            os: 'Linux / Ubuntu 14.10',
+            status: 'Ok'
+          },
+          {
+            id: 8,
+            browser: 'Firefox 39.0',
+            os: 'Linux / Ubuntu 14.10',
+            status: 'Ok'
+          },
+          {
+            id: 9,
+            browser: 'Яндекс',
+            os: 'Android',
+            status: 'Ok'
           }
         ]
       }

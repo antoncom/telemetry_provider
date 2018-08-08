@@ -3,7 +3,7 @@
     <div class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
-        <a href="javascript:;" v-on:click="enablePorts">
+        <a href="javascript:;" v-on:click="togglePorts">
           <div class="bpmn_activity_container">
             <span class="bpmn_activity_content">{{data.text}}</span>
             <span class="bpmn_activity_iefix">&nbsp;</span>
@@ -14,13 +14,13 @@
       <div class="bpmn_activity_backlight" style="display:none;"></div>
       <div v-bind:class="acState.state" class="bpmn_activity_aditional_info" :style="showStatus">{{acState.part}}</div>
     </div>
-    <port v-for="pType in portTypes" v-if="showPorts" :position="pType" :key="pType"></port>
+    <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
   </div>
 </template>
 
 <script type="text/babel">
   import * as types from 'src/store/mutation-types.js'
-  import store from 'src/store/index.js'
+  import { mapState } from 'vuex'
   import Port from './Port.vue'
   export default {
     components: {
@@ -50,8 +50,14 @@
       }
     },
     computed: {
-      showPorts: function () {
-        return store.state.isPortsEnabled
+      ...mapState('bpm', ['isPortsEnabled'])
+    },
+    methods: {
+      togglePorts: function () {
+        this.$store.commit({
+          type: 'bpm/' + types.SHOW_PORTS,
+          payload: !this.isPortsEnabled
+        })
       }
     },
     created: function () {
@@ -72,14 +78,6 @@
       else if (this.data.viewState === 'collapsed') this.acType = 'subprocess_collapsed_activity'
       else if (this.data.viewState === 'expanded') this.acType = 'subprocess_expanded_activity'
       else this.acType = 'simple_activity'
-    },
-    methods: {
-      enablePorts: function () {
-        store.commit({
-          type: types.SHOW_PORTS,
-          payload: !store.state.isPortsEnabled
-        })
-      }
     }
   }
 </script>

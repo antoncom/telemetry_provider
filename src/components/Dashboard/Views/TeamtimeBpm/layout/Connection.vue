@@ -7,7 +7,8 @@
 
 <script type="text/babel">
   import ConnectionLine from './ConnectionLine.vue'
-  import store from 'src/store/index.js'
+//  import store from 'src/store/index.js'
+  import { mapState, mapGetters } from 'vuex'
   import Arrow from './Arrow.vue'
   export default {
     components: {
@@ -39,8 +40,10 @@
       let targetFigureId = this.data.target.figureId
       let sourcePortType = this.data.source.name
       let targetPortType = this.data.target.name
-      let fromPt = store.getters.getPortGlobalXY(sourceFigureId, sourcePortType)
-      let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+//      let fromPt = store.getters.getPortGlobalXY(sourceFigureId, sourcePortType)
+//      let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+      let fromPt = this.getPortGlobalXY(sourceFigureId, sourcePortType)
+      let toPt = this.getPortGlobalXY(targetFigureId, targetPortType)
 
       var fromDir = 0
       var toDir = 0
@@ -57,6 +60,8 @@
       console.log('POINTS', this.points)
     },
     computed: {
+      ...mapState('bpm', ['isPortsEnabled']),
+      ...mapGetters('bpm', ['getPortGlobalXY']),
       lines: function () {
         // generate lines
         var w = 2
@@ -93,10 +98,12 @@
       arrow: function () {
         let targetFigureId = this.data.target.figureId
         let targetPortType = this.data.target.name
-        let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+//        let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+        let toPt = this.getPortGlobalXY(targetFigureId, targetPortType)
         let shiftLeft = 0
         let shiftTop = 0
-        let isPortsEnabled = store.state.isPortsEnabled
+//        let isPortsEnabled = store.state.isPortsEnabled
+        let isPortsEnabled = this.isPortsEnabled
 
         if (targetPortType === 'input') {
           [shiftLeft, shiftTop] = [-9, -4]

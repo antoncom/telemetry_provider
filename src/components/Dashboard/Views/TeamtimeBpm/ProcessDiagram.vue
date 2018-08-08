@@ -61,6 +61,7 @@
   import Message from './layout/Message.vue'
   import Timer from './layout/Timer.vue'
   import Connection from './layout/Connection.vue'
+  import { mapState } from 'vuex'
 
   export default {
     data () {
@@ -72,6 +73,7 @@
         minColumnWidth: 120
       }
     },
+    store: store,
     components: {
       BlocksMenu,
       Activity,
@@ -82,33 +84,18 @@
       ConditionAnd,
       Message,
       Timer,
-      Connection,
-      store
+      Connection
     },
     mounted () {
       console.log('ProcessDiagram MOUNTED')
       this.$nextTick(function () {
-        store.dispatch('loadWorkflow', 327).then(() => {
-          store.dispatch('loadStatus')
+        store.dispatch('bpm/loadWorkflow', 327).then(() => {
+          store.dispatch('bpm/loadStatus')
         })
       })
     },
     computed: {
-      columns: function () {
-        return store.state.columns
-      },
-      rows: function () {
-        return store.state.rows
-      },
-      figures: function () {
-        return store.state.figures
-      },
-      connections: function () {
-        return store.state.connections
-      },
-      statuses: function () {
-        return store.state.figureStatus
-      },
+      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus']),
       width: function () {
         var w = 0
         for (let col of this.columns) {
@@ -147,7 +134,7 @@
     methods: {
       activityStatus: function (act) {
         var out = {}
-        this.statuses.forEach(function (status) {
+        this.figureStatus.forEach(function (status) {
           if (status.id === act.id) {
             out = {
               state: 'bpmn_activity_' + status.params.state,
