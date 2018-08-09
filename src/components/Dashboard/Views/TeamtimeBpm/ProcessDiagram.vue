@@ -31,7 +31,7 @@
       </template>
     </div>
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
-      <div id="SwimlanePanel-paintarea" v-bind:class="isGridShown" v-bind:style="swimlaneStyle">
+      <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
         <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id"></start>
         <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id"></activity>
         <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id"></end>
@@ -48,6 +48,7 @@
 </template>
 
 <script type="text/babel">
+
   import store from 'src/store/index.js'
 
   // Diagram layout components
@@ -89,13 +90,13 @@
     mounted () {
       console.log('ProcessDiagram MOUNTED')
       this.$nextTick(function () {
-        store.dispatch('bpm/loadWorkflow', 327).then(() => {
-          store.dispatch('bpm/loadStatus')
+        this.$store.dispatch('bpm/loadWorkflow', 327).then(() => {
+          this.$store.dispatch('bpm/loadStatus')
         })
       })
     },
     computed: {
-      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus']),
+      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus', 'isGridShown']),
       width: function () {
         var w = 0
         for (let col of this.columns) {
@@ -116,17 +117,17 @@
           height: this.height + 'px'
         }
         return result
-      },
-      isGridShown: function () {
+      }
+      /* isGridShown: function () {
         var gridClass = ''
         console.log('IS GRID SHOWN')
-        if (store.state.isGridShown === true) {
+        if (this.$store.state.bpm.isGridShown === true) {
           gridClass = 'hide-grid'
         } else {
           gridClass = 'show-grid'
         }
         return gridClass
-      }
+      } */
     },
     created () {
       console.log('ProcessDiagram CREATED')

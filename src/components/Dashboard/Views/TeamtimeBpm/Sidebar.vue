@@ -67,7 +67,7 @@
                   Показать:&nbsp;&nbsp;
                   <select name="filter_show" id="filter_show" class="inputbox"><option value="status" selected="selected">Статус выполнения</option><option value="plan">План часов</option><option value="time">Время (Факт/План)</option><option value="price">Цена работ</option><option value="performer">Исполнитель</option><option value="date">Дата выполнения</option><option value="">Ничего</option></select>					</td><td>
               </td><td>
-                <input id="SwimlanePanel-toolbar-SnapGrid10" class="cmdSnapGrid10 ui-helper-hidden-accessible" type="checkbox" v-model="isGridShown">
+                <input id="SwimlanePanel-toolbar-SnapGrid10" class="cmdSnapGrid10 ui-helper-hidden-accessible" type="checkbox" :value="isGridShown" v-on:change="toggleGrid">
                 <label for="SwimlanePanel-toolbar-SnapGrid10" aria-pressed="true" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-active" role="button" aria-disabled="false"><span class="ui-button-text">
                           <span v-bind:class="{hide_grid: isGridShown, show_grid: !isGridShown}" title="Grid">Grid</span>
                       </span></label>
@@ -141,7 +141,7 @@
 
 <script type="text/babel">
   import * as types from 'src/store/mutation-types.js'
-  import store from 'src/store/index.js'
+  import { mapState } from 'vuex'
   export default {
     props: {
       titles: {
@@ -152,13 +152,14 @@
     data () {
 //      return this.$root.$data
       return {
-        isGridShown: false
+        // isGridShown: false
       }
     },
     created: function () {
-      this.isGridShown = store.state.isGridShown
+      // this.isGridShown = this.isGridShown
     },
     computed: {
+      ...mapState('bpm', ['isGridShown'])
 //      isGridShown: function () {
 //        var gridClass = 'hide_grid'
 //        if (store.state.isGridShown === true) {
@@ -170,12 +171,12 @@
 //      }
     },
     watch: {
-      isGridShown: 'toggleGrid'
+      // isGridShown: 'toggleGrid'
     },
     methods: {
       toggleGrid: function () {
-        store.commit(types.SHOW_GRID, !store.state.isGridShown)
-        return store.state.isGridShown
+        this.$store.commit('bpm/' + types.SHOW_GRID, !this.isGridShown)
+        // return store.state.isGridShown
       }
     }
   }

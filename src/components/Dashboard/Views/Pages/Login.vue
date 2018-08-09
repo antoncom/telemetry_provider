@@ -97,8 +97,8 @@
       return {
         error: '',
         status: '',
-        username: '',
-        password: '',
+        username: 'admin',
+        password: 'adminadmin',
         from: '/' // redirect after login to requested page
       }
     },
