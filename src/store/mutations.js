@@ -1,96 +1,6 @@
-import * as types from './mutation-types'
-
+// import * as types from './mutation-types'
+/*
 export default {
-  [types.LOGIN]: (state, commit) => {
-    let roles = ['', 'provider', 'operator', 'householder']
-    state.userAuthorized = true
-    state.userType = roles[commit.payload.type]
-    if (state.userType === 'operator') {
-      state.userId = 2
-    }
-    state.userToken = commit.payload.token
-  },
-
-  [types.VALIDATE_ERROR]: (state, errors) => {
-
-  },
-
-  [types.LOGOUT]: (state) => {
-    state.userAuthorized = false
-    state.userToken = ''
-    state.userType = ''
-  },
-
-  [types.LOGIN_SUCCESS]: (state) => {
-  },
-
-  [types.ADD_OPERATOR]: (state, commit) => {
-    state.setOperatorPassword = commit.payload.password
-  },
-  [types.EDIT_OPERATOR]: (state, commit) => {
-    state.setOperatorPassword = commit.payload.password
-  },
-  [types.GET_OPERATOR]: (state, commit) => {
-    state.operator = commit.payload
-  },
-  [types.DELETE_OPERATOR]: (state, commit) => {
-  },
-  [types.LIST_OPERATORS]: (state, commit) => {
-    state.operators = commit.payload
-  },
-
-  [types.ADD_HOUSEHOLDER]: (state, commit) => {
-    state.setHouseholderPassword = commit.payload.password
-  },
-  [types.EDIT_HOUSEHOLDER]: (state, commit) => {
-    state.setHouseholderPassword = commit.payload.password
-  },
-  [types.GET_HOUSEHOLDER]: (state, commit) => {
-    state.hoseholder = commit.payload
-  },
-  [types.DELETE_HOUSEHOLDER]: (state, commit) => {
-  },
-  [types.LIST_HOUSEHOLDERS]: (state, commit) => {
-    state.householders = commit.payload
-  },
-  [types.KEEP_HOUSEHOLDERID]: (state, commit) => {
-    state.selectedHouseholder = commit
-  },
-
-  [types.ADD_HOUSE]: (state, commit) => {
-  },
-  [types.EDIT_HOUSE]: (state, commit) => {
-  },
-  [types.GET_HOUSE]: (state, commit) => {
-  },
-  [types.DELETE_HOUSE]: (state, commit) => {
-  },
-  [types.LIST_HOUSES]: (state, commit) => {
-    state.houses = commit.payload
-  },
-  [types.KEEP_HOUSEID]: (state, commit) => {
-    state.selectedHouse = commit
-  },
-
-  [types.ADD_EQUIPMENT]: (state, commit) => {
-  },
-  [types.EDIT_EQUIPMENT]: (state, commit) => {
-  },
-  [types.GET_EQUIPMENT]: (state, commit) => {
-  },
-  [types.UNBIND_EQUIPMENT]: (state, commit) => {
-  },
-
-  [types.GET_CONSUMPTION]: (state, commit) => {
-    state.consumption_data = commit.payload.data
-    state.consumption_type = commit.payload.type
-  },
-
-  [types.CLEAR_CONSUMPTION]: (state) => {
-    state.consumption_data = []
-    state.consumption_type = ''
-  },
-
   [types.LOAD_WORKFLOW]: (state, commit) => {
     console.log('DIAG', commit.payload)
     state.rows = commit.payload.rows
@@ -111,3 +21,4 @@ export default {
 
   }
 }
+*/

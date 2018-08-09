@@ -6,7 +6,7 @@ function install (Vue) {
       if (binding.arg === 'see') {
         if (binding.value && binding.value.length > 0) {
           let whoCanSee = binding.value
-          let userRole = store.getters.userType
+          let userRole = store.state.common.userType
           if (whoCanSee.indexOf(userRole) === -1) {
             el.parentNode.removeChild(el)
           }

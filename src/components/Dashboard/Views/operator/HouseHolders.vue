@@ -80,9 +80,7 @@
   import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
-  import store from 'src/store/index.js'
-
-  // import routes from 'src/routes/routes'
+  import { mapState } from 'vuex'
   import {router} from 'src/main'
 
   // Axios
@@ -108,6 +106,7 @@
       PPagination
     },
     computed: {
+      ...mapState('common', ['userType', 'userToken', 'userId']),
       tableColumns () {
         var result = [
           {
@@ -136,7 +135,7 @@
             minWidth: 120
           }
         ]
-        let role = store.getters.userType
+        let role = this.userType
         if (role === 'provider') {
           let columns = [
             {
@@ -193,10 +192,10 @@
     },
     created () {
       var path = ''
-      if (store.getters.userType === 'operator') path = '/householders?org_id=' + store.getters.getUserId
-      else if (store.getters.userType === 'provider') path = '/householders'
+      if (this.userType === 'operator') path = '/householders?org_id=' + this.userId
+      else if (this.userType === 'provider') path = '/householders'
       this.api = credentials.appix_api + path
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = this.userToken
       axios.get(this.api)
               .then(response => {
                 this.loading2 = false
@@ -241,8 +240,7 @@
           confirmButtonText: 'Удалить домовладельца!'
         }).then((result) => {
           if (result) {
-            this.$store.dispatch('deleteHouseholder', { row: row, table: this.tableData })
-            // this.$refs.householders.doLayout()
+            this.$store.dispatch('base/deleteHouseholder', { row: row, table: this.tableData })
           }
         }).catch(swal.noop)
       }

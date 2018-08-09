@@ -137,18 +137,19 @@
   import Vue from 'vue'
   import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
-  import store from 'src/store/index.js'
   import * as types from 'src/store/mutation-types.js'
-  import {router} from 'src/main'
+  import { router } from 'src/main'
+  import { mapState } from 'vuex'
+
   // Axios
   import axios from 'axios'
   import VueAxios from 'vue-axios'
   import swal from 'sweetalert2'
   import userCanSee from 'src/plugins/userCanSee.js'
+
   Vue.use(userCanSee)
   Vue.use(VueAxios, axios)
   axios.defaults.timeout = 5000
-  // axios.defaults.baseURL = 'https://my.api.mockaroo.com'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   axios.defaults.withCredentials = false
   Vue.use(Table)
@@ -156,11 +157,14 @@
   Vue.use(Select)
   Vue.use(Option)
   Vue.use(Loading)
+
   export default{
     components: {
       PPagination
     },
     computed: {
+      ...mapState('base', ['householders', 'operators']),
+      ...mapState('common', ['userType', 'userToken', 'userId']),
       tableColumns () {
         var result = [
           {
@@ -174,7 +178,7 @@
             minWidth: 400
           }
         ]
-        var role = this.$store.getters.userType
+        var role = this.userType
         switch (role) {
           case ('provider'): {
             let columns = [
@@ -225,12 +229,6 @@
       pagedData () {
         return this.tableData.slice(this.from, this.to)
       },
-      householders () {
-        return store.state.householders
-      },
-      operators () {
-        return store.getters.operators
-      },
       /***
        * Searches through table data and returns a paginated array.
        * Note that this should not be used for table with a lot of data as it might be slow!
@@ -269,14 +267,11 @@
         this.pagination.total = this.tableData.length
         return this.tableData.length
       }
-//      org_id () {
-//        return this.houseHolderId
-//      }
     },
     created () {
-      this.model.org_id = store.getters.getUserId
+      this.model.org_id = this.userId
       this.api = credentials.appix_api + '/houses?org_id=' + this.householder // store.getters.getUserId
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = this.userToken
       axios.get(this.api)
               .then(response => {
                 this.loading2 = false
@@ -286,8 +281,8 @@
               .catch(e => {
                 this.errors.push(e)
               })
-      this.$store.dispatch('listHouseholders', this.$data.model)
-      this.$store.dispatch('listOperators', this.$data.model)
+      this.$store.dispatch('base/listHouseholders', this.$data.model)
+      this.$store.dispatch('base/listOperators', this.$data.model)
     },
     data () {
       return {
@@ -317,7 +312,7 @@
     methods: {
       handleFilter () {
         this.api = credentials.appix_api + '/houses?org_id=' + this.householder // store.getters.getUserId
-        axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
+        axios.defaults.headers.common['X-AUTH-TOKEN'] = this.userToken
         axios.get(this.api)
                 .then(response => {
                   this.loading2 = false
@@ -329,11 +324,11 @@
                 })
       },
       handleViewBinding (row, col, index) {
-        this.$store.commit(types.KEEP_HOUSEID, row.id)
+        this.$store.commit('base/' + types.KEEP_HOUSEID, row.id)
         router.push('/equipment')
       },
       getHouseholdersByOperator () {
-        this.$store.dispatch('listHouseholders', this.$data.model_operator)
+        this.$store.dispatch('base/listHouseholders', this.$data.model_operator)
       },
       handleEdit (index, row) {
         router.push('/houses/edit/' + row.id)
@@ -356,7 +351,7 @@
           confirmButtonText: 'Удалить дом!'
         }).then((result) => {
           if (result) {
-            this.$store.dispatch('deleteHouse', { row: row, table: this.tableData })
+            this.$store.dispatch('base/deleteHouse', { row: row, table: this.tableData })
           }
         }).catch(swal.noop)
       }

@@ -80,10 +80,8 @@
   import {Table, TableColumn, Select, Option, Loading, Scrollbar, Dropdown} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
-  import store from 'src/store/index.js'
-
-  // import routes from 'src/routes/routes'
-  import {router} from 'src/main'
+  import { mapState } from 'vuex'
+  import { router } from 'src/main'
 
   import swal from 'sweetalert2'
 
@@ -118,6 +116,7 @@
       Scrollbar
     },
     computed: {
+      ...mapState('common', ['userToken']),
       pagedData () {
         return this.tableData.slice(this.from, this.to)
       },
@@ -162,7 +161,7 @@
     },
     mounted () {
       this.api = credentials.appix_api + '/operators'
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = this.userToken
       axios.get(this.api)
               .then(response => {
                 this.loading2 = false
@@ -234,7 +233,7 @@
           confirmButtonText: 'Удалить оператора!'
         }).then((result) => {
           if (result) {
-            this.$store.dispatch('deleteOperator', { row: row, table: this.tableData })
+            this.$store.dispatch('base/deleteOperator', { row: row, table: this.tableData })
           }
         }).catch(swal.noop)
       }

@@ -180,7 +180,7 @@
   import PPagination from 'src/components/UIComponents/Pagination.vue'
   import LineChart from 'src/components/UIComponents/Chartsjs/LineChart.js'
   import credentials from 'src/api/credentials.js'
-  // import ChartCard from 'src/components/UIComponents/Cards/ChartCard.vue'
+  import { mapState } from 'vuex'
 
   Vue.use(Table)
   Vue.use(TableColumn)
@@ -339,12 +339,12 @@
         })
       },
       'model.from': function () {
-        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+        this.$store.dispatch('base/getConsumption', this.$data.model).then(() => {
           this.initCharts()
         })
       },
       'model.to': function () {
-        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+        this.$store.dispatch('base/getConsumption', this.$data.model).then(() => {
           this.initCharts()
         })
       },
@@ -355,130 +355,14 @@
         deep: true
       },
       'model.consumption_type': function () {
-        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
-          this.initCharts()
-        })
-      }
-    },
-    methods: {
-      download () {
-        let params = '?house_id=' + this.model.house_id + '&from=' + this.model.from + '&to=' + this.model.to +
-                '&download=' + this.model.selected_filetype + '&token=' + this.$store.getters.getToken
-        var url = credentials.appix_api + '/' + this.model.consumption_type + params
-        window.open(url, '_blank')
-      },
-      hexToRGB (hex, alpha) {
-        var r = parseInt(hex.slice(1, 3), 16)
-        var g = parseInt(hex.slice(3, 5), 16)
-        var b = parseInt(hex.slice(5, 7), 16)
-        if (alpha) {
-          return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')'
-        } else {
-          return 'rgb(' + r + ', ' + g + ', ' + b + ')'
-        }
-      },
-      initConsumptionChart () {
-        var lines = this.model.consumption_lines
-        var param = this.model.selected_param
-        var series = []
-        var labels = []
-
-        var weather = {
-          yAxisID: 'B',
-          label: 'Температура воздуха',
-          data: [-5, -3, -2, 0, 5, 12, 15, 7, 2, 15, 28, 28, 28, 17, 10, 10, 5, 6, 6, 5, 7, 8, 5, 6, 4, 3, 5],
-          backgroundColor: this.hexToRGB('#FF0000', 0.1)
-        }
-
-        if (lines && lines.length) {
-          for (let i = 0; i < lines.length; i++) {
-            if (lines[i].selected) {
-              let lineData = this.consumption_graphData(lines[i].name, param)
-              labels = lineData.labels
-              series.push(lineData)
-            }
-          }
-        }
-        series.push(weather)
-        // show chart
-        if ((series && series.length > 0) && (labels && labels.length > 0)) {
-          this.datacollection = {
-            labels: labels,
-            datasets: series
-          }
-        } else {
-          this.datacollection = {
-            labels: [],
-            datasets: []
-          }
-        }
-      },
-      initCharts () {
-        this.initConsumptionChart()
-      },
-      consumption_graphData (line, param) {
-        this.model.max_param_value = 0
-        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
-          var dataArray = this.$store.getters.consumption_data
-          // iterate lines
-          for (let i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].name === line) {
-              // line found
-              // iterate records of the line
-              var obj = {
-                label: line, // chart name
-                data: [], // yAxis data
-                labels: [] // xAxis data timestamp)
-              }
-              for (var record of dataArray[i].data) {
-                obj['data'].push(record[param])
-                obj['labels'].push(record['timestamp'])
-                if (this.model.max_param_value < record[param]) {
-                  this.model.max_param_value = record[param]
-                }
-              }
-              obj['backgroundColor'] = this.hexToRGB(this.datacolors[i], 0.4)
-              obj['yAxisID'] = 'A'
-              // break iterations if the line found
-              break
-            }
-          }
-          return obj
-        }
-      },
-      consumption_lineData (line) {
-        var result = []
-        if (this.$store.getters.consumption_data.length && this.$store.getters.consumption_data.length > 0) {
-          var dataArray = this.$store.getters.consumption_data
-          // iterate lines
-          for (let i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].name === line) {
-              // line found
-              result = dataArray[i].data
-              // break iterations if the line found
-              break
-            }
-          }
-        }
-        return result
-      }
-    },
-    async mounted () {
-      this.$data.model.house_id = this.$route.params.id
-      this.$store.dispatch('getHouse', this.$data.model)
-      if (this.model.consumption_type !== '') {
-        this.$store.dispatch('getConsumption', this.$data.model).then(() => {
+        this.$store.dispatch('base/getConsumption', this.$data.model).then(() => {
           this.initCharts()
         })
       }
     },
     computed: {
-      consumption_type () {
-        return this.$store.getters.consumption_type
-      },
-      consumption_data () {
-        return this.$store.getters.consumption_data
-      },
+      ...mapState('base', ['consumption_type', 'consumption_data']),
+      ...mapState('common', ['userToken']),
       consumption_params_labels () {
         var result = []
         for (var i = 0; i < this.consumption_types.length; i++) {
@@ -511,7 +395,6 @@
             break
           }
         }
-        console.log('POPOVER', result)
         return result
       },
       consumption_params () {
@@ -603,12 +486,118 @@
         return this.consumption_tableData.length
       }
     },
-    created () {
+    methods: {
+      download () {
+        let params = '?house_id=' + this.model.house_id + '&from=' + this.model.from + '&to=' + this.model.to +
+                '&download=' + this.model.selected_filetype + '&token=' + this.userToken
+        var url = credentials.appix_api + '/' + this.model.consumption_type + params
+        window.open(url, '_blank')
+      },
+      hexToRGB (hex, alpha) {
+        var r = parseInt(hex.slice(1, 3), 16)
+        var g = parseInt(hex.slice(3, 5), 16)
+        var b = parseInt(hex.slice(5, 7), 16)
+        if (alpha) {
+          return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')'
+        } else {
+          return 'rgb(' + r + ', ' + g + ', ' + b + ')'
+        }
+      },
+      initConsumptionChart () {
+        var lines = this.model.consumption_lines
+        var param = this.model.selected_param
+        var series = []
+        var labels = []
+
+        var weather = {
+          yAxisID: 'B',
+          label: 'Температура воздуха',
+          data: [-5, -3, -2, 0, 5, 12, 15, 7, 2, 15, 28, 28, 28, 17, 10, 10, 5, 6, 6, 5, 7, 8, 5, 6, 4, 3, 5],
+          backgroundColor: this.hexToRGB('#FF0000', 0.1)
+        }
+
+        if (lines && lines.length) {
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].selected) {
+              let lineData = this.consumption_graphData(lines[i].name, param)
+              labels = lineData.labels
+              series.push(lineData)
+            }
+          }
+        }
+        series.push(weather)
+        // show chart
+        if ((series && series.length > 0) && (labels && labels.length > 0)) {
+          this.datacollection = {
+            labels: labels,
+            datasets: series
+          }
+        } else {
+          this.datacollection = {
+            labels: [],
+            datasets: []
+          }
+        }
+      },
+      initCharts () {
+        this.initConsumptionChart()
+      },
+      consumption_graphData (line, param) {
+        this.model.max_param_value = 0
+        if (this.consumption_data.length && this.consumption_data.length > 0) {
+          var dataArray = this.consumption_data
+          // iterate lines
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].name === line) {
+              // line found
+              // iterate records of the line
+              var obj = {
+                label: line, // chart name
+                data: [], // yAxis data
+                labels: [] // xAxis data timestamp)
+              }
+              for (var record of dataArray[i].data) {
+                obj['data'].push(record[param])
+                obj['labels'].push(record['timestamp'])
+                if (this.model.max_param_value < record[param]) {
+                  this.model.max_param_value = record[param]
+                }
+              }
+              obj['backgroundColor'] = this.hexToRGB(this.datacolors[i], 0.4)
+              obj['yAxisID'] = 'A'
+              // break iterations if the line found
+              break
+            }
+          }
+          return obj
+        }
+      },
+      consumption_lineData (line) {
+        var result = []
+        if (this.consumption_data.length && this.consumption_data.length > 0) {
+          var dataArray = this.consumption_data
+          // iterate lines
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].name === line) {
+              // line found
+              result = dataArray[i].data
+              // break iterations if the line found
+              break
+            }
+          }
+        }
+        return result
+      }
+    },
+    async mounted () {
+      this.$data.model.house_id = this.$route.params.id
+      this.$store.dispatch('base/getHouse', this.$data.model)
+      if (this.model.consumption_type !== '') {
+        this.$store.dispatch('base/getConsumption', this.$data.model).then(() => {
+          this.initCharts()
+        })
+      }
     }
-//    mounted () {
-//      this.$data.model.id = this.$route.params.id
-//      this.$store.dispatch('getHouse', this.$data.model)
-//    }
   }
 </script>
 <style>

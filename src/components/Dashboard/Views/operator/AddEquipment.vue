@@ -114,8 +114,7 @@
   import VeeValidate, { mapFields, Validator } from 'vee-validate'
   import ru from 'vee-validate/dist/locale/ru'
   import PSwitch from 'src/components/UIComponents/Switch.vue'
-
-  import store from 'src/store/index.js'
+  import { mapState } from 'vuex'
 
   // Localize takes the locale object as the second argument (optional) and merges it.
   Validator.localize('ru', ru)
@@ -128,12 +127,10 @@
     },
     computed: {
       ...mapFields(['address', 'line1', 'line2', 'line1_name', 'line2_name']),
-      houses () {
-        return store.state.houses
-      }
+      ...mapState('base', ['houses'])
     },
     created () {
-      this.$store.dispatch('listHouses', this.$data.model)
+      this.$store.dispatch('base/listHouses', this.$data.model)
     },
     data () {
       return {
@@ -180,7 +177,7 @@
         })
       },
       addEquipment () {
-        this.$store.dispatch('addEquipment', this.$data.model)
+        this.$store.dispatch('base/addEquipment', this.$data.model)
       }
     }
   }

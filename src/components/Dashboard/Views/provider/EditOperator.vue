@@ -224,12 +224,12 @@
         })
       },
       editHouseholder () {
-        this.$store.dispatch('editOperator', this.$data.model)
+        this.$store.dispatch('base/editOperator', this.$data.model)
       }
     },
     mounted: function () {
       this.$data.model.id = this.$route.params.id
-      this.$store.dispatch('getOperator', this.$data.model)
+      this.$store.dispatch('base/getOperator', this.$data.model)
     }
   }
 </script>

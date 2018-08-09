@@ -227,7 +227,7 @@
         })
       },
       addOperator () {
-        this.$store.dispatch('addOperator', this.$data.model)
+        this.$store.dispatch('base/addOperator', this.$data.model)
       }
     }
   }

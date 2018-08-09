@@ -54,6 +54,7 @@
 </template>
 <script type="text/babel">
   import sidebarLinks from 'src/sidebarLinks.js'
+  import { mapState } from 'vuex'
 
   export default{
     data () {
@@ -121,9 +122,7 @@
       this.links = sidebarLinks
     },
     computed: {
-      userAuthorized () {
-        return this.$store.state.userAuthorized
-      }
+      ...mapState('common', ['userAuthorized'])
     }
   }
 </script>

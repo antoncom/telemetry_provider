@@ -46,7 +46,7 @@ export const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiredAuth) {
-    if (to.meta.roles.indexOf(store.state.userType) >= 0) {
+    if (to.meta.roles.indexOf(store.state.common.userType) >= 0) {
       next()
     } else {
       // router.push('/login')
@@ -56,7 +56,6 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

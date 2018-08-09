@@ -52,7 +52,7 @@
     },
     mounted () {
       this.$data.model.house_id = this.$route.params.id
-      this.$store.dispatch('getHouse', this.$data.model)
+      this.$store.dispatch('base/getHouse', this.$data.model)
     },
     data () {
       return {
@@ -79,7 +79,7 @@
         })
       },
       editHouse () {
-        this.$store.dispatch('editHouse', this.$data.model)
+        this.$store.dispatch('base/editHouse', this.$data.model)
       }
     }
   }

@@ -213,8 +213,8 @@
           }
         },
         // password generator
-        size: '8',
-        characters: 'a-z,A-Z,0-9,#',
+//        size: '8',
+//        characters: 'a-z,A-Z,0-9,#',
         placeholder: 'Password',
         auto: [String, Boolean],
         value: '',
@@ -231,12 +231,12 @@
         })
       },
       editHouseholder () {
-        this.$store.dispatch('editHouseholder', this.$data.model)
+        this.$store.dispatch('base/editHouseholder', this.$data.model)
       }
     },
     mounted: function () {
       this.$data.model.id = this.$route.params.id
-      this.$store.dispatch('getHouseholder', this.$data.model)
+      this.$store.dispatch('base/getHouseholder', this.$data.model)
     }
   }
 </script>

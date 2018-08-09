@@ -139,8 +139,8 @@
   import {Table, TableColumn, Select, Option, Loading, Tooltip} from 'element-ui'
   import PPagination from 'src/components/UIComponents/Pagination.vue'
 
-  import store from 'src/store/index.js'
-  import {router} from 'src/main'
+  import { mapState } from 'vuex'
+  import { router } from 'src/main'
 
   import swal from 'sweetalert2'
 
@@ -166,14 +166,10 @@
       PPagination
     },
     computed: {
+      ...mapState('base', ['householders', 'houses', 'selectedHouseholder', 'selectedHouse']),
+      ...mapState('common', ['userType', 'userToken']),
       pagedData () {
         return this.tableData.slice(this.from, this.to)
-      },
-      householders () {
-        return store.getters.getHouseholders
-      },
-      houses () {
-        return store.getters.getHouses
       },
       /***
        * Searches through table data and returns a paginated array.
@@ -215,10 +211,10 @@
       }
     },
     created () {
-      this.$store.dispatch('listHouseholders', this.$data.model)
-      this.$store.dispatch('listHouses', this.$data.model)
-      this.model.org_id = store.getters.selectedHouseholder
-      this.model.house_id = store.getters.selectedHouse
+      this.$store.dispatch('base/listHouseholders', this.$data.model)
+      this.$store.dispatch('base/listHouses', this.$data.model)
+      this.model.org_id = this.selectedHouseholder
+      this.model.house_id = this.selectedHouse
       this.handleFilter()
     },
     data () {
@@ -283,15 +279,15 @@
         if (filterType === 'householder') {
           this.model.house_id = ''
           this.house = ''
-          store.commit('KEEP_HOUSEHOLDERID', this.model.org_id)
-          this.$store.dispatch('listHouses', this.$data.model)
+          this.$store.commit('base/KEEP_HOUSEHOLDERID', this.model.org_id)
+          this.$store.dispatch('base/listHouses', this.$data.model)
         } else if (filterType === 'house') {
-          store.commit('KEEP_HOUSEID', this.model.house_id)
+          this.$store.commit('base/KEEP_HOUSEID', this.model.house_id)
         }
         if (this.model.org_id > 0 || this.model.house_id > 0) {
           this.loading2 = true
           this.api = credentials.appix_api + '/equipment?org_id=' + this.model.org_id + '&house_id=' + this.model.house_id
-          axios.defaults.headers.common['X-AUTH-TOKEN'] = store.getters.getToken
+          axios.defaults.headers.common['X-AUTH-TOKEN'] = this.userToken
           axios.get(this.api)
                   .then(response => {
                     this.loading2 = false
@@ -312,7 +308,7 @@
         router.push('/equipment/edit/' + row.id)
       },
       userCanSee () {
-        return (store.state.userType === 'provider' || store.state.userType === 'operator')
+        return (this.userType === 'provider' || this.userType === 'operator')
       },
       gotoAdd () {
         router.push('/equipment/add')
@@ -331,11 +327,11 @@
           if (result) {
             // Get address of house (only if the address is selected in dropdown)
             var adr = ''
-            if (store.getters.selectedHouse !== '') {
+            if (this.selectedHouse !== '') {
               let index = 0
-              let houses = store.getters.getHouses
+              let houses = this.houses
               for (index = 0; index < houses.length; index++) {
-                if (houses[index].id === store.getters.selectedHouse) {
+                if (houses[index].id === this.selectedHouse) {
                   adr = houses[index].address
                 }
               }
@@ -348,7 +344,7 @@
               house_address: adr,
               refresh: this.handleFilter
             }
-            this.$store.dispatch('unbindEquipment', payload)
+            this.$store.dispatch('base/unbindEquipment', payload)
           }
         }).catch(swal.noop)
       }

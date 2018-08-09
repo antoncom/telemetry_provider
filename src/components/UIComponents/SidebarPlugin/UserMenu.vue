@@ -45,7 +45,7 @@
     },
     methods: {
       logout () {
-        this.$store.dispatch('logout').then(() => {
+        this.$store.dispatch('common/logout').then(() => {
           this.$router.push('/login')
         })
       },

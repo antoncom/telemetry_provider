@@ -97,15 +97,15 @@
       return {
         error: '',
         status: '',
-        username: 'admin',
-        password: 'adminadmin',
+        username: 'user1',
+        password: 'pass1',
         from: '/' // redirect after login to requested page
       }
     },
     methods: {
       login () {
         if (this.$router.history.pending !== null) this.from = this.$router.history.pending.path
-        this.$store.dispatch('login', this.$data)
+        this.$store.dispatch('common/login', this.$data)
       },
       toggleNavbar () {
         document.body.classList.toggle('nav-open')

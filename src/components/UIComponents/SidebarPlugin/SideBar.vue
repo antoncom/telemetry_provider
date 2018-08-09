@@ -102,7 +102,7 @@
       },
       isMenuShownForUser: (roles) => {
         if (typeof roles !== 'object') return true
-        if (roles.indexOf(store.state.userType) > -1) return true
+        if (roles.indexOf(store.state.common.userType) > -1) return true
         else return false
       }
     },

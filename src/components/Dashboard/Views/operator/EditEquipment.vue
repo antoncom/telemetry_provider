@@ -72,7 +72,7 @@
     },
     mounted () {
       this.$data.model.id = this.$route.params.id
-      this.$store.dispatch('getEquipment', this.$data.model)
+      this.$store.dispatch('base/getEquipment', this.$data.model)
     },
     data () {
       return {
@@ -103,7 +103,7 @@
         })
       },
       editEquipment () {
-        this.$store.dispatch('editEquipment', this.$data.model)
+        this.$store.dispatch('base/editEquipment', this.$data.model)
       }
     }
   }

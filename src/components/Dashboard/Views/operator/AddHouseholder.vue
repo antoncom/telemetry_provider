@@ -176,6 +176,7 @@
   import Vue from 'vue'
   import VeeValidate, { mapFields, Validator } from 'vee-validate'
   import ru from 'vee-validate/dist/locale/ru'
+  import { mapState } from 'vuex'
 
   // Localize takes the locale object as the second argument (optional) and merges it.
   Validator.localize('ru', ru)
@@ -184,21 +185,19 @@
 
   export default {
     created () {
-      if (this.$store.getters.userType === 'provider') {
-        this.$store.dispatch('listOperators', this.$data.model)
+      if (this.userType === 'provider') {
+        this.$store.dispatch('base/listOperators', this.$data.model)
       }
     },
     computed: {
       ...mapFields(['operator', 'name', 'email', 'tin', 'address', 'username', 'password', 'confirmedPassword', 'generate_password']),
-      operators () {
-        return this.$store.getters.operators
-      },
+      ...mapState('base', ['operators', 'userType', 'userId']),
       'model.operator' () {
         // if authorized as operator then org_id=userid
         // otherwise org_id got from dropdown in the add householder form
         var result = ''
-        if (this.$store.getters.userType === 'operator') {
-          result = this.$store.getters.getUserId
+        if (this.userType === 'operator') {
+          result = this.userId
         }
         return result
       }
@@ -263,13 +262,11 @@
       },
       validate () {
         this.$validator.validateAll().then(isValid => {
-          console.log('== VALIDATED ==')
-          // this.$emit('on-submit', this.registerForm, isValid)
           this.addHouseholder()
         })
       },
       addHouseholder () {
-        this.$store.dispatch('addHouseholder', this.$data.model)
+        this.$store.dispatch('base/addHouseholder', this.$data.model)
       }
     }
   }
