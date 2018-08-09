@@ -12,7 +12,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <router-link class="navbar-brand" to="/admin">Telemetry - оптимальный расход энергресурсов</router-link>
+          <router-link class="navbar-brand" to="/">Telemetry</router-link>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -97,8 +97,8 @@
       return {
         error: '',
         status: '',
-        username: 'user1',
-        password: 'pass1',
+        username: '',
+        password: '',
         from: '/' // redirect after login to requested page
       }
     },

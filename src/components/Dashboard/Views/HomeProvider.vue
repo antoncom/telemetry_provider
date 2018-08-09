@@ -36,8 +36,8 @@
           <div class="col-md-12">
             <div class="card-content table-responsive table-full-width">
               <el-table :data="browsers_compability">
-                <el-table-column label="N" property="id" width="50"></el-table-column>
-                <el-table-column label="Браузер" property="browser" width="160"></el-table-column>
+                <el-table-column label="N" property="id" width="60"></el-table-column>
+                <el-table-column label="Браузер" property="browser" width="200"></el-table-column>
                 <el-table-column label="OS" property="os" width="180"></el-table-column>
                 <el-table-column label="Статус" property="status">
                   <template slot-scope="scope">
@@ -111,8 +111,20 @@
           },
           {
             id: 9,
-            browser: 'Яндекс',
-            os: 'Android',
+            browser: 'Chrome 67.0.3396.87',
+            os: 'Android 7.1.1',
+            status: 'Ok'
+          },
+          {
+            id: 10,
+            browser: 'Яндекс 18.6 от 08.07.2018',
+            os: 'Android 7.1.1',
+            status: 'Ok'
+          },
+          {
+            id: 11,
+            browser: 'Яндекс 18.3 от 22.05.2018',
+            os: 'Android 5.0',
             status: 'Ok'
           }
         ]

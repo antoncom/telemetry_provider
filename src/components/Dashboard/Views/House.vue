@@ -12,7 +12,7 @@
             <vue-tabs  v-for="ctype in consumption_types" :key="ctype.type" class="card-content" v-show="model.consumption_type == ctype.type">
               <v-tab title="Потребление" icon="ti-bar-chart">
                 <div class="row">
-                  <div class="col-lg-4 pull-left" style="text-align: left; margin-top: 5px;">
+                  <div class="col-lg-4" style="text-align: left; margin-top: 5px;">
                     <div class="btn-group" style="margin-bottom: 20px;">
                       <button v-on:click="dataViewType='graphic'" v-bind:class="{ 'btn-fill': dataViewType=='graphic' }" type="button" class="btn btn-sm btn-default">График</button>
                       <button v-on:click="dataViewType='table'" v-bind:class="{ 'btn-fill': dataViewType=='table' }" type="button" class="btn btn-sm btn-default">Данные</button>
