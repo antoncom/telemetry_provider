@@ -23,44 +23,24 @@
     },
     data () {
       return {
-        points: [] // Array of points of Manhatten rout
+        points: [] // Array of points of Manhatten route
       }
     },
     created: function () {
-      console.log('LINE created')
     },
     mounted: function () {
-      // populate lines array
-      var UP = 0
-      var RIGHT = 1
-      var DOWN = 2
-      var LEFT = 3
-
-      let sourceFigureId = this.data.source.figureId
-      let targetFigureId = this.data.target.figureId
-      let sourcePortType = this.data.source.name
-      let targetPortType = this.data.target.name
-//      let fromPt = store.getters.getPortGlobalXY(sourceFigureId, sourcePortType)
-//      let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
-      let fromPt = this.getPortGlobalXY(sourceFigureId, sourcePortType)
-      let toPt = this.getPortGlobalXY(targetFigureId, targetPortType)
-
-      var fromDir = 0
-      var toDir = 0
-      // fromPt is an x,y to start from.
-      // fromDir is an angle that the first link must
-      if (sourcePortType === 'output') fromDir = RIGHT
-      if (sourcePortType === 'output1') fromDir = UP
-      if (sourcePortType === 'output2') fromDir = DOWN
-      if (targetPortType === 'input') toDir = LEFT
-      if (targetPortType === 'input1') toDir = UP
-      if (targetPortType === 'input2') toDir = DOWN
-
-      this.makePoints(fromPt, fromDir, toPt, toDir)
-      console.log('POINTS', this.points)
+      this.drawConnection()
+    },
+    watch: {
+      figureMoved: function () {
+        if (this.figureMoved) {
+          console.log('FIGURE MOVED', this.figureMoved)
+          this.drawConnection()
+        }
+      }
     },
     computed: {
-      ...mapState('bpm', ['isPortsEnabled']),
+      ...mapState('bpm', ['isPortsEnabled', 'figureMoved']),
       ...mapGetters('bpm', ['getPortGlobalXY']),
       lines: function () {
         // generate lines
@@ -258,6 +238,36 @@
         }
         this.makePoints(point, dir, toPt, toDir)
         this.addPoint(fromPt)
+      },
+      drawConnection: function () {
+        this.points = []
+        // populate lines array
+        var UP = 0
+        var RIGHT = 1
+        var DOWN = 2
+        var LEFT = 3
+
+        let sourceFigureId = this.data.source.figureId
+        let targetFigureId = this.data.target.figureId
+        let sourcePortType = this.data.source.name
+        let targetPortType = this.data.target.name
+//      let fromPt = store.getters.getPortGlobalXY(sourceFigureId, sourcePortType)
+//      let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+        let fromPt = this.getPortGlobalXY(sourceFigureId, sourcePortType)
+        let toPt = this.getPortGlobalXY(targetFigureId, targetPortType)
+
+        var fromDir = 0
+        var toDir = 0
+        // fromPt is an x,y to start from.
+        // fromDir is an angle that the first link must
+        if (sourcePortType === 'output') fromDir = RIGHT
+        if (sourcePortType === 'output1') fromDir = UP
+        if (sourcePortType === 'output2') fromDir = DOWN
+        if (targetPortType === 'input') toDir = LEFT
+        if (targetPortType === 'input1') toDir = UP
+        if (targetPortType === 'input2') toDir = DOWN
+
+        this.makePoints(fromPt, fromDir, toPt, toDir)
       }
     }
   }

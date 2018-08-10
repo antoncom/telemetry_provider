@@ -1,5 +1,5 @@
 <template>
-  <div v-drag :id="data.id" tabindex="0" class="with-context-menu" :style="style">
+  <div v-on:mouseup="mouseup" v-on:mousedown="mousedown" v-on:mousemove="mousemove" :id="data.id" tabindex="0" class="with-context-menu" :style="style">
     <div class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
@@ -23,7 +23,7 @@
   import { mapState } from 'vuex'
   import Port from './Port.vue'
 
-  import { draggable } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
+  // import { draggable } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
 
   export default {
     components: {
@@ -33,23 +33,15 @@
       data: Object, // data for the activity
       acState: Object // {state: 'part-done', part: '73%'} or {state: 'done', part: '}
     },
-    mixins: [draggable],
-    directives: {
-      drag: {
-        // определение директивы
-        inserted: (el) => {
-          el.addEventListener('mouseup', (e) => this.mouseup(e, el))
-          el.addEventListener('mousedown', (e) => this.mousedown(e, el))
-          el.addEventListener('mousemove', (e) => {
-            console.log('EL', el)
-            this.mousemove(e, el)
-          })
-          this.initialZIndex = 100001
-        }
-      }
-    },
     data () {
       return {
+        draggableElementId: null, // if this is present, only a specific area of the draggable will respond to dragging (eg header bar).
+        down: false,
+        initialX: 0,
+        initialY: 0,
+        draggerOffsetLeft: 0,
+        draggerOffsetTop: 0,
+        initialZIndex: '',
         x: 0,
         y: 0,
         w: 140,
@@ -58,7 +50,8 @@
           height: '60px',
           width: '140px',
           left: '0px',
-          top: '0px'
+          top: '0px',
+          zIndex: ''
         },
         showStatus: {
           display: 'none'
@@ -68,15 +61,53 @@
       }
     },
     computed: {
-      ...mapState('bpm', ['isPortsEnabled'])
+      ...mapState('bpm', ['isPortsEnabled', 'isGridShown', 'snapGridSize'])
+    },
+    watch: {
+      x: function () {
+        if (this.isGridShown) {
+          this.style.left = Math.round(this.x / this.snapGridSize) * this.snapGridSize + 'px'
+        } else {
+          this.style.left = this.x + 'px'
+        }
+      },
+      y: function () {
+        if (this.isGridShown) {
+          this.style.top = Math.round(this.y / this.snapGridSize) * this.snapGridSize + 'px'
+        } else {
+          this.style.top = this.y + 'px'
+        }
+      }
     },
     methods: {
       mousemove: function (e, el) {
-        console.log('HERERERERER')
         if (this.down) {
-          el.style.left = this.draggerOffsetLeft + (e.clientX - this.initialX) + 'px'
-          el.style.top = this.draggerOffsetTop + (e.clientY - this.initialY) + 'px'
+          this.x = e.clientX - this.draggerOffsetLeft
+          this.y = e.clientY - this.draggerOffsetTop
         }
+      },
+      mousedown: function (e, el) {
+        this.down = true
+        this.initialX = this.x
+        this.initialY = this.y
+        this.draggerOffsetLeft = e.clientX - this.x
+        this.draggerOffsetTop = e.clientY - this.y
+        this.style.zIndex = 10001
+
+        this.$store.commit('bpm/' + types.FIGURES_NOT_MOVED)
+      },
+      mouseup: function (e, el) {
+        this.down = false
+        this.style.zIndex = this.initialZIndex
+
+        this.$store.commit({
+          type: 'bpm/' + types.CHANGE_FIGURE_XY,
+          payload: {
+            figureId: this.data.id,
+            x: this.x,
+            y: this.y
+          }
+        })
       },
       togglePorts: function () {
         this.$store.commit({

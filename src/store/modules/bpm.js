@@ -6,10 +6,12 @@ const state = {
   rows: [],
   columns: [],
   figures: new Map(),
+  figureMoved: false, // true if a figure was moved by user
   connections: [],
   figureStatus: [],
   isPortsEnabled: true,
-  isGridShown: false
+  isGridShown: false,
+  snapGridSize: 10
 }
 
 const getters = {
@@ -102,7 +104,6 @@ const getters = {
     // Get global coordinates of the port
     result.x = figure.x + local.x
     result.y = figure.y + local.y
-
     return result
   }
 }
@@ -176,6 +177,26 @@ const mutations = {
   },
   [types.SHOW_GRID]: (state, commit) => {
     state.isGridShown = commit
+  },
+  [types.CHANGE_FIGURE_XY]: (state, commit) => {
+    // get figure from the store
+    var figure = null
+    for (let fig of state.figures) {
+      if (fig.id === commit.payload.figureId) {
+        figure = fig
+        break
+      }
+    }
+    if (figure === null) {
+      console.log(types.CHANGE_FIGURE_XY + ': Figure with ID "' + commit.payload.figureId + '" is not found!')
+      return
+    }
+    figure.x = commit.payload.x
+    figure.y = commit.payload.y
+    state.figureMoved = true
+  },
+  [types.FIGURES_NOT_MOVED]: (state) => {
+    state.figureMoved = false
   }
 }
 
