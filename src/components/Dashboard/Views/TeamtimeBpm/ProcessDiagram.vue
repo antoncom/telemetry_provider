@@ -48,7 +48,6 @@
 </template>
 
 <script type="text/babel">
-
   import store from 'src/store/index.js'
 
   // Diagram layout components

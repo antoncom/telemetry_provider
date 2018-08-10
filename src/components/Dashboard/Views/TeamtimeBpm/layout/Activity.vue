@@ -1,5 +1,5 @@
 <template>
-  <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
+  <div v-drag :id="data.id" tabindex="0" class="with-context-menu" :style="style">
     <div class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
@@ -22,6 +22,9 @@
   import * as types from 'src/store/mutation-types.js'
   import { mapState } from 'vuex'
   import Port from './Port.vue'
+
+  import { draggable } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
+
   export default {
     components: {
       Port
@@ -29,6 +32,21 @@
     props: {
       data: Object, // data for the activity
       acState: Object // {state: 'part-done', part: '73%'} or {state: 'done', part: '}
+    },
+    mixins: [draggable],
+    directives: {
+      drag: {
+        // определение директивы
+        inserted: (el) => {
+          el.addEventListener('mouseup', (e) => this.mouseup(e, el))
+          el.addEventListener('mousedown', (e) => this.mousedown(e, el))
+          el.addEventListener('mousemove', (e) => {
+            console.log('EL', el)
+            this.mousemove(e, el)
+          })
+          this.initialZIndex = 100001
+        }
+      }
     },
     data () {
       return {
@@ -53,6 +71,13 @@
       ...mapState('bpm', ['isPortsEnabled'])
     },
     methods: {
+      mousemove: function (e, el) {
+        console.log('HERERERERER')
+        if (this.down) {
+          el.style.left = this.draggerOffsetLeft + (e.clientX - this.initialX) + 'px'
+          el.style.top = this.draggerOffsetTop + (e.clientY - this.initialY) + 'px'
+        }
+      },
       togglePorts: function () {
         this.$store.commit({
           type: 'bpm/' + types.SHOW_PORTS,
