@@ -6,7 +6,11 @@ const state = {
   rows: [],
   columns: [],
   figures: new Map(),
-  figureMoved: false, // true if a figure was moved by user
+  figureMoved: {
+    id: '',
+    x: 0,
+    y: 0
+  },
   connections: [],
   figureStatus: [],
   isPortsEnabled: true,
@@ -163,7 +167,6 @@ const actions = {
 
 const mutations = {
   [types.LOAD_WORKFLOW]: (state, commit) => {
-    console.log('DIAG', commit.payload)
     state.rows = commit.payload.rows
     state.columns = commit.payload.columns
     state.figures = commit.payload.figures
@@ -193,10 +196,9 @@ const mutations = {
     }
     figure.x = commit.payload.x
     figure.y = commit.payload.y
-    state.figureMoved = true
-  },
-  [types.FIGURES_NOT_MOVED]: (state) => {
-    state.figureMoved = false
+    state.figureMoved.id = commit.payload.figureId
+    state.figureMoved.x = commit.payload.x
+    state.figureMoved.y = commit.payload.y
   }
 }
 

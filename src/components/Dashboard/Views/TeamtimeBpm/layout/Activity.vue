@@ -1,5 +1,5 @@
 <template>
-  <div v-on:mouseup="mouseup" v-on:mousedown="mousedown" v-on:mousemove="mousemove" :id="data.id" tabindex="0" class="with-context-menu" :style="style">
+  <div v-on:mousedown="mousedown" :id="data.id" tabindex="0" class="with-context-menu" :style="style">
     <div class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
@@ -65,27 +65,16 @@
     },
     watch: {
       x: function () {
-        if (this.isGridShown) {
-          this.style.left = Math.round(this.x / this.snapGridSize) * this.snapGridSize + 'px'
-        } else {
-          this.style.left = this.x + 'px'
-        }
+        this.style.left = this.x + 'px'
       },
       y: function () {
-        if (this.isGridShown) {
-          this.style.top = Math.round(this.y / this.snapGridSize) * this.snapGridSize + 'px'
-        } else {
-          this.style.top = this.y + 'px'
-        }
+        this.style.top = this.y + 'px'
+      },
+      down: function () {
+        console.log('DOWN', this.down)
       }
     },
     methods: {
-      mousemove: function (e, el) {
-        if (this.down) {
-          this.x = e.clientX - this.draggerOffsetLeft
-          this.y = e.clientY - this.draggerOffsetTop
-        }
-      },
       mousedown: function (e, el) {
         this.down = true
         this.initialX = this.x
@@ -93,12 +82,6 @@
         this.draggerOffsetLeft = e.clientX - this.x
         this.draggerOffsetTop = e.clientY - this.y
         this.style.zIndex = 10001
-
-        this.$store.commit('bpm/' + types.FIGURES_NOT_MOVED)
-      },
-      mouseup: function (e, el) {
-        this.down = false
-        this.style.zIndex = this.initialZIndex
 
         this.$store.commit({
           type: 'bpm/' + types.CHANGE_FIGURE_XY,

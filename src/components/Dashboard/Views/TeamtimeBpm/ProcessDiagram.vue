@@ -31,16 +31,21 @@
       </template>
     </div>
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
-      <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
+      <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle" v-on:mousemove="mousemove" v-on:mouseup="mouseup">
         <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id"></start>
-        <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id"></activity>
+        <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id" :ref="activity.id"></activity>
         <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id"></end>
         <condition-xor v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionXOR'" v-bind:data="activity" :key="activity.id"></condition-xor>
         <condition-or v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionOR'" v-bind:data="activity" :key="activity.id"></condition-or>
         <condition-and v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionAND'" v-bind:data="activity" :key="activity.id"></condition-and>
         <message v-for="activity in figures" v-if="activity.type === 'bpmn.Message'" v-bind:data="activity" :key="activity.id"></message>
         <timer v-for="activity in figures" v-if="activity.type === 'bpmn.Timer'" v-bind:data="activity" :key="activity.id"></timer>
-        <connection v-for="connection in connections" v-bind:data="connection" v-bind:key="connection.source.figureId + '_' + connection.target.figureId"></connection>
+        <connection
+                v-for="connection in connections"
+                v-bind:data="connection"
+                v-bind:key="connection.source.figureId + '_' + connection.target.figureId"
+                :ref="connection.source.figureId + '_' + connection.target.figureId">
+        </connection>
       </div>
     </div>
     <blocks-menu></blocks-menu>
@@ -48,6 +53,7 @@
 </template>
 
 <script type="text/babel">
+  import * as types from 'src/store/mutation-types.js'
   import store from 'src/store/index.js'
 
   // Diagram layout components
@@ -94,8 +100,22 @@
         })
       })
     },
+    watch: {
+      figureMoved: {
+        handler: function (figMoved) {
+          if (figMoved.id !== '' && figMoved.x && figMoved.y) {
+            for (var conn in this.$refs) {
+              if (conn.indexOf(figMoved.id) >= 0 && this.$refs[conn][0].drawConnection) {
+                this.$refs[conn][0].drawConnection()
+              }
+            }
+          }
+        },
+        deep: true
+      }
+    },
     computed: {
-      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus', 'isGridShown']),
+      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus', 'isGridShown', 'figureMoved', 'snapGridSize']),
       width: function () {
         var w = 0
         for (let col of this.columns) {
@@ -143,6 +163,41 @@
           }
         })
         return out
+      },
+      updateConnection: (id) => {
+        this.$refs[id].drawConnection()
+      },
+      mousemove: function (e) {
+        /***/
+        if (this.figureMoved.id !== '') {
+          var figure = this.$refs[this.figureMoved.id][0]
+          if (figure.down) {
+            var newX = e.clientX - figure.draggerOffsetLeft
+            var newY = e.clientY - figure.draggerOffsetTop
+            if (this.isGridShown) {
+              figure.x = Math.round(newX / this.snapGridSize) * this.snapGridSize
+              figure.y = Math.round(newY / this.snapGridSize) * this.snapGridSize
+            } else {
+              figure.x = newX
+              figure.y = newY
+            }
+            this.$store.commit({
+              type: 'bpm/' + types.CHANGE_FIGURE_XY,
+              payload: {
+                figureId: this.figureMoved.id,
+                x: figure.x,
+                y: figure.y
+              }
+            })
+          }
+        }
+      },
+      mouseup: function (e) {
+        if (this.figureMoved.id !== '') {
+          var figure = this.$refs[this.figureMoved.id][0]
+          figure.down = false
+          figure.style.zIndex = this.initialZIndex
+        }
       }
     }
   }

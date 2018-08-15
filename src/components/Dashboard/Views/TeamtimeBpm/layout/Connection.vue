@@ -31,14 +31,6 @@
     mounted: function () {
       this.drawConnection()
     },
-    watch: {
-      figureMoved: function () {
-        if (this.figureMoved) {
-          console.log('FIGURE MOVED', this.figureMoved)
-          this.drawConnection()
-        }
-      }
-    },
     computed: {
       ...mapState('bpm', ['isPortsEnabled', 'figureMoved']),
       ...mapGetters('bpm', ['getPortGlobalXY']),
@@ -78,11 +70,10 @@
       arrow: function () {
         let targetFigureId = this.data.target.figureId
         let targetPortType = this.data.target.name
-//        let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+
         let toPt = this.getPortGlobalXY(targetFigureId, targetPortType)
         let shiftLeft = 0
         let shiftTop = 0
-//        let isPortsEnabled = store.state.isPortsEnabled
         let isPortsEnabled = this.isPortsEnabled
 
         if (targetPortType === 'input') {
@@ -251,8 +242,7 @@
         let targetFigureId = this.data.target.figureId
         let sourcePortType = this.data.source.name
         let targetPortType = this.data.target.name
-//      let fromPt = store.getters.getPortGlobalXY(sourceFigureId, sourcePortType)
-//      let toPt = store.getters.getPortGlobalXY(targetFigureId, targetPortType)
+
         let fromPt = this.getPortGlobalXY(sourceFigureId, sourcePortType)
         let toPt = this.getPortGlobalXY(targetFigureId, targetPortType)
 
