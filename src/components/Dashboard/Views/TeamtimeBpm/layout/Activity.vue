@@ -1,6 +1,6 @@
 <template>
-  <div v-on:mousedown="mousedown" :id="data.id" tabindex="0" class="with-context-menu" :style="style">
-    <div class="bpmn_activity" :style="style" v-bind:class="acType">
+  <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
+    <div v-on:mousedown="mousedown" class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
         <a href="javascript:;" v-on:click="togglePorts">
@@ -20,12 +20,13 @@
 
 <script type="text/babel">
   import * as types from 'src/store/mutation-types.js'
-  import { mapState } from 'vuex'
   import Port from './Port.vue'
+  import { dragndropFigure } from '../mixins/dragndrop.js'
 
   // import { draggable } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
 
   export default {
+    mixins: [dragndropFigure],
     components: {
       Port
     },
@@ -35,13 +36,6 @@
     },
     data () {
       return {
-        draggableElementId: null, // if this is present, only a specific area of the draggable will respond to dragging (eg header bar).
-        down: false,
-        initialX: 0,
-        initialY: 0,
-        draggerOffsetLeft: 0,
-        draggerOffsetTop: 0,
-        initialZIndex: '',
         x: 0,
         y: 0,
         w: 140,
@@ -51,7 +45,8 @@
           width: '140px',
           left: '0px',
           top: '0px',
-          zIndex: ''
+          zIndex: '',
+          opacity: 1
         },
         showStatus: {
           display: 'none'
@@ -60,38 +55,7 @@
         portTypes: ['input', 'input1', 'input2', 'output', 'output1', 'output2']
       }
     },
-    computed: {
-      ...mapState('bpm', ['isPortsEnabled', 'isGridShown', 'snapGridSize'])
-    },
-    watch: {
-      x: function () {
-        this.style.left = this.x + 'px'
-      },
-      y: function () {
-        this.style.top = this.y + 'px'
-      },
-      down: function () {
-        console.log('DOWN', this.down)
-      }
-    },
     methods: {
-      mousedown: function (e, el) {
-        this.down = true
-        this.initialX = this.x
-        this.initialY = this.y
-        this.draggerOffsetLeft = e.clientX - this.x
-        this.draggerOffsetTop = e.clientY - this.y
-        this.style.zIndex = 10001
-
-        this.$store.commit({
-          type: 'bpm/' + types.CHANGE_FIGURE_XY,
-          payload: {
-            figureId: this.data.id,
-            x: this.x,
-            y: this.y
-          }
-        })
-      },
       togglePorts: function () {
         this.$store.commit({
           type: 'bpm/' + types.SHOW_PORTS,
@@ -100,15 +64,6 @@
       }
     },
     created: function () {
-      // position & size of activity
-      this.x = this.data.x
-      this.y = this.data.y
-      this.w = this.data.width
-      this.h = this.data.height
-      this.style.left = this.data.x + 'px'
-      this.style.top = this.data.y + 'px'
-      this.style.height = this.data.height + 'px'
-      this.style.width = this.data.width + 'px'
       // show state of activity
       if (this.acState.state !== '') this.showStatus.display = 'block'
 

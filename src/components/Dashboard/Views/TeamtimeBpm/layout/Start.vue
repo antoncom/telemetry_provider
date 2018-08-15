@@ -1,17 +1,18 @@
 <template>
 <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
   <div class="bpmn_start">
-    <div class="bpmn_start_content">Start</div>
+    <div class="bpmn_start_content" v-on:mousedown="mousedown">Start</div>
     <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
   </div>
 </div>
 </template>
 
 <script type="text/babel">
-  import { mapState } from 'vuex'
   import Port from './Port.vue'
+  import { dragndropFigure } from '../mixins/dragndrop.js'
 
   export default {
+    mixins: [dragndropFigure],
     components: {
       Port
     },
@@ -28,16 +29,15 @@
           height: '40px',
           width: '40px',
           left: '0px',
-          top: '0px'
+          top: '0px',
+          zIndex: '',
+          opacity: 1
         },
         showStatus: {
           display: 'none'
         },
         portTypes: ['output']
       }
-    },
-    computed: {
-      ...mapState('bpm', ['isPortsEnabled'])
     },
     created: function () {
       // position of the block

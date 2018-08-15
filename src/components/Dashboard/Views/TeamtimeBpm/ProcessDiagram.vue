@@ -32,14 +32,14 @@
     </div>
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
       <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle" v-on:mousemove="mousemove" v-on:mouseup="mouseup">
-        <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id"></start>
+        <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></start>
         <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id" :ref="activity.id"></activity>
-        <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id"></end>
-        <condition-xor v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionXOR'" v-bind:data="activity" :key="activity.id"></condition-xor>
-        <condition-or v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionOR'" v-bind:data="activity" :key="activity.id"></condition-or>
-        <condition-and v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionAND'" v-bind:data="activity" :key="activity.id"></condition-and>
-        <message v-for="activity in figures" v-if="activity.type === 'bpmn.Message'" v-bind:data="activity" :key="activity.id"></message>
-        <timer v-for="activity in figures" v-if="activity.type === 'bpmn.Timer'" v-bind:data="activity" :key="activity.id"></timer>
+        <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></end>
+        <condition-xor v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionXOR'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></condition-xor>
+        <condition-or v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionOR'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></condition-or>
+        <condition-and v-for="activity in figures" v-if="activity.type === 'bpmn.ConditionAND'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></condition-and>
+        <message v-for="activity in figures" v-if="activity.type === 'bpmn.Message'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></message>
+        <timer v-for="activity in figures" v-if="activity.type === 'bpmn.Timer'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></timer>
         <connection
                 v-for="connection in connections"
                 v-bind:data="connection"
@@ -137,19 +137,8 @@
         }
         return result
       }
-      /* isGridShown: function () {
-        var gridClass = ''
-        console.log('IS GRID SHOWN')
-        if (this.$store.state.bpm.isGridShown === true) {
-          gridClass = 'hide-grid'
-        } else {
-          gridClass = 'show-grid'
-        }
-        return gridClass
-      } */
     },
     created () {
-      console.log('ProcessDiagram CREATED')
     },
     methods: {
       activityStatus: function (act) {
@@ -168,7 +157,6 @@
         this.$refs[id].drawConnection()
       },
       mousemove: function (e) {
-        /***/
         if (this.figureMoved.id !== '') {
           var figure = this.$refs[this.figureMoved.id][0]
           if (figure.down) {
@@ -196,7 +184,8 @@
         if (this.figureMoved.id !== '') {
           var figure = this.$refs[this.figureMoved.id][0]
           figure.down = false
-          figure.style.zIndex = this.initialZIndex
+          figure.style.zIndex = figure.initialZIndex
+          figure.style.opacity = 1
         }
       }
     }
