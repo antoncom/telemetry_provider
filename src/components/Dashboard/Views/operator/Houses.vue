@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <h4 class="title">Дома</h4>
+      <div v-drag style="position: absolute; border: 1px solid red; display: block; padding: 50px; background-color: #00a6b2; left:400px; top: 20px;">TEST</div>
     </div>
     <div class="col-md-12 card">
       <div class="card-header">
@@ -133,6 +134,7 @@
   </div>
 </template>
 <script type="text/babel">
+  import drag from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
   import credentials from 'src/api/credentials.js'
   import Vue from 'vue'
   import {Table, TableColumn, Select, Option, Loading} from 'element-ui'
@@ -159,6 +161,9 @@
   Vue.use(Loading)
 
   export default{
+    directives: {
+      drag
+    },
     components: {
       PPagination
     },

@@ -1,18 +1,21 @@
 <template>
 <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
   <div class="bpmn_end">
-    <div class="bpmn_end_content" v-on:mousedown="mousedown">End</div>
+    <div v-drag class="bpmn_end_content">End</div>
   </div>
   <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
 </div>
 </template>
 
 <script type="text/babel">
-  import { dragndropFigure } from '../mixins/dragndrop.js'
+  import { drag, dragndropFigure } from '../mixins/dragndrop.js'
   import Port from './Port.vue'
 
   export default {
     mixins: [dragndropFigure],
+    directives: {
+      drag
+    },
     components: {
       Port
     },

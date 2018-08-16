@@ -1,7 +1,7 @@
 <template>
 <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
   <div class="bpmn_start">
-    <div class="bpmn_start_content" v-on:mousedown="mousedown">Start</div>
+    <div v-drag class="bpmn_start_content">Start</div>
     <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
   </div>
 </div>
@@ -9,10 +9,13 @@
 
 <script type="text/babel">
   import Port from './Port.vue'
-  import { dragndropFigure } from '../mixins/dragndrop.js'
+  import { drag, dragndropFigure } from '../mixins/dragndrop.js'
 
   export default {
     mixins: [dragndropFigure],
+    directives: {
+      drag
+    },
     components: {
       Port
     },

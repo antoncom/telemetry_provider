@@ -1,6 +1,6 @@
 <template>
 <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
-  <div class="bpmn_condition_xor" v-on:mousedown="mousedown">
+  <div v-drag class="bpmn_condition_xor">
     <div class="bpmn_icon"></div>
     <div class="bpmn_event_content">{{data.text}}</div>
   </div>
@@ -10,10 +10,13 @@
 
 <script type="text/babel">
   import Port from './Port.vue'
-  import { dragndropFigure } from '../mixins/dragndrop.js'
+  import { drag, dragndropFigure } from '../mixins/dragndrop.js'
 
   export default {
     mixins: [dragndropFigure],
+    directives: {
+      drag
+    },
     components: {
       Port
     },

@@ -266,11 +266,11 @@
         this.makePoints(fromPt, fromDir, toPt, toDir)
       },
       // Draw connecting line while drag-n-drop port
-      drawDirectLine: function () {
-        var ax = 10
-        var bx = 100
-        var ay = 50
-        var by = 200
+      drawDirectLine: function (ax, ay, bx, by) {
+//        var ax = 10
+//        var bx = 100
+//        var ay = 50
+//        var by = 200
         if (ay > by) {
           bx = ax + bx
           ax = bx - ax

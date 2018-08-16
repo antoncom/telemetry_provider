@@ -3,7 +3,8 @@
 </template>
 
 <script type="text/babel">
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapState } from 'vuex'
+  import * as types from 'src/store/mutation-types.js'
   export default {
     props: {
       type: {
@@ -24,11 +25,35 @@
       }
     },
     computed: {
-      ...mapGetters('bpm', ['getPortLocalXY'])
+      ...mapGetters('bpm', ['getPortLocalXY']),
+      ...mapState('bpm', ['connections'])
     },
     methods: {
       mousedown: function () {
         this.down = true
+        // make connection hidden if exists
+        var figureId = this.$parent.$options.propsData.data.id
+        var connRef = ''
+        for (var i = 0; i < this.connections.length; i++) {
+          if (this.position === this.connections[i].source.name) {
+            if (this.connections[i].source.figureId.indexOf(figureId) >= 0) {
+              connRef = this.connections[i].source.figureId + '_' + this.connections[i].target.figureId
+              break
+            }
+          } else if (this.position === this.connections[i].target.name) {
+            if (this.connections[i].target.figureId.indexOf(figureId) >= 0) {
+              connRef = this.connections[i].source.figureId + '_' + this.connections[i].target.figureId
+              break
+            }
+          }
+        }
+        this.$parent.$parent.$refs[connRef][0].points = [] // remove connection
+        this.$store.commit({
+          type: 'bpm/' + types.CHANGE_CONNECTION,
+          payload: {
+            connRef: connRef
+          }
+        })
       }
     },
     created: function () {

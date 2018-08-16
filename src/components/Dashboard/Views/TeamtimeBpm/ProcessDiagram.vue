@@ -31,7 +31,8 @@
       </template>
     </div>
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
-      <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle" v-on:mousemove="mousemove" v-on:mouseup="mouseup">
+      <!--<div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle" v-on:mousemove="mousemove" v-on:mouseup="mouseup">-->
+      <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
         <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></start>
         <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id" :ref="activity.id"></activity>
         <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></end>
@@ -53,7 +54,7 @@
 </template>
 
 <script type="text/babel">
-  import * as types from 'src/store/mutation-types.js'
+  // import * as types from 'src/store/mutation-types.js'
   import store from 'src/store/index.js'
 
   // Diagram layout components
@@ -93,7 +94,6 @@
       Connection
     },
     mounted () {
-      console.log('ProcessDiagram MOUNTED')
       this.$nextTick(function () {
         this.$store.dispatch('bpm/loadWorkflow', 327).then(() => {
           this.$store.dispatch('bpm/loadStatus')
@@ -101,7 +101,7 @@
       })
     },
     watch: {
-      figureMoved: {
+      figureMoved: { // redraw connection while a figure is moving with drag-n-drop
         handler: function (figMoved) {
           if (figMoved.id !== '' && figMoved.x && figMoved.y) {
             for (var conn in this.$refs) {
@@ -115,7 +115,7 @@
       }
     },
     computed: {
-      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus', 'isGridShown', 'figureMoved', 'snapGridSize']),
+      ...mapState('bpm', ['columns', 'rows', 'figures', 'connections', 'figureStatus', 'isGridShown', 'figureMoved', 'snapGridSize', 'connectionMoved']),
       width: function () {
         var w = 0
         for (let col of this.columns) {
@@ -155,8 +155,8 @@
       },
       updateConnection: (id) => {
         this.$refs[id].drawConnection()
-      },
-      mousemove: function (e) {
+      }
+    /* mousemove: function (e) {
         if (this.figureMoved.id !== '') {
           var figure = this.$refs[this.figureMoved.id][0]
           if (figure.down) {
@@ -200,8 +200,16 @@
           figure.down = false
           figure.style.zIndex = figure.initialZIndex
           figure.style.opacity = 1
+        } else if (this.connectionMoved !== '') {
+          this.$refs[this.connectionMoved][0].drawConnection()
+          this.$store.commit({
+            type: 'bpm/' + types.CHANGE_CONNECTION,
+            payload: {
+              connRef: ''
+            }
+          })
         }
-      }
+      } */
     }
   }
 </script>

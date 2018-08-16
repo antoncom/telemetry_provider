@@ -11,6 +11,9 @@ const state = {
     x: 0,
     y: 0
   },
+  connectionMoved: {
+    connRef: ''
+  },
   connections: [],
   figureStatus: [],
   isPortsEnabled: true,
@@ -199,6 +202,9 @@ const mutations = {
     state.figureMoved.id = commit.payload.figureId
     state.figureMoved.x = commit.payload.x
     state.figureMoved.y = commit.payload.y
+  },
+  [types.CHANGE_CONNECTION]: (state, commit) => {
+    state.connectionMoved = commit.payload.connRef
   }
 }
 

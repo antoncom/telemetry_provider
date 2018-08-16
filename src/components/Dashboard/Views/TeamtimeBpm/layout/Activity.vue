@@ -1,6 +1,7 @@
 <template>
   <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
-    <div v-on:mousedown="mousedown" class="bpmn_activity" :style="style" v-bind:class="acType">
+    <!--<div v-on:mousedown="mousedown" class="bpmn_activity" :style="style" v-bind:class="acType">-->
+    <div v-drag class="bpmn_activity" :style="style" v-bind:class="acType">
       <div class="bpmn_linked_process_icon" v-bind:class="{linked: data.viewState === 'linked'}"></div>
       <div class="bpmn_content_hidden" :style="{'width': data.width-6 + 'px', 'height': data.height-6 + 'px'}">
         <a href="javascript:;" v-on:click="togglePorts">
@@ -19,13 +20,17 @@
 </template>
 
 <script type="text/babel">
+  // import drag from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
   import * as types from 'src/store/mutation-types.js'
   import Port from './Port.vue'
-  import { dragndropFigure } from '../mixins/dragndrop.js'
+  import { drag, dragndropFigure } from '../mixins/dragndrop.js' // directive v-drag + mixin for any dragndrop figure
 
   // import { draggable } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
 
   export default {
+    directives: {
+      drag
+    },
     mixins: [dragndropFigure],
     components: {
       Port
