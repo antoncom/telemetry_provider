@@ -1,5 +1,5 @@
 <template>
-  <div class="port" v-bind:class="position" v-bind:style="portStyle"></div>
+  <div class="port" v-bind:class="position" v-bind:style="portStyle" v-on:mousedown="mousedown"></div>
 </template>
 
 <script type="text/babel">
@@ -25,6 +25,11 @@
     },
     computed: {
       ...mapGetters('bpm', ['getPortLocalXY'])
+    },
+    methods: {
+      mousedown: function () {
+        this.down = true
+      }
     },
     created: function () {
       // Place port accordingly type of figure and type of the port

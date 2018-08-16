@@ -2,6 +2,7 @@
   <div v-bind:id="makeId()">
     <connection-line v-for="(line, index) in lines" v-bind:properties="line" :key="makeId() + index"></connection-line>
     <arrow :position="arrow.position" :orientation="arrow.orientation"></arrow>
+    <div v-bind:style="directLine.style"></div>
   </div>
 </template>
 
@@ -23,13 +24,17 @@
     },
     data () {
       return {
-        points: [] // Array of points of Manhatten route
+        points: [], // Array of points of Manhatten route,
+        directLine: {
+          style: {}
+        }
       }
     },
     created: function () {
     },
     mounted: function () {
       this.drawConnection()
+      this.drawDirectLine()
     },
     computed: {
       ...mapState('bpm', ['isPortsEnabled', 'figureMoved']),
@@ -230,6 +235,7 @@
         this.makePoints(point, dir, toPt, toDir)
         this.addPoint(fromPt)
       },
+      // draw connection from one figure to another
       drawConnection: function () {
         this.points = []
         // populate lines array
@@ -258,6 +264,43 @@
         if (targetPortType === 'input2') toDir = DOWN
 
         this.makePoints(fromPt, fromDir, toPt, toDir)
+      },
+      // Draw connecting line while drag-n-drop port
+      drawDirectLine: function () {
+        var ax = 10
+        var bx = 100
+        var ay = 50
+        var by = 200
+        if (ay > by) {
+          bx = ax + bx
+          ax = bx - ax
+          bx = bx - ax
+          by = ay + by
+          ay = by - ay
+          by = by - ay
+        }
+        var calc = Math.atan((ay - by) / (bx - ax))
+        calc = calc * 180 / Math.PI
+        var length = Math.sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by))
+
+        this.directLine.style = {
+          height: length + 'px',
+          width: '2px',
+          'background-color': 'black',
+          position: 'absolute',
+          top: ay + 'px',
+          left: ax + 'px',
+          transform: 'rotate(' + calc + 'deg)',
+          '-ms-transform': 'rotate(' + calc + 'deg)',
+          'transform-origin': '0% 0%',
+          '-moz-transform': 'rotate(' + calc + 'deg)',
+          '-moz-transform-origin': '0% 0%',
+          '-webkit-transform': 'rotate(' + calc + 'deg)',
+          '-webkit-transform-origin': '0% 0%',
+          '-o-transform': 'rotate(' + calc + 'deg)',
+          '-o-transform-origin': '0% 0%'
+        }
+//        document.body.innerHTML += "<div id='line' style='height:" + length + "pxwidth:1pxbackground-color:blackposition:absolutetop:" + (ay) + "pxleft:" + (ax) + "pxtransform:rotate(" + calc + "deg)-ms-transform:rotate(" + calc + "deg)transform-origin:0% 0%-moz-transform:rotate(" + calc + "deg)-moz-transform-origin:0% 0%-webkit-transform:rotate(" + calc  + "deg)-webkit-transform-origin:0% 0%-o-transform:rotate(" + calc + "deg)-o-transform-origin:0% 0%'></div>"
       }
     }
   }

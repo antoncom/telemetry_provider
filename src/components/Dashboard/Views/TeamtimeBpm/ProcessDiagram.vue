@@ -178,6 +178,20 @@
               }
             })
           }
+        } else if (this.portMouseDown !== '') {
+          // move line nib together with mouse pointer
+          // --------------------------------------------
+          // get global x/y of mouse pointer
+          var lineNib = {}
+          if (this.isGridShown) {
+            lineNib.x = Math.round(e.clientX / this.snapGridSize) * this.snapGridSize
+            lineNib.y = Math.round(e.clientY / this.snapGridSize) * this.snapGridSize
+          } else {
+            lineNib.x = e.clientX
+            lineNib.y = e.clientY
+          }
+          // get connection ref
+          // drawConnection() diring mousemove
         }
       },
       mouseup: function (e) {
