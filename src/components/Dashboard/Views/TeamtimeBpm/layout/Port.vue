@@ -1,11 +1,17 @@
 <template>
-  <div class="port" v-bind:class="position" v-bind:style="portStyle" v-on:mousedown="mousedown"></div>
+  <div v-drag-port class="port" v-bind:class="position" v-bind:style="portStyle"></div>
 </template>
 
 <script type="text/babel">
   import { mapGetters, mapState } from 'vuex'
-  import * as types from 'src/store/mutation-types.js'
+  // import * as types from 'src/store/mutation-types.js'
+  import { dragPortDirective, dragPortMixin } from '../mixins/dragndropPort.js'
+
   export default {
+    mixins: [dragPortMixin],
+    directives: {
+      dragPortDirective
+    },
     props: {
       type: {
         type: String,
@@ -14,22 +20,28 @@
       position: {
         type: String,
         default: 'input1' // 'input', 'input1', 'input2'
+      },
+      parentId: {
+        type: String,
+        default: ''
       }
     },
     data () {
       return {
         portStyle: {
           left: '0px',
-          top: '0px'
+          top: '0px',
+          zIndex: undefined,
+          position: 'absolute'
         }
       }
     },
     computed: {
-      ...mapGetters('bpm', ['getPortLocalXY']),
+      ...mapGetters('bpm', ['getPortLocalXY', 'getPortGlobalXY']),
       ...mapState('bpm', ['connections'])
     },
     methods: {
-      mousedown: function () {
+      /* mousedown: function () {
         this.down = true
         // make connection hidden if exists
         var figureId = this.$parent.$options.propsData.data.id
@@ -54,11 +66,13 @@
             connRef: connRef
           }
         })
-      }
+      } */
     },
     created: function () {
       // Place port accordingly type of figure and type of the port
-      let figureId = this.$parent.data.id
+      // let figureId = this.$parent.data.id
+
+      let figureId = (this.$parent.data === undefined) ? this.parentId : this.$parent.data.id
       let portType = this.position
 
       // set port position inside the figure

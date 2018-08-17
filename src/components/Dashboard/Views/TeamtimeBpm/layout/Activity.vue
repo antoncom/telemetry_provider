@@ -15,7 +15,8 @@
       <div class="bpmn_activity_backlight" style="display:none;"></div>
       <div v-bind:class="acState.state" class="bpmn_activity_aditional_info" :style="showStatus">{{acState.part}}</div>
     </div>
-    <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
+    <!--<portal to="globalports" tag="div" :disabled="arePortsLocal">-->
+    <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="data.id + pType" :parent-id="data.id"></port>
   </div>
 </template>
 
@@ -24,8 +25,8 @@
   import * as types from 'src/store/mutation-types.js'
   import Port from './Port.vue'
   import { drag, dragndropFigure } from '../mixins/dragndrop.js' // directive v-drag + mixin for any dragndrop figure
-
-  // import { draggable } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/draggable.js'
+  // import { Portal, PortalTarget } from 'portal-vue'
+  import { Wormhole } from 'portal-vue'
 
   export default {
     directives: {
@@ -33,7 +34,10 @@
     },
     mixins: [dragndropFigure],
     components: {
-      Port
+      Port,
+//      Portal,
+//      PortalTarget,
+      Wormhole
     },
     props: {
       data: Object, // data for the activity
@@ -41,6 +45,7 @@
     },
     data () {
       return {
+        arePortsLocal: true,
         x: 0,
         y: 0,
         w: 140,
@@ -61,11 +66,32 @@
       }
     },
     methods: {
+      sendToPortalTarget () {
+        var passengers = []
+        for (let i = 0; i < this.$children.length; i++) {
+          passengers.push(this.$children[i].$vnode)
+        }
+        console.log(passengers)
+        Wormhole.open({
+          to: 'globalports',
+          from: 'localports',
+          passengers
+        })
+      },
       togglePorts: function () {
         this.$store.commit({
           type: 'bpm/' + types.SHOW_PORTS,
           payload: !this.isPortsEnabled
         })
+      },
+      // *** HERE *** //
+      // Далее данный метод нужно вынести куда-то - скорее всего внутрь компонента <Port>
+      // также как и метод sendToPortalTarget
+      clearPortalTarget () {
+        console.log('CLOSE HOLE')
+        Wormhole.close({
+          to: 'globalports'
+        }, true)
       }
     },
     created: function () {
@@ -77,6 +103,9 @@
       else if (this.data.viewState === 'collapsed') this.acType = 'subprocess_collapsed_activity'
       else if (this.data.viewState === 'expanded') this.acType = 'subprocess_expanded_activity'
       else this.acType = 'simple_activity'
+    },
+    mounted: function () {
+      // console.log(this.$children)
     }
   }
 </script>

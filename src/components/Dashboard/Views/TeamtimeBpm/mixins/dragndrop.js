@@ -90,8 +90,6 @@ export function mousedown (e, el, _figure) {
     _figure.context.overlay.remove()
   }
   _figure.context.down = true
-  // _figure.context.initialX = e.clientX
-  // _figure.context.initialY = e.clientY
   const overlay = createOverlay(e, el, _figure)
   _figure.context.overlay = overlay
   adjustElementZIndex(el, 10001)

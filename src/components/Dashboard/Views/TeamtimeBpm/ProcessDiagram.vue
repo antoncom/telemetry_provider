@@ -31,8 +31,12 @@
       </template>
     </div>
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
-      <!--<div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle" v-on:mousemove="mousemove" v-on:mouseup="mouseup">-->
       <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
+        <!--Портируем сюда порты когда драг-н-дроп порта-->
+        <div style="position: absolute; z-index: 20000">
+          <portal-target name="globalports" />
+        </div>
+        <!--///-->
         <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></start>
         <activity v-for="activity in figures" v-if="activity.type === 'bpmn.Activity'" :acState="activityStatus(activity)" v-bind:data="activity" :key="activity.id" :ref="activity.id"></activity>
         <end v-for="activity in figures" v-if="activity.type === 'bpmn.End'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></end>
@@ -69,6 +73,7 @@
   import Timer from './layout/Timer.vue'
   import Connection from './layout/Connection.vue'
   import { mapState } from 'vuex'
+  import { Portal, PortalTarget } from 'portal-vue'
 
   export default {
     data () {
@@ -91,7 +96,9 @@
       ConditionAnd,
       Message,
       Timer,
-      Connection
+      Connection,
+      Portal,
+      PortalTarget
     },
     mounted () {
       this.$nextTick(function () {
