@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import * as types from 'src/store/mutation-types.js'
 import { mapState } from 'vuex'
+import { Portal, PortalTarget } from 'portal-vue'
 
 // //////////////////////////////////////
 // mixin code (directive code see below)
 // //////////////////////////////////////
 export const dragndropFigure = {
+  components: {
+    Portal,
+    PortalTarget
+  },
   data () {
     return {
       down: false,
@@ -28,7 +33,7 @@ export const dragndropFigure = {
     }
   },
   computed: {
-    ...mapState('bpm', ['isPortsEnabled', 'isGridShown', 'snapGridSize'])
+    ...mapState('bpm', ['isPortsEnabled', 'isGridShown', 'snapGridSize', 'bubbledPorts'])
   },
   created: function () {
     // position & size of figure

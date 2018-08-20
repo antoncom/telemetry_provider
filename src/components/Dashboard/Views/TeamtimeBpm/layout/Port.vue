@@ -4,7 +4,7 @@
 
 <script type="text/babel">
   import { mapGetters, mapState } from 'vuex'
-  // import * as types from 'src/store/mutation-types.js'
+  import * as types from 'src/store/mutation-types.js'
   import { dragPortDirective, dragPortMixin } from '../mixins/dragndropPort.js'
 
   export default {
@@ -20,10 +20,6 @@
       position: {
         type: String,
         default: 'input1' // 'input', 'input1', 'input2'
-      },
-      parentId: {
-        type: String,
-        default: ''
       }
     },
     data () {
@@ -33,12 +29,13 @@
           top: '0px',
           zIndex: undefined,
           position: 'absolute'
-        }
+        },
+        figureId: '' // keep parent figure id. It's required when use portal (bubbling ports to diagram component)
       }
     },
     computed: {
       ...mapGetters('bpm', ['getPortLocalXY', 'getPortGlobalXY']),
-      ...mapState('bpm', ['connections'])
+      ...mapState('bpm', ['connections', 'bubbledPorts'])
     },
     methods: {
       /* mousedown: function () {
@@ -69,43 +66,69 @@
       } */
     },
     created: function () {
-      // Place port accordingly type of figure and type of the port
-      // let figureId = this.$parent.data.id
+      var shiftX = 0
+      var shiftY = 0
+      var figureId = ''
+      var portType = this.position
 
-      let figureId = (this.$parent.data === undefined) ? this.parentId : this.$parent.data.id
-      let portType = this.position
+      if (portType === 'input') {
+        shiftX = -9
+        shiftY = -9
+      }
+      if (portType === 'input1') {
+        shiftX = -9
+        shiftY = -9
+      }
+      if (portType === 'input2') {
+        shiftX = -9
+        shiftY = -9
+      }
+      if (portType === 'output') {
+        shiftX = -9
+        shiftY = -9
+      }
+      if (portType === 'output1') {
+        shiftX = -9
+        shiftY = -9
+      }
+      if (portType === 'output2') {
+        shiftX = -9
+        shiftY = -9
+      }
 
-      // set port position inside the figure
-      let local = this.getPortLocalXY(figureId, portType)
-      if (local !== undefined) {
-        let shiftX = 0
-        let shiftY = 0
-        if (portType === 'input') {
-          shiftX = -9
-          shiftY = -9
+      if (this.bubbledPorts.atRest) {
+        // console.log('PORT AT FIGURE KEY', this.$vnode)
+        // console.log('REF FIGURE', this)
+        // Place port inside figure accordingly type of figure and type of the port
+        // let figureId = this.$parent.data.id
+        figureId = this.$parent.data.id
+
+        if (this.$vnode.key !== '') {
+          this.$store.commit({
+            type: 'bpm/' + types.BUBBLED_PORT,
+            payload: {
+              atRest: true,
+              figureId: figureId,
+              portType: portType,
+              portKey: this.$vnode.key
+            }
+          })
         }
-        if (portType === 'input1') {
-          shiftX = -9
-          shiftY = -9
+
+        // set port position inside the figure
+        var local = this.getPortLocalXY(figureId, portType)
+        if (local !== undefined) {
+          this.portStyle.left = local.x + shiftX + 'px'
+          this.portStyle.top = local.y + shiftY + 'px'
         }
-        if (portType === 'input2') {
-          shiftX = -9
-          shiftY = -9
+      } else {
+        figureId = this.bubbledPorts.ports[this.$vnode.key].figureId
+        portType = this.bubbledPorts.ports[this.$vnode.key].portType
+        var global = this.getPortGlobalXY(figureId, portType)
+        if (global !== undefined) {
+          this.portStyle.left = global.x + shiftX + 'px'
+          this.portStyle.top = global.y + shiftY + 'px'
         }
-        if (portType === 'output') {
-          shiftX = -9
-          shiftY = -9
-        }
-        if (portType === 'output1') {
-          shiftX = -9
-          shiftY = -9
-        }
-        if (portType === 'output2') {
-          shiftX = -9
-          shiftY = -9
-        }
-        this.portStyle.left = local.x + shiftX + 'px'
-        this.portStyle.top = local.y + shiftY + 'px'
       }
     }
   }

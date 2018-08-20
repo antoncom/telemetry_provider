@@ -33,8 +33,8 @@
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
       <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
         <!--Портируем сюда порты когда драг-н-дроп порта-->
-        <div style="position: absolute; z-index: 20000">
-          <portal-target name="globalports" />
+        <div style="position: absolute; z-index: 20000; border: 1px solid red;">
+          <portal-target name="globalports" multiple />
         </div>
         <!--///-->
         <start v-for="activity in figures" v-if="activity.type === 'bpmn.Start'" v-bind:data="activity" :key="activity.id" :ref="activity.id"></start>
@@ -74,8 +74,10 @@
   import Connection from './layout/Connection.vue'
   import { mapState } from 'vuex'
   import { Portal, PortalTarget } from 'portal-vue'
+  // import { whormHoleMixin } from 'src/components/Dashboard/Views/TeamtimeBpm/mixins/wharmhole.js'
 
   export default {
+//    mixins: [whormHoleMixin],
     data () {
       return {
         name: '', // id prefix for panel
@@ -97,8 +99,8 @@
       Message,
       Timer,
       Connection,
-      Portal,
-      PortalTarget
+      PortalTarget,
+      Portal
     },
     mounted () {
       this.$nextTick(function () {
@@ -148,6 +150,34 @@
     created () {
     },
     methods: {
+//      sendToPortalTarget () {
+//        console.log('sendToPortalTarget', this.$refs)
+//        var ports = []
+//        for (var ref in this.$refs) {
+//          if (this.$refs[ref][0].portTypes !== undefined) {
+//            var children = this.$refs[ref][0].$children
+//            for (var i = 0; i < children.length; i++) {
+//              var child = children[i]
+//              if (child.portStyle !== undefined) {
+//                ports.push(child.$vnode)
+//              }
+//            }
+//          }
+//        }
+//        console.log('PORTS', ports)
+//        var pass = [this.$createElement('p', 'aaaaaaaaaaa')]
+//        Wormhole.open({
+//          to: 'globalports55',
+//          from: 'localports55',
+//          pass
+//        })
+//      },
+//      clearPortalTarget () {
+//        console.log('CLOSE HOLE')
+//        Wormhole.close({
+//          to: 'globalports'
+//        }, true)
+//      },
       activityStatus: function (act) {
         var out = {}
         this.figureStatus.forEach(function (status) {

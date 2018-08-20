@@ -17,6 +17,12 @@ const state = {
   connections: [],
   figureStatus: [],
   isPortsEnabled: true,
+  bubbledPorts: {
+    atRest: true,
+    ports: {},
+    startDragPort: null,
+    directLine: null
+  },
   isGridShown: false,
   snapGridSize: 10
 }
@@ -205,6 +211,14 @@ const mutations = {
   },
   [types.CHANGE_CONNECTION]: (state, commit) => {
     state.connectionMoved = commit.payload.connRef
+  },
+  [types.BUBBLED_PORT]: (state, commit) => {
+    if (commit.payload.atRest !== undefined) {
+      state.bubbledPorts.atRest = commit.payload.atRest
+    }
+    if (commit.payload.portKey !== undefined) state.bubbledPorts.ports[commit.payload.portKey] = { figureId: commit.payload.figureId, portType: commit.payload.portType }
+    if (commit.payload.startDragPort !== undefined) state.bubbledPorts.startDragPort = commit.payload.startDragPort
+    if (commit.payload.directLine !== undefined) state.bubbledPorts.directLine = commit.payload.directLine
   }
 }
 

@@ -2,7 +2,9 @@
 <div :id="data.id" tabindex="0" class="with-context-menu" :style="style">
   <div class="bpmn_start">
     <div v-drag class="bpmn_start_content">Start</div>
-    <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
+    <portal to="globalports" name="ports" :disabled="bubbledPorts.atRest">
+      <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="data.id + pType"></port>
+    </portal>
   </div>
 </div>
 </template>

@@ -4,7 +4,9 @@
     <div class="bpmn_icon"></div>
     <div class="bpmn_event_content">{{data.text}}</div>
   </div>
-  <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="pType"></port>
+  <portal to="globalports" name="ports" :disabled="bubbledPorts.atRest">
+    <port v-for="pType in portTypes" v-if="isPortsEnabled" :position="pType" :key="data.id + pType"></port>
+  </portal>
 </div>
 </template>
 

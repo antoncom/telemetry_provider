@@ -1,6 +1,7 @@
 import Vue from 'vue'
-// import * as types from 'src/store/mutation-types.js'
+import * as types from 'src/store/mutation-types.js'
 import { mapState } from 'vuex'
+// import { Wormhole } from 'portal-vue'
 
 // //////////////////////////////////////
 // mixin code (directive code see below)
@@ -15,7 +16,24 @@ export const dragPortMixin = {
     }
   },
   computed: {
-    ...mapState('bpm', ['isPortsEnabled', 'isGridShown', 'snapGridSize'])
+    ...mapState('bpm', ['isPortsEnabled', 'isGridShown', 'snapGridSize', 'bubbledPorts'])
+  },
+  methods: {
+    /* sendToPortalTarget (_port) {
+      var portToBubble = [this.$createElement('p', 'This will be displayed in the Target!')]
+      console.log('portToBubble', portToBubble)
+      Wormhole.open({
+        to: 'globalports',
+        from: 'localports',
+        portToBubble
+      })
+    },
+    clearPortalTarget () {
+      console.log('CLOSE HOLE')
+      Wormhole.close({
+        to: 'globalports'
+      }, true)
+    } */
   }
 }
 
@@ -57,6 +75,12 @@ export function createDirectLine (_port) {
     -o-transform-origin: 0% 0%;
   `)
   document.getElementById('previewframe').contentWindow.document.getElementById('SwimlanePanel-scrollarea').appendChild(directLine)
+  _port.context.$store.commit({
+    type: 'bpm/' + types.BUBBLED_PORT,
+    payload: {
+      directLine: directLine
+    }
+  })
   return directLine
 }
 /*
@@ -90,6 +114,14 @@ export function mousedown (e, el, _port) {
   _port.context.directLine = directLine
   _port.context.portStyle.zIndex = 20000
   _port.context.portStyle.position = 'absolute'
+
+  // Save startdrag port
+  _port.context.$store.commit({
+    type: 'bpm/' + types.BUBBLED_PORT,
+    payload: {
+      startDragPort: _port.context.overlay
+    }
+  })
 }
 
 export function mouseup (e, el, _port) {
@@ -98,10 +130,21 @@ export function mouseup (e, el, _port) {
     return
   }
 
+  // make connection
+
+  // remove helpers
+
   _port.context.overlay.removeEventListener('mouseup', mouseup)
   _port.context.overlay.removeEventListener('mousemove', mousemove)
   _port.context.overlay.remove()
   _port.context.directLine.remove()
+  _port.context.$store.commit({
+    type: 'bpm/' + types.BUBBLED_PORT,
+    payload: {
+      atRest: true,
+      startDragPort: null
+    }
+  })
 }
 
 export function mousemove (e, el, _port) {
@@ -141,14 +184,30 @@ export const dragPortDirective = Vue.directive('drag-port', {
   inserted: function (el, binding, vnode) {
     var _port = vnode
     el.addEventListener('mousedown', (e) => {
-      // _port.context.$parent.arePortsLocal = false
-      _port.context.$parent.sendToPortalTarget()
+      console.log('Source Port', _port.context.$vnode.key)
+      _port.context.$store.commit({
+        type: 'bpm/' + types.BUBBLED_PORT,
+        payload: {
+          atRest: false
+        }
+      })
       mousedown(e, el, _port)
     })
+
     el.addEventListener('mouseup', (e) => {
-      console.log('UPPP THE PORT', _port)
-      _port.context.clearPortalTarget()
-      // mousedown(e, el, _port)
+      console.log('Target Port', _port.context.$vnode.key)
+      _port.context.$store.commit({
+        type: 'bpm/' + types.BUBBLED_PORT,
+        payload: {
+          atRest: true
+        }
+      })
+      // remove helpers (overlay, etc)
+      var overlay = _port.context.bubbledPorts.startDragPort
+      overlay.removeEventListener('mouseup', mouseup)
+      overlay.removeEventListener('mousemove', mousemove)
+      overlay.remove()
+      _port.context.bubbledPorts.directLine.remove()
     })
   }
 })
