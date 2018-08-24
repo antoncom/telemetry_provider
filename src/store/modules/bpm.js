@@ -23,8 +23,24 @@ const state = {
     startDragPort: null,
     directLine: null
   },
+  landedPorts: {
+    figureId: '',
+    portPositions: []
+  },
   isGridShown: false,
-  snapGridSize: 10
+  snapGridSize: 10,
+  directLine: {
+    sourceFigure: {
+      id: '',
+      portType: ''
+    },
+    targetFigure: {
+      id: '',
+      portType: ''
+    },
+    existedConnection: '',
+    domEl: ''
+  }
 }
 
 const getters = {
@@ -118,6 +134,9 @@ const getters = {
     result.x = figure.x + local.x
     result.y = figure.y + local.y
     return result
+  },
+  directLineDomEl: (state, getters) => {
+    return state.directLine
   }
 }
 
@@ -219,6 +238,20 @@ const mutations = {
     if (commit.payload.portKey !== undefined) state.bubbledPorts.ports[commit.payload.portKey] = { figureId: commit.payload.figureId, portType: commit.payload.portType }
     if (commit.payload.startDragPort !== undefined) state.bubbledPorts.startDragPort = commit.payload.startDragPort
     if (commit.payload.directLine !== undefined) state.bubbledPorts.directLine = commit.payload.directLine
+  },
+  [types.ADD_DIRECT_LINE]: (state, commit) => {
+    state.directLine = { ...commit.payload }
+  },
+  [types.REMOVE_DIRECT_LINE]: (state, commit) => {
+    state.directLine.domEl.remove()
+    state.directLine = {}
+  },
+  [types.LAND_PORTS_TO_FIGURE]: (state, commit) => {
+    state.landedPorts = {...commit.payload }
+  },
+  [types.UNLAND_PORTS_TO_FIGURE]: (state, commit) => {
+    state.landedPorts.figureId = ''
+    state.landedPorts.portPositions = []
   }
 }
 

@@ -75,31 +75,41 @@ export function createDirectLine (_port) {
     -o-transform-origin: 0% 0%;
   `)
   document.getElementById('previewframe').contentWindow.document.getElementById('SwimlanePanel-scrollarea').appendChild(directLine)
-  _port.context.$store.commit({
+  _port.context.directLine = directLine
+
+  // delete this
+/*  _port.context.$store.commit({
     type: 'bpm/' + types.BUBBLED_PORT,
     payload: {
       directLine: directLine
     }
-  })
-  return directLine
-}
-/*
+  }) */
+  //
 
-export function createPortsPlaceholders () {
-  const directLine = document.createElement('div')
-  directLine.setAttribute('style', `
-    height: 2px;
-    width: 2px;
-    z-index: 10010;
-    background-color: black;
-    position: absolute;
-    top: ` + _port.context.y + `
-    left: ` + _port.context.x + `
-  `)
-  document.getElementById('previewframe').contentWindow.document.getElementById('SwimlanePanel-scrollarea').appendChild(directLine)
+  if (_port.context.type === 'input') {
+    var targetFigure = {
+      id: _port.context.figureId,
+      portPosition: _port.context.position
+    }
+  } else if (_port.context.type === 'output') {
+    var sourceFigure = {
+      id: _port.context.figureId,
+      portPosition: _port.context.position
+    }
+  }
+  _port.context.$store.commit({
+    type: 'bpm/' + types.ADD_DIRECT_LINE,
+    payload: {
+      sourceFigure,
+      targetFigure,
+      existedConnection: '',
+      domEl: directLine
+    }
+  })
+  console.log('BEFORE', directLine)
+  console.log('AFTER', _port.context.directLine)
   return directLine
 }
-*/
 
 export function mousedown (e, el, _port) {
   setDraggerOffset(e, _port)
@@ -110,8 +120,10 @@ export function mousedown (e, el, _port) {
   _port.context.down = true
   const overlay = createOverlay(e, el, _port)
   _port.context.overlay = overlay
-  const directLine = createDirectLine(_port)
-  _port.context.directLine = directLine
+
+  createDirectLine(_port)
+
+  // _port.context.$store.getters.directLineDomEl = directLine
   _port.context.portStyle.zIndex = 20000
   _port.context.portStyle.position = 'absolute'
 
@@ -137,7 +149,9 @@ export function mouseup (e, el, _port) {
   _port.context.overlay.removeEventListener('mouseup', mouseup)
   _port.context.overlay.removeEventListener('mousemove', mousemove)
   _port.context.overlay.remove()
-  _port.context.directLine.remove()
+  // _port.context.$store.getters.directLineDomEl.remove()
+  _port.context.$store.commit('bpm/' + types.REMOVE_DIRECT_LINE)
+
   _port.context.$store.commit({
     type: 'bpm/' + types.BUBBLED_PORT,
     payload: {
@@ -157,6 +171,8 @@ export function mousemove (e, el, _port) {
     let aY = e.clientY - 35
 
     drawDirectLine(aX, aY, bX, bY, _port)
+
+    // console.log('DR--', _port.context.directLine)
   }
 }
 
@@ -165,6 +181,15 @@ export function drawDirectLine (x1, y1, x2, y2, _port) {
   var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI
   var transform = 'rotate(' + angle + 'deg)'
 
+  // console.log('GETTERS directLineDomEl ==', _port.context.$store.getters)
+  /* _port.context.$store.getters.directLineDomEl.style.left = x1 + 'px'
+  _port.context.$store.getters.directLineDomEl.style.top = y1 + 'px'
+  _port.context.$store.getters.directLineDomEl.style.width = length + 'px'
+  _port.context.$store.getters.directLineDomEl.style.transform = transform
+  _port.context.$store.getters.directLineDomEl.style['-ms-transform'] = transform
+  _port.context.$store.getters.directLineDomEl.style['-moz-transform'] = transform
+  _port.context.$store.getters.directLineDomEl.style['-webkit-transform'] = transform
+  _port.context.$store.getters.directLineDomEl.style['-o-transform'] = transform */
   _port.context.directLine.style.left = x1 + 'px'
   _port.context.directLine.style.top = y1 + 'px'
   _port.context.directLine.style.width = length + 'px'
@@ -207,7 +232,8 @@ export const dragPortDirective = Vue.directive('drag-port', {
       overlay.removeEventListener('mouseup', mouseup)
       overlay.removeEventListener('mousemove', mousemove)
       overlay.remove()
-      _port.context.bubbledPorts.directLine.remove()
+      // _port.context.bubbledPorts.$store.getters.directLineDomEl.remove()
+      _port.context.$store.commit('bpm/' + types.REMOVE_DIRECT_LINE)
     })
   }
 })

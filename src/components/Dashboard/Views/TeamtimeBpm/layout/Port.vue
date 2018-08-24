@@ -35,7 +35,7 @@
     },
     computed: {
       ...mapGetters('bpm', ['getPortLocalXY', 'getPortGlobalXY']),
-      ...mapState('bpm', ['connections', 'bubbledPorts'])
+      ...mapState('bpm', ['connections', 'bubbledPorts', 'directLine'])
     },
     methods: {
       /* mousedown: function () {
