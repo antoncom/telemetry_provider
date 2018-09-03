@@ -79,7 +79,7 @@ export function createDirectLine (_port) {
 
   // delete this
 /*  _port.context.$store.commit({
-    type: 'bpm/' + types.BUBBLED_PORT,
+    type: 'bpm/' + types.BUBBLE_PORTS,
     payload: {
       directLine: directLine
     }
@@ -127,11 +127,11 @@ export function mousedown (e, el, _port) {
   _port.context.portStyle.zIndex = 20000
   _port.context.portStyle.position = 'absolute'
 
-  // Save startdrag port
+  // Save overlay
   _port.context.$store.commit({
-    type: 'bpm/' + types.BUBBLED_PORT,
+    type: 'bpm/' + types.REGISTER_PORT_FOR_BUBBLING,
     payload: {
-      startDragPort: _port.context.overlay
+      overlay: _port.context.overlay
     }
   })
 }
@@ -151,14 +151,7 @@ export function mouseup (e, el, _port) {
   _port.context.overlay.remove()
   // _port.context.$store.getters.directLineDomEl.remove()
   _port.context.$store.commit('bpm/' + types.REMOVE_DIRECT_LINE)
-
-  _port.context.$store.commit({
-    type: 'bpm/' + types.BUBBLED_PORT,
-    payload: {
-      atRest: true,
-      startDragPort: null
-    }
-  })
+  _port.context.$store.commit('bpm/' + types.UNBUBBLE_PORTS)
 }
 
 export function mousemove (e, el, _port) {
@@ -171,8 +164,6 @@ export function mousemove (e, el, _port) {
     let aY = e.clientY - 35
 
     drawDirectLine(aX, aY, bX, bY, _port)
-
-    // console.log('DR--', _port.context.directLine)
   }
 }
 
@@ -190,14 +181,14 @@ export function drawDirectLine (x1, y1, x2, y2, _port) {
   _port.context.$store.getters.directLineDomEl.style['-moz-transform'] = transform
   _port.context.$store.getters.directLineDomEl.style['-webkit-transform'] = transform
   _port.context.$store.getters.directLineDomEl.style['-o-transform'] = transform */
-  _port.context.directLine.style.left = x1 + 'px'
-  _port.context.directLine.style.top = y1 + 'px'
-  _port.context.directLine.style.width = length + 'px'
-  _port.context.directLine.style.transform = transform
-  _port.context.directLine.style['-ms-transform'] = transform
-  _port.context.directLine.style['-moz-transform'] = transform
-  _port.context.directLine.style['-webkit-transform'] = transform
-  _port.context.directLine.style['-o-transform'] = transform
+  _port.context.directLine.domEl.style.left = x1 + 'px'
+  _port.context.directLine.domEl.style.top = y1 + 'px'
+  _port.context.directLine.domEl.style.width = length + 'px'
+  _port.context.directLine.domEl.style.transform = transform
+  _port.context.directLine.domEl.style['-ms-transform'] = transform
+  _port.context.directLine.domEl.style['-moz-transform'] = transform
+  _port.context.directLine.domEl.style['-webkit-transform'] = transform
+  _port.context.directLine.domEl.style['-o-transform'] = transform
 }
 
 export function setDraggerOffset (e, _port) {
@@ -209,26 +200,15 @@ export const dragPortDirective = Vue.directive('drag-port', {
   inserted: function (el, binding, vnode) {
     var _port = vnode
     el.addEventListener('mousedown', (e) => {
-      console.log('Source Port', _port.context.$vnode.key)
-      _port.context.$store.commit({
-        type: 'bpm/' + types.BUBBLED_PORT,
-        payload: {
-          atRest: false
-        }
-      })
+      _port.context.$store.commit('bpm/' + types.BUBBLE_PORTS)
       mousedown(e, el, _port)
     })
 
     el.addEventListener('mouseup', (e) => {
       console.log('Target Port', _port.context.$vnode.key)
-      _port.context.$store.commit({
-        type: 'bpm/' + types.BUBBLED_PORT,
-        payload: {
-          atRest: true
-        }
-      })
+      _port.context.$store.commit('bpm/' + types.UNBUBBLE_PORTS)
       // remove helpers (overlay, etc)
-      var overlay = _port.context.bubbledPorts.startDragPort
+      var overlay = _port.context.bubbledPorts.overlay
       overlay.removeEventListener('mouseup', mouseup)
       overlay.removeEventListener('mousemove', mousemove)
       overlay.remove()

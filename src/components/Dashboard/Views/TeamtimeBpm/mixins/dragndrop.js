@@ -61,7 +61,7 @@ export function createOverlay (e, el, _figure) {
     left: 0;
     z-index: 10001;
     background-color: blue;
-    opacity: 0.1;
+    opacity: 0.4;
   `)
   overlay.addEventListener('mouseup', (e) => mouseup(e, el, _figure))
   overlay.addEventListener('mousemove', (e) => mousemove(e, el, _figure))

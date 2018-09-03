@@ -20,7 +20,7 @@ const state = {
   bubbledPorts: {
     atRest: true,
     ports: {},
-    startDragPort: null,
+    overlay: null,
     directLine: null
   },
   landedPorts: {
@@ -231,13 +231,19 @@ const mutations = {
   [types.CHANGE_CONNECTION]: (state, commit) => {
     state.connectionMoved = commit.payload.connRef
   },
-  [types.BUBBLED_PORT]: (state, commit) => {
+  [types.REGISTER_PORT_FOR_BUBBLING]: (state, commit) => {
     if (commit.payload.atRest !== undefined) {
       state.bubbledPorts.atRest = commit.payload.atRest
     }
     if (commit.payload.portKey !== undefined) state.bubbledPorts.ports[commit.payload.portKey] = { figureId: commit.payload.figureId, portType: commit.payload.portType }
-    if (commit.payload.startDragPort !== undefined) state.bubbledPorts.startDragPort = commit.payload.startDragPort
+    if (commit.payload.overlay !== undefined) state.bubbledPorts.overlay = commit.payload.overlay
     if (commit.payload.directLine !== undefined) state.bubbledPorts.directLine = commit.payload.directLine
+  },
+  [types.BUBBLE_PORTS]: (state, commit) => {
+    state.bubbledPorts.atRest = false
+  },
+  [types.UNBUBBLE_PORTS]: (state, commit) => {
+    state.bubbledPorts.atRest = true
   },
   [types.ADD_DIRECT_LINE]: (state, commit) => {
     state.directLine = { ...commit.payload }
@@ -247,7 +253,7 @@ const mutations = {
     state.directLine = {}
   },
   [types.LAND_PORTS_TO_FIGURE]: (state, commit) => {
-    state.landedPorts = {...commit.payload }
+    state.landedPorts = { ...commit.payload }
   },
   [types.UNLAND_PORTS_TO_FIGURE]: (state, commit) => {
     state.landedPorts.figureId = ''
