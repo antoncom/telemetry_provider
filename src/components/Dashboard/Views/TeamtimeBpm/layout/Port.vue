@@ -97,11 +97,7 @@
       }
 
       if (this.bubbledPorts.atRest) {
-        // TODO Убрать повторную регистрацию портов, если она уже была сделана
-        // console.log('PORT AT FIGURE KEY', this.$vnode)
-        // console.log('REF FIGURE', this)
         // Place port inside figure accordingly type of figure and type of the port
-        // let figureId = this.$parent.data.id
         figureId = this.$parent.data.id
 
         // set port position inside the figure
@@ -110,8 +106,8 @@
           this.portStyle.left = local.x + shiftX + 'px'
           this.portStyle.top = local.y + shiftY + 'px'
         }
-
-        if (this.$vnode.key !== '') {
+        // Register port in Vuex only first time
+        if (this.bubbledPorts.ports[this.$vnode.key] === undefined) {
           this.$store.commit({
             type: 'bpm/' + types.REGISTER_PORT_FOR_BUBBLING,
             payload: {
@@ -121,8 +117,6 @@
               portKey: this.$vnode.key
             }
           })
-        } else {
-          console.log('NOTHING To REGISTER')
         }
       } else {
         console.log('BUBBLED PORT PARENT', this)
