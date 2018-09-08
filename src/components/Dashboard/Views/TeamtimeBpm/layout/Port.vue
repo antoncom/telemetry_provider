@@ -28,14 +28,37 @@
           left: '0px',
           top: '0px',
           zIndex: undefined,
-          position: 'absolute'
+          position: 'absolute',
+          'background-position': '0px 3px'
         },
-        figureId: '' // keep parent figure id. It's required when use portal (bubbling ports to diagram component)
+        figureId: '', // keep parent figure id. It's required when use portal (bubbling ports to diagram component)
+        connectionRef: '' // ref of connection which was linked to the port
+      }
+    },
+    watch: {
+      connectionMoved: { // redraw connection while a figure is moving with drag-n-drop
+        handler: function () {
+          if (this.figureId !== '' && this.figureId === this.connectionMoved.source.figureId && this.position === this.connectionMoved.source.portPosition ||
+                  this.figureId !== '' && this.figureId === this.connectionMoved.target.figureId && this.position === this.connectionMoved.target.portPosition) {
+            this.portStyle['background-position'] = '0px -32px'
+          } else {
+            this.portStyle['background-position'] = '0px 3px'
+          }
+        },
+        deep: true
       }
     },
     computed: {
       ...mapGetters('bpm', ['getPortLocalXY', 'getPortGlobalXY']),
-      ...mapState('bpm', ['connections', 'bubbledPorts', 'directLine'])
+      ...mapState('bpm', ['connections', 'connectionMoved', 'bubbledPorts', 'directLine'])
+/*      updateStyle: function () {
+        let result = this.portStyle
+        if (this.figureId !== '' && this.figureId === this.connectionMoved.source.figureId && this.position === this.connectionMoved.source.portPosition ||
+                this.figureId !== '' && this.figureId === this.connectionMoved.target.figureId && this.position === this.connectionMoved.target.portPosition) {
+          result['background-position'] = '0px -32px'
+        }
+        return result
+      } */
     },
     methods: {
       /* mousedown: function () {
@@ -66,6 +89,7 @@
       } */
     },
     created: function () {
+      this.figureId = this.$parent.data.id
       var shiftX = 0
       var shiftY = 0
       var figureId = ''

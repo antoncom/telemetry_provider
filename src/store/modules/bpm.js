@@ -12,7 +12,16 @@ const state = {
     y: 0
   },
   connectionMoved: {
-    connRef: ''
+    connRef: '',
+    source: {
+      figureId: '',
+      portPosition: ''
+    },
+    target: {
+      figureId: '',
+      portPosition: ''
+
+    }
   },
   connections: [],
   figureStatus: [],
@@ -229,6 +238,25 @@ const mutations = {
     state.figureMoved.y = commit.payload.y
   },
   [types.CHANGE_CONNECTION]: (state, commit) => {
+    state.connectionMoved = commit.payload.connRef
+  },
+  [types.SELECT_CONNECTION]: (state, commit) => {
+    state.connectionMoved.source.figureId = commit.payload.source.figureId
+    state.connectionMoved.target.figureId = commit.payload.target.figureId
+    state.connectionMoved.source.portPosition = commit.payload.source.portPosition
+    state.connectionMoved.target.portPosition = commit.payload.target.portPosition
+    state.connectionMoved.connRef = commit.payload.connRef
+  },
+  [types.ADD_CONNECTION]: (state, commit) => {
+    state.connections.push(commit.payload)
+  },
+  [types.DELETE_CONNECTION]: (state, commit) => {
+    for (var i = 0; i < state.connections.length; i++) {
+      if (state.connections[i].source.figureId === commit.payload.source.figureId &&
+          state.connections[i].target.figureId === commit.payload.target.figureId) {
+        state.connections.splice(i, 1)
+      }
+    }
     state.connectionMoved = commit.payload.connRef
   },
   [types.REGISTER_PORT_FOR_BUBBLING]: (state, commit) => {

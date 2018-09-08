@@ -8,7 +8,6 @@
 
 <script type="text/babel">
   import ConnectionLine from './ConnectionLine.vue'
-//  import store from 'src/store/index.js'
   import { mapState, mapGetters } from 'vuex'
   import Arrow from './Arrow.vue'
   export default {

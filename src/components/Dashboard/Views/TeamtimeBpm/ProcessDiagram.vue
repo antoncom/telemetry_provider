@@ -31,7 +31,7 @@
       </template>
     </div>
     <div id="SwimlanePanel-scrollarea" v-bind:style="swimlaneStyle">
-      <div id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
+      <div v-on:click.prevent="clickBlankSpace" id="SwimlanePanel-paintarea" v-bind:class="{'show-grid': isGridShown}" v-bind:style="swimlaneStyle">
         <!--Портируем сюда порты когда драг-н-дроп порта-->
         <div style="position: absolute; z-index: 20000; border: 1px solid red;">
           <portal-target name="globalports" multiple />
@@ -58,7 +58,7 @@
 </template>
 
 <script type="text/babel">
-  // import * as types from 'src/store/mutation-types.js'
+  import * as types from 'src/store/mutation-types.js'
   import store from 'src/store/index.js'
 
   // Diagram layout components
@@ -150,6 +150,22 @@
     created () {
     },
     methods: {
+      clickBlankSpace: function () {
+        this.$store.commit({
+          type: 'bpm/' + types.SELECT_CONNECTION,
+          payload: {
+            source: {
+              figureId: '',
+              portPosition: ''
+            },
+            target: {
+              figureId: '',
+              portPosition: ''
+            },
+            connRef: ''
+          }
+        })
+      },
 //      sendToPortalTarget () {
 //        console.log('sendToPortalTarget', this.$refs)
 //        var ports = []

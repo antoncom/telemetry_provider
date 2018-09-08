@@ -84,7 +84,6 @@ export function createDirectLine (_port) {
       directLine: directLine
     }
   }) */
-  //
 
   if (_port.context.type === 'input') {
     var targetFigure = {
@@ -134,6 +133,12 @@ export function mousedown (e, el, _port) {
       overlay: _port.context.overlay
     }
   })
+
+  // Remove existed connection if there is here
+  // get the existed connection source & target figures id
+  // remove with commit()
+  // /////
+  console.log('THIS PORT FIGURE ID', _port.context.figureId)
 }
 
 export function mouseup (e, el, _port) {
